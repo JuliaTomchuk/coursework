@@ -44,6 +44,17 @@ public class OneWayFlight {
     @OneToMany(cascade= CascadeType.ALL,mappedBy = "oneWayFlight",orphanRemoval = true)
     private Set<AirplaneSeat> airplaneSeats=new HashSet<>();
 
+    public OneWayFlight(String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, Integer flightNumber, Integer cabinBaggage, Integer checkedBaggage) {
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.flightTime = flightTime;
+        this.flightNumber = flightNumber;
+        this.cabinBaggage = cabinBaggage;
+        this.checkedBaggage = checkedBaggage;
+    }
+
     public boolean addSeat(AirplaneSeat seat){
         boolean isAdded = airplaneSeats.add(seat);
         seat.setOneWayFlight(this);
@@ -56,16 +67,7 @@ public class OneWayFlight {
     }
 
 
-    public OneWayFlight(String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, Integer flightNumber, Integer cabinBaggage, Integer checkedBaggage) {
-        this.departureAirport = departureAirport;
-        this.arrivalAirport = arrivalAirport;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.flightTime = flightTime;
-        this.flightNumber = flightNumber;
-        this.cabinBaggage = cabinBaggage;
-        this.checkedBaggage = checkedBaggage;
-    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tours")
@@ -28,6 +30,8 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter(AccessLevel.NONE)
     private Integer id;
+    @NaturalId
+    private Long bookingNumber;
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<RoundTrip> roundTrips = new ArrayList<>();
     @OneToMany(cascade = CascadeType.PERSIST)
@@ -43,26 +47,15 @@ public class Tour {
 
     }
 
-    public Integer calculatePrice() {
-        return room.getPrice() + calculateRoundTripsPrice() + calculateBoardBasisPrice();
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tour tour)) return false;
+        return getBookingNumber().equals(tour.getBookingNumber());
     }
 
-    private Integer calculateRoundTripsPrice() {
-        int roundTripsPrice = 0;
-        for (RoundTrip trip : roundTrips) {
-            roundTripsPrice = roundTripsPrice + trip.calculatePrice();
-        }
-        return roundTripsPrice;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBookingNumber());
     }
-
-    private Integer calculateBoardBasisPrice() {
-        int boardBasisPrice = 0;
-        for (BoardBasis boardBasis : boardBasisSet) {
-            boardBasisPrice = boardBasisPrice + boardBasis.getPrice();
-        }
-        return boardBasisPrice;
-    }
-
-
 }

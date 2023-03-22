@@ -48,14 +48,20 @@ public class Hotel {
     @Basic(fetch = FetchType.LAZY)
     @Lob
     private String description;
+    private HotelTypeByStars typeByStars;
+    private HotelTypeByTargetMarket typeByTargetMarket;
+    @OneToMany(mappedBy = "hotel",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
 
-    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description) {
+    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket) {
         this.name = name;
         this.rooms = rooms;
         this.address = address;
         this.region = region;
         this.boardBasisSet = boardBasisSet;
         this.description = description;
+        this.typeByStars =typeByStars;
+        this.typeByTargetMarket = typeByTargetMarket;
     }
 
 

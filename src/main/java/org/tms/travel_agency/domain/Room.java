@@ -31,6 +31,7 @@ public class Room {
     private RoomTypesByOccupancy typesByOccupancy;
     private RoomTypesByView typesByView;
     private Integer price;
+    private boolean booked;
     @ManyToOne
     @NaturalId
     private Hotel hotel;

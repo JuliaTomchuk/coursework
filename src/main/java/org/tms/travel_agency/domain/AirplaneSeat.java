@@ -30,6 +30,7 @@ public class AirplaneSeat {
     private OneWayFlight oneWayFlight;
     private AirplaneSeatsTypes airplaneSeatsTypes;
     private Integer price;
+    private boolean booked;
 
     public AirplaneSeat(Integer number, OneWayFlight oneWayFlight, AirplaneSeatsTypes airplaneSeatsTypes,Integer price) {
         this.number = number;

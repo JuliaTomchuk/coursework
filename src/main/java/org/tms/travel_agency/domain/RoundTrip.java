@@ -30,6 +30,7 @@ public class RoundTrip {
     private AirplaneSeat arrive;
 
 
+
     public RoundTrip(AirplaneSeat depart, AirplaneSeat arrive) {
 
         this.depart = depart;
@@ -39,6 +40,11 @@ public class RoundTrip {
 
     public int calculatePrice() {
         return depart.getPrice() + arrive.getPrice();
+    }
+
+    public void bookSeat(){
+        depart.setBooked(true);
+        arrive.setBooked(true);
     }
 
 }

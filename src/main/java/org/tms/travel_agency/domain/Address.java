@@ -31,23 +31,26 @@ public class Address {
     @NaturalId
     private String street;
 
-    public Address(String country, String city, String street) {
+    @NaturalId
+    private String home;
+
+    public Address(String country, String city, String street, String home) {
 
         this.country = country;
         this.city = city;
         this.street = street;
+        this.home=home;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Address address)) return false;
-        return getCity().equals(address.getCity()) && getStreet().equals(address.getStreet());
+        return getCity().equals(address.getCity()) && getStreet().equals(address.getStreet()) && getHome().equals(address.getHome());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCity(), getStreet());
+        return Objects.hash(getCity(), getStreet(), getHome());
     }
 }
