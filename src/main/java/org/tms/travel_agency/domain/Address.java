@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
+import java.util.UUID;
 
 @ToString
 @NoArgsConstructor
@@ -21,10 +23,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "addresses")
 public class Address {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(value = AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
     private String country;
     @NaturalId
     private String city;

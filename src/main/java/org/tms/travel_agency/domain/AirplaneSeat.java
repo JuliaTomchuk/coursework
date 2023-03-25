@@ -4,14 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
+
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
+import java.util.UUID;
+
 
 @Entity
 @NoArgsConstructor
@@ -19,10 +23,10 @@ import java.util.Objects;
 @Getter
 public class AirplaneSeat {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
     @NaturalId
     private Integer number;
     @ManyToOne

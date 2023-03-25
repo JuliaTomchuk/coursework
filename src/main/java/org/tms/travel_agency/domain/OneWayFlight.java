@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Setter
@@ -26,10 +28,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "one_way_flights")
 public class OneWayFlight {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
+
     @NaturalId
     private String departureAirport;
     private String arrivalAirport;

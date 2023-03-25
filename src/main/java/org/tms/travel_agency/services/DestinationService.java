@@ -7,5 +7,7 @@ import java.util.Set;
 public interface DestinationService {
 
     Set<Destination> getAll();
-    Destination getByName();
+    Destination getByName(String name);
+    String getDescription(Integer id);
+
 }

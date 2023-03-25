@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Setter
@@ -30,13 +32,13 @@ import java.util.Set;
 @Table(name = "regions")
 public class Region {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(value = AccessLevel.NONE)
-    private Integer id;
-    @NaturalId
+    @GeneratedValue
+    private UUID id;
+     @NaturalId
     private String name;
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Hotel> hotels = new HashSet<>();
+
     @ManyToOne
     private Destination destination;
     @Basic(fetch = FetchType.LAZY)

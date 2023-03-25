@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,10 +22,10 @@ import javax.persistence.Table;
 @Table(name = "round_trips")
 @NoArgsConstructor
 public class RoundTrip {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
     @OneToOne
     private AirplaneSeat depart;
     @OneToOne

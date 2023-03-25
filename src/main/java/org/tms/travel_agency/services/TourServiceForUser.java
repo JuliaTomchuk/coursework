@@ -2,8 +2,11 @@ package org.tms.travel_agency.services;
 
 import org.tms.travel_agency.domain.Tour;
 
+import java.util.UUID;
+
 public interface TourServiceForUser {
-    Integer calculatePrice(Tour tour);
-    void bookTour(Tour tour);
+
+    void bookTour(UUID id);
+    Tour getBookedTour(UUID id);
 
 }
