@@ -38,8 +38,9 @@ public class Region {
     private String name;
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Hotel> hotels = new HashSet<>();
-
-    @ManyToOne
+    @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<OneWayFlight> oneWayFlightSet = new HashSet<>();
+     @ManyToOne
     private Destination destination;
     @Basic(fetch = FetchType.LAZY)
     @Lob
@@ -62,6 +63,17 @@ public class Region {
     public boolean deleteHotel(Hotel hotel) {
         boolean isDeleted = hotels.remove(hotel);
         hotel.setRegion(null);
+        return isDeleted;
+    }
+    public boolean addOneWayFlight(OneWayFlight oneWayFlight) {
+        boolean isAdded = oneWayFlightSet.add(oneWayFlight);
+        oneWayFlight.setRegion(this);
+        return isAdded;
+    }
+
+    public boolean deleteHotel(OneWayFlight oneWayFlight) {
+        boolean isDeleted = oneWayFlightSet.remove(oneWayFlight);
+        oneWayFlight.setRegion(null);
         return isDeleted;
     }
 

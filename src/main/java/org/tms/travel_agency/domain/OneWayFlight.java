@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -32,7 +33,8 @@ public class OneWayFlight {
     @Id
     @GeneratedValue
     private UUID id;
-
+    @ManyToOne
+    private Region region;
     @NaturalId
     private String departureAirport;
     private String arrivalAirport;
@@ -47,7 +49,7 @@ public class OneWayFlight {
     @OneToMany(cascade= CascadeType.ALL,mappedBy = "oneWayFlight",orphanRemoval = true)
     private Set<AirplaneSeat> airplaneSeats=new HashSet<>();
 
-    public OneWayFlight(String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, Integer flightNumber, Integer cabinBaggage, Integer checkedBaggage) {
+    public OneWayFlight(Region region,String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, Integer flightNumber, Integer cabinBaggage, Integer checkedBaggage) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureTime = departureTime;
@@ -56,6 +58,7 @@ public class OneWayFlight {
         this.flightNumber = flightNumber;
         this.cabinBaggage = cabinBaggage;
         this.checkedBaggage = checkedBaggage;
+        this.region=region;
     }
 
     public boolean addSeat(AirplaneSeat seat){

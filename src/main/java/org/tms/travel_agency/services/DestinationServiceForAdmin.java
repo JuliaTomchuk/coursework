@@ -2,10 +2,12 @@ package org.tms.travel_agency.services;
 
 import org.tms.travel_agency.domain.Destination;
 
-public interface DestinationServiceForAdmin  {
+import java.util.UUID;
 
-    boolean save(Destination destination);
-    boolean delete(Integer id);
+public interface DestinationServiceForAdmin extends DestinationService {
+
+    Destination save(Destination destination);
+    void delete(UUID id);
     boolean update(Destination destination);
 
 }

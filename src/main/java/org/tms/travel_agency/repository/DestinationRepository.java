@@ -6,4 +6,6 @@ import org.tms.travel_agency.domain.Destination;
 import java.util.UUID;
 
 public interface DestinationRepository extends JpaRepository<Destination, UUID> {
+
+    Destination findByNameIgnoreCase(String name);
 }

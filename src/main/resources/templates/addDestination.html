@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Add New Destination</title>
+</head>
+<body>
+<div class="container text-center">
+  <div class="row">
+    <div class="col">
+      Column
+    </div>
+    <div class="col">
+      Column
+    </div>
+    <div class="col">
+      Column
+    </div>
+    <div class="row  ">
+
+      <div class="col-4 ">
+        <form th:action="@{/destinations/addDestination}" method="post" th:object="${newDestination}">
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Name</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter name" th:field="*{name}">
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label">Description</label>
+            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter description" th:field="*{description}">
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </div>
+
+        </form>
+
+      </div>
+      <div class="col-7">
+        <table class="table table-striped">
+          <tr>
+            <th>destination name</th>
+            <th>delete destination</th>
+            <th>update destination</th>
+            <th>add region</th>
+          </tr>
+          <tr th:each="destination:${destinationList}">
+            <td th:text="${destination.name}"></td>
+            <td><a th:href=" @{/destinations/delete(id=${destination.id})}"><button  type="button" class="btn btn-danger">Delete</button></a> </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+</body>
+</html>
