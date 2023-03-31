@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +25,7 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @ToString
 @Getter
@@ -32,14 +36,16 @@ import java.util.Set;
 public class Hotel {
     @NaturalId
     private String name;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(value = AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     private Set<Room> rooms = new HashSet<>();
-    @OneToOne
+
     @NaturalId
+    @OneToOne
     private Address address;
     @ManyToOne
     private Region region;
@@ -88,6 +94,20 @@ public class Hotel {
         boardBasis.setHotel(null);
         return isDeleted;
     }
+
+    public boolean addReview(Review review) {
+        boolean isAdded = reviews.add(review);
+        review.setHotel(this);
+        return isAdded;
+    }
+
+    public boolean deleteReview(Review review) {
+        boolean isDeleted = reviews.remove(review);
+        review.setHotel(null);
+        return isDeleted;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

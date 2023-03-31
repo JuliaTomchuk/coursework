@@ -2,7 +2,9 @@ package org.tms.travel_agency.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
@@ -11,16 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name="accounts")
 public class User {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
     private String firstName;
     private String secondName;
     private String patronymic;

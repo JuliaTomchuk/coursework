@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
@@ -12,12 +13,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tours")
@@ -26,18 +29,21 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 public class Tour {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
+
     @NaturalId
     private Long bookingNumber;
     @OneToMany(cascade = CascadeType.PERSIST)
-    private List<RoundTrip> roundTrips = new ArrayList<>();
+    private List <RoundTrip> roundTrips = new ArrayList<>();
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<BoardBasis> boardBasisSet = new ArrayList<>();
     @OneToOne
     private Room room;
+    @ManyToOne
+    private User user;
 
 
     public Tour(List<RoundTrip> roundTrips, List<BoardBasis> boardBasisSet, Room room) {

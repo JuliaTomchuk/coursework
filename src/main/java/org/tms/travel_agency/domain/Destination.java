@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -28,10 +30,10 @@ import java.util.Set;
 @Entity
 @Table(name = "destinations")
 public class Destination {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
     @NaturalId
     private String name;
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
