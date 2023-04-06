@@ -8,6 +8,8 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -28,6 +30,8 @@ public class RoundTrip extends TourProduct {
     private AirplaneTicket depart;
     @OneToOne
     private AirplaneTicket arrive;
+    @ManyToOne
+    private Region region;
 
 
 

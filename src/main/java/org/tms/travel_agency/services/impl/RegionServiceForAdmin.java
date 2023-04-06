@@ -7,7 +7,6 @@ import org.tms.travel_agency.domain.RoundTrip;
 import org.tms.travel_agency.domain.Tour;
 import org.tms.travel_agency.services.FourComponentJoin;
 import org.tms.travel_agency.services.TravelAdminService;
-import org.tms.travel_agency.services.ThreeComponentJoin;
 
 import java.util.UUID;
 

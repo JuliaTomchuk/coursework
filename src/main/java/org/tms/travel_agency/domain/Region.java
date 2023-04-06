@@ -1,11 +1,9 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
@@ -13,7 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -42,6 +39,8 @@ public class Region {
     private Set<OneWayFlight> oneWayFlightSet = new HashSet<>();
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Tour> tours = new HashSet<>();
+    @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<RoundTrip>  roundTripSet = new HashSet<>();
      @ManyToOne
     private Destination destination;
     @Basic(fetch = FetchType.LAZY)
@@ -73,10 +72,22 @@ public class Region {
 
     }
 
-    public void deleteHotel(OneWayFlight oneWayFlight) {
+    public void deleteOneWayFlight(OneWayFlight oneWayFlight) {
         oneWayFlightSet.remove(oneWayFlight);
         oneWayFlight.setRegion(null);
 
+    }
+    public void addTour(Tour tour){
+        tours.add(tour);
+        tour.setRegion(this);
+    }
+    public void deleteTour(Tour tour){
+        tours.add(tour);
+        tour.setRegion(this);
+    }
+    public void addRoundTrip(RoundTrip trip){
+        roundTripSet.add(trip);
+        trip.setRegion(this);
     }
 
 

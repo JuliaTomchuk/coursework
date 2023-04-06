@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.tms.travel_agency.domain.User;
 import org.tms.travel_agency.services.TravelAdminService;
-import org.tms.travel_agency.services.TravelUserService;
 
 import java.util.List;
 import java.util.UUID;
