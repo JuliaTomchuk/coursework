@@ -1,18 +1,16 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -21,32 +19,40 @@ import java.util.UUID;
 @Entity
 @Table(name = "round_trips")
 @NoArgsConstructor
-public class RoundTrip {
+public class RoundTrip extends TourProduct {
 
     @Id
     @GeneratedValue
     private UUID id;
     @OneToOne
-    private AirplaneSeat depart;
+    private AirplaneTicket depart;
     @OneToOne
-    private AirplaneSeat arrive;
+    private AirplaneTicket arrive;
 
 
 
-    public RoundTrip(AirplaneSeat depart, AirplaneSeat arrive) {
+    public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive) {
 
         this.depart = depart;
         this.arrive = arrive;
 
     }
-
-    public int calculatePrice() {
-        return depart.getPrice() + arrive.getPrice();
+    @Override
+    public BigDecimal calculatePrice() {
+        return depart.getPrice().add(arrive.getPrice());
     }
 
-    public void bookSeat(){
+    @Override
+    protected void book() {
+        //переопределить методы нормально
         depart.setBooked(true);
         arrive.setBooked(true);
     }
+
+    @Override
+    protected void cancelBooking() {
+
+    }
+
 
 }

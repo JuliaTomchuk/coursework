@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tms.travel_agency.domain.Destination;
 import org.tms.travel_agency.repository.DestinationRepository;
-import org.tms.travel_agency.services.DestinationService;
+import org.tms.travel_agency.services.TravelUserService;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
-public class DestinationServiceImpl implements DestinationService {
+public class DestinationService implements TravelUserService<Destination> {
 
 
     @Autowired
@@ -31,14 +29,14 @@ public class DestinationServiceImpl implements DestinationService {
     }
 
     @Override
-    public Destination getByName(String name) {
-       return destinationRepository.findByNameIgnoreCase(name);
+    public Destination getById() {
+        return null;
     }
 
     @Override
-    @Transactional
-    public String getDescription(UUID id) {
-        Optional<Destination> byId = destinationRepository.findById(id);
-        return byId.stream().map(d->d.getDescription()).findFirst().orElse("");
+    public List<Destination> search(Destination destination) {
+        return null;
     }
+
+
 }

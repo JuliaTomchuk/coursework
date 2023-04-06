@@ -1,17 +1,20 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,7 +23,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name="accounts")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -29,34 +32,68 @@ public class User {
     private String secondName;
     private String patronymic;
     @NaturalId
-    private String login;
-    private char[] password;
+    private String username;
+    private String password;
     private String passwordNumber;
     private Integer age;
-
     private Role role;
 
 
-    public User(String firstName, String secondName, String login, char[] password, String passwordNumber, Integer age, String patronymic, Role role) {
+
+
+    public User(String firstName, String secondName, String username, String password, String passwordNumber, Integer age, String patronymic, Role role) {
         this.firstName = firstName;
         this.secondName = secondName;
-        this.login = login;
+        this.username = username;
         this.password = password;
         this.passwordNumber = passwordNumber;
         this.age = age;
         this.patronymic=patronymic;
         this.role=role;
+
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return getLogin().equals(user.getLogin());
+        return getUsername().equals(user.getUsername());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getLogin());
+        return Objects.hash(getUsername());
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       return List.of( new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
 }

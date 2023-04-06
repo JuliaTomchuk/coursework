@@ -20,7 +20,7 @@
     <div class="row  ">
 
       <div class="col-4 ">
-        <form th:action="@{/destinations/addDestination}" method="post" th:object="${newDestination}">
+        <form th:action="@{/destinations/destinationManager}" method="post" th:object="${newDestination}">
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Name</label>
             <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter name" th:field="*{name}">
@@ -36,7 +36,7 @@
         </form>
 
       </div>
-      <div class="col-7">
+      <div class="col-12">
         <table class="table table-striped">
           <tr>
             <th>destination name</th>
@@ -46,7 +46,14 @@
           </tr>
           <tr th:each="destination:${destinationList}">
             <td th:text="${destination.name}"></td>
-            <td><a th:href=" @{/destinations/delete(id=${destination.id})}"><button  type="button" class="btn btn-danger">Delete</button></a> </td>
+            <td><a th:href=" @{/destinations/delete/(id=${destination.id})}"><button
+                    type="button" class="btn btn-danger">Delete</button></a> </td>
+
+          <td>
+           <th:form>
+
+           </th:form>
+              </td>
           </tr>
         </table>
       </div>

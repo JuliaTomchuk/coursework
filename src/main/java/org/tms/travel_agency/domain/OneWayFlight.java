@@ -1,21 +1,20 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -43,13 +42,14 @@ public class OneWayFlight {
     private LocalDateTime arrivalTime;
     private Integer flightTime;
      @NaturalId
-    private Integer flightNumber;
+    private String flightNumber;
     private Integer cabinBaggage;
     private Integer checkedBaggage;
+    private BigDecimal pricePerHour;
     @OneToMany(cascade= CascadeType.ALL,mappedBy = "oneWayFlight",orphanRemoval = true)
-    private Set<AirplaneSeat> airplaneSeats=new HashSet<>();
+    private Set<AirplaneTicket> airplaneTickets=new HashSet<>();
 
-    public OneWayFlight(Region region,String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, Integer flightNumber, Integer cabinBaggage, Integer checkedBaggage) {
+    public OneWayFlight(Region region,String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, String flightNumber, Integer cabinBaggage, Integer checkedBaggage, BigDecimal pricePerHour) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureTime = departureTime;
@@ -59,17 +59,17 @@ public class OneWayFlight {
         this.cabinBaggage = cabinBaggage;
         this.checkedBaggage = checkedBaggage;
         this.region=region;
+        this.pricePerHour=pricePerHour;
     }
 
-    public boolean addSeat(AirplaneSeat seat){
-        boolean isAdded = airplaneSeats.add(seat);
-        seat.setOneWayFlight(this);
-        return isAdded;
-    }
-    public boolean deleteSeat(AirplaneSeat seat){
-        boolean isDeleted = airplaneSeats.remove(seat);
-        seat.setOneWayFlight(null);
-        return isDeleted;
+    public void addTicket(AirplaneTicket ticket){
+        boolean isAdded = airplaneTickets.add(ticket);
+        ticket.setOneWayFlight(this);
+         }
+    public void deleteTicket(AirplaneTicket ticket){
+        boolean isDeleted = airplaneTickets.remove(ticket);
+        ticket.setOneWayFlight(null);
+
     }
 
 

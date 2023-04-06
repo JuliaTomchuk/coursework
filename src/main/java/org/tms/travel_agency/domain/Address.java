@@ -26,8 +26,8 @@ public class Address {
 
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private UUID id;
-    private String country;
     @NaturalId
     private String city;
     @NaturalId
@@ -36,9 +36,9 @@ public class Address {
     @NaturalId
     private String home;
 
-    public Address(String country, String city, String street, String home) {
+    public Address( String city, String street, String home) {
 
-        this.country = country;
+
         this.city = city;
         this.street = street;
         this.home=home;

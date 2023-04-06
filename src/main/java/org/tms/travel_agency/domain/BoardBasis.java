@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -30,12 +31,12 @@ public class BoardBasis {
 
     @NaturalId
     private BoardBasisTypes type;
-    private Integer price;
+    private BigDecimal price;
     @ManyToOne
     @NaturalId
     private Hotel hotel;
 
-    public BoardBasis(BoardBasisTypes type, Integer price, Hotel hotel) {
+    public BoardBasis(BoardBasisTypes type, BigDecimal price, Hotel hotel) {
         this.type = type;
         this.price = price;
         this.hotel = hotel;

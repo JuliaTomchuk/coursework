@@ -22,12 +22,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@ToString
+
 @Getter
 @Setter
 @Entity
@@ -39,11 +40,11 @@ public class Hotel {
 
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private UUID id;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     private Set<Room> rooms = new HashSet<>();
-
+    private BigDecimal basicPriceOfRoom;
     @NaturalId
     @OneToOne
     private Address address;
@@ -59,7 +60,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
-    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket) {
+    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket,BigDecimal basicPriceOfRoom) {
         this.name = name;
         this.rooms = rooms;
         this.address = address;
@@ -68,43 +69,41 @@ public class Hotel {
         this.description = description;
         this.typeByStars =typeByStars;
         this.typeByTargetMarket = typeByTargetMarket;
+        this.basicPriceOfRoom =basicPriceOfRoom;
     }
 
 
-    public boolean addRoom(Room room) {
-        boolean isAdded = rooms.add(room);
+    public void addRoom(Room room) {
+        rooms.add(room);
         room.setHotel(this);
-        return isAdded;
     }
 
-    public boolean deleteRoom(Room room) {
-        boolean isDeleted = rooms.remove(room);
+    public void deleteRoom(Room room) {
+        rooms.remove(room);
         room.setHotel(null);
-        return isDeleted;
+
     }
 
-    public boolean addBoardBasis(BoardBasis boardBasis) {
-        boolean isAdded = boardBasisSet.add(boardBasis);
+    public void addBoardBasis(BoardBasis boardBasis) {
+        boardBasisSet.add(boardBasis);
         boardBasis.setHotel(this);
-        return isAdded;
-    }
+        }
 
-    public boolean deleteBoardBasis(BoardBasis boardBasis) {
-        boolean isDeleted = boardBasisSet.remove(boardBasis);
+    public void deleteBoardBasis(BoardBasis boardBasis) {
+        boardBasisSet.remove(boardBasis);
         boardBasis.setHotel(null);
-        return isDeleted;
-    }
+           }
 
-    public boolean addReview(Review review) {
-        boolean isAdded = reviews.add(review);
+    public void addReview(Review review) {
+        reviews.add(review);
         review.setHotel(this);
-        return isAdded;
+
     }
 
-    public boolean deleteReview(Review review) {
-        boolean isDeleted = reviews.remove(review);
+    public void deleteReview(Review review) {
+        reviews.remove(review);
         review.setHotel(null);
-        return isDeleted;
+
     }
 
 

@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @NoArgsConstructor
-public class Tour {
+public class Tour extends TourProduct{
 
     @Id
     @GeneratedValue
@@ -36,21 +37,20 @@ public class Tour {
 
     @NaturalId
     private Long bookingNumber;
+    private Integer numOfTourist;
     @OneToMany(cascade = CascadeType.PERSIST)
     private List <RoundTrip> roundTrips = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.PERSIST)
-    private List<BoardBasis> boardBasisSet = new ArrayList<>();
-    @OneToOne
+     @OneToOne
     private Room room;
     @ManyToOne
-    private User user;
+    private Region region;
 
 
-    public Tour(List<RoundTrip> roundTrips, List<BoardBasis> boardBasisSet, Room room) {
+    public Tour(List<RoundTrip> roundTrips, Room room, Region region, Integer numOfTourist) {
         this.roundTrips = roundTrips;
-        this.boardBasisSet = boardBasisSet;
         this.room = room;
-
+        this.region=region;
+        this.numOfTourist=numOfTourist;
     }
 
     @Override
@@ -63,5 +63,21 @@ public class Tour {
     @Override
     public int hashCode() {
         return Objects.hash(getBookingNumber());
+    }
+
+
+    @Override
+    protected BigDecimal calculatePrice() {
+        return null;
+    }
+
+    @Override
+    protected void book() {
+
+    }
+
+    @Override
+    protected void cancelBooking() {
+
     }
 }

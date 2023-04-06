@@ -1,29 +1,27 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
+
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-@Getter
-@Setter
-@ToString
-@Entity
+@Data
 @NoArgsConstructor
+@Entity
 @Table(name = "rooms")
-public class Room {
+public class Room extends TourProduct{
 
     @Id
     @GeneratedValue
@@ -31,22 +29,27 @@ public class Room {
 
     @NaturalId
     private Integer number;
+    private Integer numOfTourist;
     private RoomTypesByOccupancy typesByOccupancy;
     private RoomTypesByView typesByView;
-    private Integer price;
-    private boolean booked;
+    private Integer pricePerDay;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
+    @OneToMany()
+    private List<BoardBasis> boardBases = new ArrayList<>();
     @ManyToOne
     @NaturalId
     private Hotel hotel;
 
-    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Integer price, Hotel hotel) {
+    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Integer price, Hotel hotel,Integer numOfTourist) {
         this.number = number;
         this.typesByOccupancy = typesByOccupancy;
         this.typesByView = typesByView;
-        this.price = price;
+        this.pricePerDay = price;
         this.hotel = hotel;
-    }
+        this.numOfTourist=numOfTourist;
 
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -58,5 +61,21 @@ public class Room {
     @Override
     public int hashCode() {
         return Objects.hash(getNumber(), getHotel());
+    }
+
+
+    @Override
+    protected BigDecimal calculatePrice() {
+        return null;
+    }
+
+    @Override
+    protected void book() {
+
+    }
+
+    @Override
+    protected void cancelBooking() {
+
     }
 }

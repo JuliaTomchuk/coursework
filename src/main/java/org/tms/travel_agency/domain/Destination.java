@@ -50,17 +50,16 @@ public class Destination {
     }
 
 
-    public boolean addRegion(Region region) {
-        boolean isAdded = regions.add(region);
+    public void addRegion(Region region) {
+        regions.add(region);
         region.setDestination(this);
-        return isAdded;
+
     }
 
-    public boolean removeRegion(Region region) {
-        boolean isDeleted = regions.remove(region);
+    public void removeRegion(Region region) {
+        regions.remove(region);
         region.setDestination(null);
-        return isDeleted;
-    }
+           }
 
     @Override
     public boolean equals(Object o) {
