@@ -3,7 +3,7 @@ package org.tms.travel_agency.dto.region;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.tms.travel_agency.domain.Hotel;
+import org.tms.travel_agency.dto.hotel.HotelLightDto;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,5 +12,5 @@ import java.util.Set;
 @AllArgsConstructor
 public class RegionWithHotelSetDto extends RegionLightDto{
 
-    private Set<Hotel> hotels = new HashSet<>();
+    private Set<HotelLightDto> hotels = new HashSet<>();
 }
