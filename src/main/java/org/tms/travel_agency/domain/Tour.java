@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class Tour extends TourProduct{
     @GeneratedValue
     private UUID id;
 
-    @NaturalId
+  // @NaturalId
     private Long bookingNumber;
     private Integer numOfTourist;
     @OneToMany(cascade = CascadeType.PERSIST)

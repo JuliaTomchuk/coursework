@@ -83,11 +83,15 @@ public class Region {
     }
     public void deleteTour(Tour tour){
         tours.add(tour);
-        tour.setRegion(this);
+        tour.setRegion(null);
     }
     public void addRoundTrip(RoundTrip trip){
         roundTripSet.add(trip);
         trip.setRegion(this);
+    }
+    public void deleteTour(RoundTrip trip){
+        roundTripSet.add(trip);
+        trip.setRegion(null);
     }
 
 

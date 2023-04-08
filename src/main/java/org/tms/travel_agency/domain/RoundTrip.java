@@ -4,15 +4,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -27,9 +30,11 @@ public class RoundTrip extends TourProduct {
     @GeneratedValue
     private UUID id;
     @OneToOne
+  //  @NaturalId
     private AirplaneTicket depart;
     @OneToOne
-    private AirplaneTicket arrive;
+   // @NaturalId
+     private AirplaneTicket arrive;
     @ManyToOne
     private Region region;
 
@@ -58,5 +63,16 @@ public class RoundTrip extends TourProduct {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RoundTrip trip)) return false;
+        if (!super.equals(o)) return false;
+        return getDepart().equals(trip.getDepart()) && getArrive().equals(trip.getArrive());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getDepart(), getArrive());
+    }
 }

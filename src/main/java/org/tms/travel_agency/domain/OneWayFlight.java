@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,10 +39,11 @@ public class OneWayFlight {
     private String departureAirport;
     private String arrivalAirport;
     @NaturalId
-    private LocalDateTime departureTime;
+     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private Integer flightTime;
      @NaturalId
+     @Column(unique = true)
     private String flightNumber;
     private Integer cabinBaggage;
     private Integer checkedBaggage;

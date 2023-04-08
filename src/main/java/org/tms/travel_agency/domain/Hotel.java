@@ -40,7 +40,7 @@ public class Hotel {
     private UUID id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     private Set<Room> rooms = new HashSet<>();
-    private BigDecimal basicPriceOfRoom;
+    private BigDecimal basicPriceOfRoomPerDay;
     @NaturalId
     @OneToOne
     private Address address;
@@ -56,7 +56,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
-    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket,BigDecimal basicPriceOfRoom) {
+    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket,BigDecimal basicPriceOfRoomPerDay) {
         this.name = name;
         this.rooms = rooms;
         this.address = address;
@@ -65,7 +65,7 @@ public class Hotel {
         this.description = description;
         this.typeByStars =typeByStars;
         this.typeByTargetMarket = typeByTargetMarket;
-        this.basicPriceOfRoom =basicPriceOfRoom;
+        this.basicPriceOfRoomPerDay =basicPriceOfRoomPerDay;
     }
 
 

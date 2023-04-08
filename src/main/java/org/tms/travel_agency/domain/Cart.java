@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Polymorphism;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -30,12 +33,13 @@ public class Cart {
     @OneToOne
     private User user;
     @OneToMany
-    private Set<Tour> tours = new HashSet<>();
+    private Set<TourProduct> tourProductSet = new HashSet<>();
 
-    public Cart(User user, Set<Tour> tours) {
+    public Cart(User user, Set<TourProduct> tourProductSet) {
         this.user = user;
-        this.tours = tours;
+        this.tourProductSet = tourProductSet;
     }
+
 
     @Override
     public boolean equals(Object o) {

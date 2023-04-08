@@ -6,11 +6,14 @@ import lombok.Setter;
 
 import org.hibernate.annotations.NaturalId;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
@@ -20,16 +23,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @Setter
 @Getter
-public class AirplaneTicket extends TourProduct {
-
+public class AirplaneTicket extends TourProduct
+{
 
     @Id
     @GeneratedValue
     private UUID id;
-    @NaturalId
+   // @NaturalId
     private Integer numberOfSeat;
     @ManyToOne
-    @NaturalId
+   // @NaturalId
     private OneWayFlight oneWayFlight;
     private AirplaneSeatsTypes airplaneSeatsTypes;
      private boolean booked;
