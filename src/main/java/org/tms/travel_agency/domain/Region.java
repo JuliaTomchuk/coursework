@@ -35,12 +35,10 @@ public class Region {
     private String name;
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Hotel> hotels = new HashSet<>();
-    @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<OneWayFlight> oneWayFlightSet = new HashSet<>();
+
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Tour> tours = new HashSet<>();
-    @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<RoundTrip>  roundTripSet = new HashSet<>();
+
      @ManyToOne
     private Destination destination;
     @Basic(fetch = FetchType.LAZY)
@@ -66,17 +64,7 @@ public class Region {
         hotel.setRegion(null);
 
     }
-    public void addOneWayFlight(OneWayFlight oneWayFlight) {
-        oneWayFlightSet.add(oneWayFlight);
-        oneWayFlight.setRegion(this);
 
-    }
-
-    public void deleteOneWayFlight(OneWayFlight oneWayFlight) {
-        oneWayFlightSet.remove(oneWayFlight);
-        oneWayFlight.setRegion(null);
-
-    }
     public void addTour(Tour tour){
         tours.add(tour);
         tour.setRegion(this);
@@ -85,15 +73,6 @@ public class Region {
         tours.add(tour);
         tour.setRegion(null);
     }
-    public void addRoundTrip(RoundTrip trip){
-        roundTripSet.add(trip);
-        trip.setRegion(this);
-    }
-    public void deleteTour(RoundTrip trip){
-        roundTripSet.add(trip);
-        trip.setRegion(null);
-    }
-
 
     @Override
     public boolean equals(Object o) {

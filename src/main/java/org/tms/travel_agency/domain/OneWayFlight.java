@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,7 +33,7 @@ public class OneWayFlight {
     @GeneratedValue
     private UUID id;
     @ManyToOne
-    private Region region;
+    private Destination destination;
     @NaturalId
     private String departureAirport;
     private String arrivalAirport;
@@ -43,15 +42,14 @@ public class OneWayFlight {
     private LocalDateTime arrivalTime;
     private Integer flightTime;
      @NaturalId
-     @Column(unique = true)
-    private String flightNumber;
+     private String flightNumber;
     private Integer cabinBaggage;
     private Integer checkedBaggage;
     private BigDecimal pricePerHour;
     @OneToMany(cascade= CascadeType.ALL,mappedBy = "oneWayFlight",orphanRemoval = true)
     private Set<AirplaneTicket> airplaneTickets=new HashSet<>();
 
-    public OneWayFlight(Region region,String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, String flightNumber, Integer cabinBaggage, Integer checkedBaggage, BigDecimal pricePerHour) {
+    public OneWayFlight(Destination destination,String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, String flightNumber, Integer cabinBaggage, Integer checkedBaggage, BigDecimal pricePerHour) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureTime = departureTime;
@@ -60,7 +58,7 @@ public class OneWayFlight {
         this.flightNumber = flightNumber;
         this.cabinBaggage = cabinBaggage;
         this.checkedBaggage = checkedBaggage;
-        this.region=region;
+        this.destination=destination;
         this.pricePerHour=pricePerHour;
     }
 

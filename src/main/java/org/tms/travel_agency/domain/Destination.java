@@ -37,6 +37,10 @@ public class Destination {
     private String name;
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Region> regions = new HashSet<>();
+    @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<RoundTrip>  roundTripSet = new HashSet<>();
+    @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<OneWayFlight> oneWayFlightSet = new HashSet<>();
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String description;
@@ -59,6 +63,27 @@ public class Destination {
         regions.remove(region);
         region.setDestination(null);
            }
+
+
+    public void addOneWayFlight(OneWayFlight oneWayFlight) {
+        oneWayFlightSet.add(oneWayFlight);
+        oneWayFlight.setDestination(this);
+
+    }
+
+    public void deleteOneWayFlight(OneWayFlight oneWayFlight) {
+        oneWayFlightSet.remove(oneWayFlight);
+        oneWayFlight.setDestination(null);
+
+    }
+    public void addRoundTrip(RoundTrip trip){
+        roundTripSet.add(trip);
+        trip.setDestination(this);
+    }
+    public void deleteRoundTrip(RoundTrip trip){
+        roundTripSet.remove(trip);
+        trip.setDestination(null);
+    }
 
     @Override
     public boolean equals(Object o) {

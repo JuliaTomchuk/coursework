@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DestinationFullDescriptionDto extends DestinationShortDescriptionDto{
+public class DestinationFullDescriptionDto extends DestinationWithRegionsDto {
 
     private String description;
 }

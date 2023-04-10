@@ -9,6 +9,7 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -46,8 +47,8 @@ public class Hotel {
     private Address address;
     @ManyToOne
     private Region region;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "hotel")
-    private Set<BoardBasis> boardBasisSet = new HashSet<>();
+    @ElementCollection(targetClass = BoardBasisTypes.class)
+    private Set<BoardBasisTypes> boardBasisSet = new HashSet<>();
     @Basic(fetch = FetchType.LAZY)
     @Lob
     private String description;
@@ -56,7 +57,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
-    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket,BigDecimal basicPriceOfRoomPerDay) {
+    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasisTypes> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket,BigDecimal basicPriceOfRoomPerDay) {
         this.name = name;
         this.rooms = rooms;
         this.address = address;
@@ -80,15 +81,6 @@ public class Hotel {
 
     }
 
-    public void addBoardBasis(BoardBasis boardBasis) {
-        boardBasisSet.add(boardBasis);
-        boardBasis.setHotel(this);
-        }
-
-    public void deleteBoardBasis(BoardBasis boardBasis) {
-        boardBasisSet.remove(boardBasis);
-        boardBasis.setHotel(null);
-           }
 
     public void addReview(Review review) {
         reviews.add(review);

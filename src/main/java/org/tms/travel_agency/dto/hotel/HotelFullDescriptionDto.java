@@ -5,7 +5,8 @@ package org.tms.travel_agency.dto.hotel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.tms.travel_agency.domain.Review;
+import  org.tms.travel_agency.dto.review.ReviewOutputDto;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,6 @@ public class HotelFullDescriptionDto extends HotelShortDescriptionDto {
     private String street;
     private String home;
     private String description;
-    private Set<Review> reviews = new HashSet<>();
+    private Set<ReviewOutputDto> reviews = new HashSet<>();
 
 }

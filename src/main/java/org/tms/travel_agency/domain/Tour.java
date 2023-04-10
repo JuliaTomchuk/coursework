@@ -28,18 +28,16 @@ import java.util.UUID;
 @Getter
 @ToString
 @NoArgsConstructor
-public class Tour extends TourProduct{
+public class Tour extends TourProduct {
 
     @Id
     @GeneratedValue
     private UUID id;
-
-  // @NaturalId
     private Long bookingNumber;
     private Integer numOfTourist;
     @OneToMany(cascade = CascadeType.PERSIST)
-    private List <RoundTrip> roundTrips = new ArrayList<>();
-     @OneToOne
+    private List<RoundTrip> roundTrips = new ArrayList<>();
+    @OneToOne
     private Room room;
     @ManyToOne
     private Region region;
@@ -48,8 +46,8 @@ public class Tour extends TourProduct{
     public Tour(List<RoundTrip> roundTrips, Room room, Region region, Integer numOfTourist) {
         this.roundTrips = roundTrips;
         this.room = room;
-        this.region=region;
-        this.numOfTourist=numOfTourist;
+        this.region = region;
+        this.numOfTourist = numOfTourist;
     }
 
     @Override
@@ -67,16 +65,25 @@ public class Tour extends TourProduct{
 
     @Override
     protected BigDecimal calculatePrice() {
-        return null;
+        BigDecimal roomPrice = room.getPrice();
+        BigDecimal roundTripsPrice = new BigDecimal(0.0);
+        for(RoundTrip trip: roundTrips){
+            roundTripsPrice.add(trip.getPrice());
+        }
+        return roomPrice.add(roundTripsPrice);
     }
 
     @Override
     protected void book() {
+        roundTrips.stream().forEach(trip -> trip.book());
+        room.book();
+
 
     }
 
     @Override
     protected void cancelBooking() {
-
+        roundTrips.stream().forEach(trip -> trip.cancelBooking());
+        room.cancelBooking();
     }
 }

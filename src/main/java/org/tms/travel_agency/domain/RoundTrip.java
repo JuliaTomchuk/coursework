@@ -30,20 +30,19 @@ public class RoundTrip extends TourProduct {
     @GeneratedValue
     private UUID id;
     @OneToOne
-  //  @NaturalId
     private AirplaneTicket depart;
     @OneToOne
-   // @NaturalId
      private AirplaneTicket arrive;
     @ManyToOne
-    private Region region;
+    private Destination destination;
 
 
 
-    public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive) {
+    public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive,Destination destination) {
 
         this.depart = depart;
         this.arrive = arrive;
+        this.destination=destination;
 
     }
     @Override
