@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name="accounts")
-public class User implements UserDetails {
+public class User  implements UserDetails{
 
     @Id
     @GeneratedValue
@@ -33,19 +34,19 @@ public class User implements UserDetails {
     @NaturalId
     private String username;
     private String password;
-    private String passwordNumber;
+    private String passportNumber;
     private Integer age;
     private Role role;
 
 
 
 
-    public User(String firstName, String secondName, String username, String password, String passwordNumber, Integer age, String patronymic, Role role) {
+    public User(String firstName, String secondName, String username, String password, String passportNumber, Integer age, String patronymic, Role role) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.username = username;
         this.password = password;
-        this.passwordNumber = passwordNumber;
+        this.passportNumber = passportNumber;
         this.age = age;
         this.patronymic=patronymic;
         this.role=role;
@@ -64,14 +65,12 @@ public class User implements UserDetails {
         return Objects.hash(getUsername());
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-       return List.of( new SimpleGrantedAuthority(role.name()));
-    }
 
     @Override
-    public String getUsername() {
-        return username;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List <SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(role.toString()));
+        return grantedAuthorities;
     }
 
     @Override
@@ -91,8 +90,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+
         return true;
     }
-
-
 }

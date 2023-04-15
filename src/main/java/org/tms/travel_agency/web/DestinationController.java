@@ -24,19 +24,19 @@ public class DestinationController {
     @GetMapping
     public ModelAndView getAllDestinations(){
         ModelAndView modelAndView = new ModelAndView("allDestinations");
-        List<Destination> all = destinationServiceForAdmin.getAll();
-        modelAndView.addObject("destinationsList", all);
+       // List<Destination> all = destinationServiceForAdmin.getAll();
+       // modelAndView.addObject("destinationsList", all);
         return modelAndView;
     }
-    @GetMapping("/destinationManager")
-    public ModelAndView addDestinationPage(@ModelAttribute(name = "newDestination") Destination destination){
-        ModelAndView modelAndView = new ModelAndView("destinationManager");
-        List<Destination> all = destinationServiceForAdmin.getAll();
-        return modelAndView.addObject("destinationList",all);
-    }
+//    @GetMapping("/destinationManager")
+//    public ModelAndView addDestinationPage(@ModelAttribute(name = "newDestination") Destination destination){
+//        ModelAndView modelAndView = new ModelAndView("destinationManager");
+//       // List<Destination> all = destinationServiceForAdmin.getAll();
+//        return modelAndView.addObject("destinationList",all);
+//    }
     @PostMapping("/destinationManager")
     public String saveDestination(Destination destination){
-        Destination save = destinationServiceForAdmin.save(destination);
+       // Destination save = destinationServiceForAdmin.save(destination);
         return "redirect:/destinations/destinationManager";
 
 
