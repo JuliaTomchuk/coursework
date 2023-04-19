@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Configuration
 public class SecurityConfiguration {
-//изменить доступ к usersManager, когда настрою flyway
+//изменить доступ к usersManager,hotelcreator, когда настрою flyway
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((auth)->{

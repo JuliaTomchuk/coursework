@@ -3,21 +3,21 @@ package org.tms.travel_agency.validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.tms.travel_agency.domain.User;
-import org.tms.travel_agency.exception.UserWithThatUsernameAlreadyExistException;
 import org.tms.travel_agency.repository.UserRepository;
 
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UsernameValidatorImpl implements UsernameValidator{
+public class UsernameValidatorImpl implements UsernameValidator {
 
     private final UserRepository repository;
+
     @Override
-    public boolean isUsernameUnique(String username){
+    public boolean isUsernameUnique(String username) {
         Optional<User> optionalUser = repository.findByUsername(username);
-        if(optionalUser.isPresent()){
-            throw new UserWithThatUsernameAlreadyExistException("A user with that username already exist");
+        if (optionalUser.isPresent()) {
+            return false;
         }
         return true;
     }

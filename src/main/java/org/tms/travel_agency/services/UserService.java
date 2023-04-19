@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface UserService extends UserDetailsService {
 
-    void save(UserFullDescriptionDto inputDto);
+    UserFullDescriptionDto save(UserFullDescriptionDto inputDto);
     UserFullDescriptionDto update(UserFullDescriptionDto inputDto);
     void delete(UUID id);
     UserFullDescriptionDto getCurrent();
