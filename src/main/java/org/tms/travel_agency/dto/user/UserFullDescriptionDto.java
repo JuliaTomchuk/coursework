@@ -4,28 +4,36 @@ package org.tms.travel_agency.dto.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.tms.travel_agency.domain.Role;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import javax.validation.constraints.Positive;
 import java.util.UUID;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserFullDescriptionDto extends UserLightDescriptionDto {
+public class UserFullDescriptionDto {
+
     private UUID id;
+    @NotBlank()
     private String firstName;
+    @NotBlank()
     private String secondName;
+    @NotBlank()
     private String patronymic;
+    @NotBlank()
     private String username;
+    @NotBlank()
     private String passportNumber;
+    @NotNull()
+    @Positive()
     private Integer age;
+    @NotBlank()
     private String password;
     private Role role;
 

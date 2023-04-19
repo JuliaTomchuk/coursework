@@ -9,6 +9,7 @@ import org.tms.travel_agency.domain.Region;
 import org.tms.travel_agency.validator.OnCreate;
 import org.tms.travel_agency.validator.OnUpdate;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Valid
 public class HotelInputDto {
     @NotNull(groups = {OnUpdate.class})
     @Null(groups={OnCreate.class})

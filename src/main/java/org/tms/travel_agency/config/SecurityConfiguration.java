@@ -11,16 +11,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.io.IOException;
 
 @EnableWebSecurity
+
 @Configuration
 public class SecurityConfiguration {
-
+//изменить доступ к usersManager, когда настрою flyway
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((auth)->{
             try {
                 auth.antMatchers("/allDestinations","/user/registration").permitAll()
                         .antMatchers("/destinationManager").hasRole("ADMIN")
-                        .antMatchers("user/accountManager","/user/update").authenticated()
+                        .antMatchers("user/accountManager","/user/update","/user/userManager").authenticated()
                         .and()
                         .formLogin()
                         .loginPage("/user/login")

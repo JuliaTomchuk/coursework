@@ -21,8 +21,9 @@
                   <form th:method="post" th:action="@{/user/registration}" th:object="${newUser}">
 
                     <div class="form-outline mb-4">
-                      <input type="text" th:field="*{firstName}" id="form3Example1cg" class="form-control form-control-lg" />
+                      <input type="text" th:field="*{firstName}"  id="form3Example1cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example1cg">Name</label>
+                      <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="ui-state-error" th:errors="*{firstName}"></p>
                     </div>
                     <div class="form-outline mb-4">
                       <input type="text" th:field="*{secondName}" id="form3Example11cg" class="form-control form-control-lg" />
@@ -42,7 +43,7 @@
                       <label class="form-label" for="form3Example4cg">Password</label>
                     </div>
                     <div class="form-outline mb-4">
-                      <input type="number" th:field="*{passportNumber}"  id="form3Example25cg" class="form-control form-control-lg" />
+                      <input type="text" th:field="*{passportNumber}"  id="form3Example25cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example1cg">Passport Number</label>
                     </div>
                     <div class="form-outline mb-4">

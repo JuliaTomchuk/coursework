@@ -12,14 +12,18 @@ import org.tms.travel_agency.exception.NoSuchUserException;
 import org.tms.travel_agency.mapper.UserMapper;
 import org.tms.travel_agency.repository.UserRepository;
 import org.tms.travel_agency.services.UserService;
+import org.tms.travel_agency.validator.UsernameValidator;
 
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
     private final UserRepository repository;
+    private final UsernameValidator validator;
 
 
     public UserDetails loadUserByUsername(String username) {
@@ -29,11 +33,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserFullDescriptionDto save(UserFullDescriptionDto inputDto) {
-        User user = mapper.convert(inputDto);
-        user.setRole(Role.ROLE_USER);
-        repository.save(user);
-        return mapper.convert(user);
+    public void save(UserFullDescriptionDto inputDto) {
+        if(validator.isUsernameUnique(inputDto.getUsername())) {
+            User user = mapper.convert(inputDto);
+            user.setRole(Role.ROLE_USER);
+            repository.save(user);
+
+        }
     }
 
 
@@ -59,5 +65,19 @@ public class UserServiceImpl implements UserService {
        UserFullDescriptionDto converted = mapper.convert(user);
        return converted;
     }
+
+    @Override
+    public List<User> getAll() {
+        List<User> all = repository.findAll();
+        return all;
+    }
+
+    @Override
+    @Transactional
+    public void changeRole(String role, UUID id) {
+        repository.findById(id).ifPresentOrElse(user -> user.setRole(Role.valueOf(role)),NoSuchUserException::new);
+
+    }
+
 
 }

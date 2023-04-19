@@ -32,11 +32,23 @@
       <tr>
         <td th:text="${user.username}"></td>
         <td th:text="${user.role}"></td>
-        <td>@mdo</td>
-      </tr>
+        <td><button type="button" class="btn btn-danger"><a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a></button></td>
+        <td><div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Role
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/user/changeRole(role='ROLE_USER',id=${user.id})}">User</a></li>
+            <li><a class="dropdown-item" th:href="@{/user/changeRole(role='ROLE_ADMIN', id=${user.id})}">Admin</a></li>
 
+          </ul>
+        </div></td>
+      </tr>
+      </tbody>
+    </table>
 
   </div>
+
   <div class ="row">
     3 row
 
