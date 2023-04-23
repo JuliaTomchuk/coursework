@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.tms.travel_agency.domain.Role;
 import org.tms.travel_agency.domain.User;
 import org.tms.travel_agency.dto.user.UserFullDescriptionDto;
+import org.tms.travel_agency.dto.user.UserLightDescriptionDto;
 import org.tms.travel_agency.exception.NoSuchUserException;
-import org.tms.travel_agency.exception.UserWithThatUsernameAlreadyExistException;
+import org.tms.travel_agency.exception.DuplicateUserException;
 import org.tms.travel_agency.mapper.UserMapper;
 import org.tms.travel_agency.repository.UserRepository;
 import org.tms.travel_agency.services.UserService;
-import org.tms.travel_agency.validator.UsernameValidator;
+import org.tms.travel_agency.validator.impl.UserValidator;
 
 
 import javax.transaction.Transactional;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
     private final UserRepository repository;
-    private final UsernameValidator validator;
+    private final UserValidator validator;
 
 
     public UserDetails loadUserByUsername(String username) {
@@ -36,8 +37,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullDescriptionDto save(UserFullDescriptionDto inputDto) {
-        if (!validator.isUsernameUnique(inputDto.getUsername())) {
-            throw new UserWithThatUsernameAlreadyExistException("A user with  username " + inputDto.getUsername() + " already exist");
+        if (!validator.isUnique(inputDto.getUsername())) {
+            throw new DuplicateUserException("A user with  username " + inputDto.getUsername() + " already exist");
         }
         User user = mapper.convert(inputDto);
         user.setRole(Role.ROLE_USER);
@@ -51,8 +52,8 @@ public class UserServiceImpl implements UserService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = repository.findByUsername(username).orElseThrow(() -> new NoSuchUserException("no user with username: " + username));
         if (!username.equals(inputDto.getUsername())) {
-            if (!validator.isUsernameUnique(inputDto.getUsername())) {
-                throw new UserWithThatUsernameAlreadyExistException("A user with  username:" + inputDto.getUsername() + " already exist");
+            if (!validator.isUnique(inputDto.getUsername())) {
+                throw new DuplicateUserException("A user with  username:" + inputDto.getUsername() + " already exist");
             }
         }
         User updated = mapper.update(inputDto, user);
@@ -75,9 +76,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<UserLightDescriptionDto> getAll() {
         List<User> all = repository.findAll();
-        return all;
+        return mapper.convert(all);
+    }
+
+    @Override
+    public UserFullDescriptionDto getById(UUID id) {
+        User user = repository.findById(id).orElseThrow(NoSuchUserException::new);
+        return mapper.convert(user);
     }
 
     @Override

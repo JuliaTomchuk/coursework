@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.tms.travel_agency.domain.User;
 import org.tms.travel_agency.dto.user.UserFullDescriptionDto;
+import org.tms.travel_agency.dto.user.UserLightDescriptionDto;
 import org.tms.travel_agency.exception.NoSuchUserException;
-import org.tms.travel_agency.exception.UserWithThatUsernameAlreadyExistException;
+import org.tms.travel_agency.exception.DuplicateUserException;
 import org.tms.travel_agency.services.UserService;
 
 
@@ -94,7 +95,7 @@ public class UserController {
 
     @GetMapping("/usersManager")
     public ModelAndView getAllUsers() {
-        List<User> users = service.getAll();
+        List<UserLightDescriptionDto> users = service.getAll();
         ModelAndView modelAndView = new ModelAndView("/usersManager");
         modelAndView.addObject("users", users);
         return modelAndView;
@@ -113,18 +114,6 @@ public class UserController {
         return "redirect:/user/usersManager ";
     }
 
-    @ExceptionHandler(UserWithThatUsernameAlreadyExistException.class)
-    public ModelAndView process(UserWithThatUsernameAlreadyExistException exception) {
-        ModelAndView modelAndView = new ModelAndView("exception");
-        modelAndView.addObject("exception", exception.getMessage());
-        return modelAndView;
-    }
 
-    @ExceptionHandler(NoSuchUserException.class)
-    public ModelAndView process(NoSuchUserException exception) {
-        ModelAndView modelAndView = new ModelAndView("/exception");
-        modelAndView.addObject("exception", exception.getMessage());
-        return modelAndView;
-    }
 
 }

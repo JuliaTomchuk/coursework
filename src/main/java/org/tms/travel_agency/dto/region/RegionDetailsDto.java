@@ -14,14 +14,13 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegionInputDto {
-    @Null(groups = {OnCreate.class})
-    @NotNull(groups ={OnUpdate.class})
+public class RegionDetailsDto {
+
     private UUID id;
-    @NotBlank( groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank
     private String name;
-    @NotBlank( groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank
     private String destination;
-    @NotBlank( groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank
     private String description;
 }

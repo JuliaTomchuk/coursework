@@ -14,13 +14,13 @@ import java.io.IOException;
 
 @Configuration
 public class SecurityConfiguration {
-//изменить доступ к usersManager,hotelcreator, когда настрою flyway
+//изменить доступ к usersManager,hotelcreator,"/destinationManager","/regionManager" когда настрою flyway
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((auth)->{
             try {
-                auth.antMatchers("/allDestinations","/user/registration").permitAll()
-                        .antMatchers("/destinationManager").hasRole("ADMIN")
+                auth.antMatchers("/allDestinations","/user/registration","/hotel/hotelCreator","/destinationManager","/regionManager").permitAll()
+//                        .antMatchers("/destinationManager").hasRole("ADMIN")
                         .antMatchers("user/accountManager","/user/update","/user/userManager").authenticated()
                         .and()
                         .formLogin()
