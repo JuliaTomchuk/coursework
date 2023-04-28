@@ -68,13 +68,7 @@
           <tr th:each="destination:${destinationList}">
             <td th:text="*{destination.name}"></td>
             <td><button type="button" class="btn btn-danger"><a th:href=" @{/destinations/delete/(id=${destination.id})}">
-                    Delete</a></button> </td>
-
-          <td>
-           <th:form>
-
-           </th:form>
-              </td>
+                   Delete</a></button> </td>
           </tr>
         </table>
       </div>

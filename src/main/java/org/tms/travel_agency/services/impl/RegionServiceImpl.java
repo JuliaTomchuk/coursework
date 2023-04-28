@@ -19,12 +19,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RegionServiceImpl implements RegionService {
     private final RegionRepository repository;
-    private final DuplicateValidator<Region> validator;
+    private final DuplicateValidator<RegionDetailsDto> validator;
     private final RegionMapper mapper;
     @Override
     @Transactional
     public RegionDetailsDto save(RegionDetailsDto dto) {
-        if (!validator.isUnique(dto.getName())){
+        if (!validator.isUnique(dto)){
             throw new DuplicateRegionException("region with name " + dto.getName()+" already exist");
         }
         Region region = mapper.convert(dto);

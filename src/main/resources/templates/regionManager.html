@@ -58,9 +58,9 @@
             <input type="text" class="form-control" id="formGroupExampleInput4" placeholder="Enter description" th:field="*{description}"><p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
           </div>
           <div class="mb-3">
-            <label for="select-destination" class="form-label">Choose destination</label>
+            <label for="select-destinationUpdate" class="form-label">Choose destination</label>
             <select th:field="*{destination}" class="form-select" id="select-destinationUpdate" aria-label="Default select example">
-              <option selected value="">Destination</option>
+              <option selected value="">Select destination</option>
               <option th:each="destination:${destinations}" th:value="${destination.name}" th:text="${destination.name}"></option>
             </select>
             <p th:if="${#fields.hasErrors('destination')}" th:errors="*{destination}"></p>

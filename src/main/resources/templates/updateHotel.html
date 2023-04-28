@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <title>HotelCreator</title>
+  <meta charset="UTF-8">
+  <title>Hotel update page</title>
 </head>
 <body>
 
@@ -21,8 +21,12 @@
     </div>
   </div>
   <div class ="row" >
-    <H1>Add new hotel</H1>
-       <form th:method="post" th:action="@{/hotels/create}" th:object="${newHotel}">
+    <H1>Update hotel</H1>
+    <form th:method="post" th:action="@{/hotels/update}" th:object="${hotel}">
+      <div class="form-floating mb-3" >
+        <input type="text" th:field="*{id}" class="form-control" id="floatingInput0" placeholder="ID" readonly="readonly">
+         <label for="floatingInput">Id</label>
+      </div>
       <div class="form-floating mb-3" >
         <input type="text" th:field="*{name}" class="form-control" id="floatingInput" placeholder="name">
         <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
@@ -32,28 +36,6 @@
         <input type="number" step="0.01" th:field="*{basicPriceOfRoom}" class="form-control" id="floatingInput2" placeholder="Basic price of room">
         <p th:if="${#fields.hasErrors('basicPriceOfRoom')}" th:errors="*{basicPriceOfRoom}"></p>
         <label for="floatingInput">Basic price of room</label>
-      </div>
-      <div class="form-floating mb-3" >
-        <input type="text" th:field="*{city}" class="form-control" id="floatingInput3" placeholder="city">
-        <p th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
-        <label for="floatingInput">City</label>
-      </div>
-      <div class="form-floating mb-3" >
-        <input type="text" th:field="*{street}" class="form-control" id="floatingInput4" placeholder="Street">
-        <p th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></p>
-        <label for="floatingInput">Street</label>
-      </div>
-      <div class="form-floating mb-3" >
-        <input type="text" th:field="*{home}" class="form-control" id="floatingInput5" placeholder="Home">
-        <p th:if="${#fields.hasErrors('home')}" th:errors="*{home}"></p>
-        <label for="floatingInput">Home</label>
-      </div>
-      <div class="form-floating mb-3" >
-          <select th:field="*{region}" class="form-select" id="select-region" aria-label="Default select example">
-          <option selected value="">Select region</option>
-          <option th:each="region:${regions}" th:value="${region.name}" th:text="${region.name}"></option>
-        </select>
-        <p th:if="${#fields.hasErrors('region')}" th:errors="*{region}"></p>
       </div>
       <div class="form-floating mb-3" >
         <input type="text" th:field="*{description}" class="form-control" id="floatingInput7" placeholder="Description">
@@ -69,7 +51,7 @@
         <option value="FOUR_STAR">****</option>
         <option value="FIVE_STAR">*****</option>
       </select>
-         <p th:if="${#fields.hasErrors('typeByStars')}" th:errors="*{typeByStars}"></p>
+      <p th:if="${#fields.hasErrors('typeByStars')}" th:errors="*{typeByStars}"></p>
       <select th:field="*{typeByTargetMarket}" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
         <option selected value="">Select hotel type by target market</option>
         <option value="BUSINESS">BUSINESS</option>
@@ -79,10 +61,10 @@
         <option value="FAMILY">FAMILY</option>
         <option value="ADULT_ONLY">ADULT_ONLY</option>
       </select>
-         <p th:if="${#fields.hasErrors('typeByTargetMarket')}" th:errors="*{typeByTargetMarket}"></p>
+      <p th:if="${#fields.hasErrors('typeByTargetMarket')}" th:errors="*{typeByTargetMarket}"></p>
 
       <div class="d-grid gap-2">
-        <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-primary" type="submit">Update</button>
       </div>
 
 

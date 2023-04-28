@@ -29,7 +29,7 @@ public class DestinationServiceImpl implements DestinationService {
     @Override
     @Transactional
     public DestinationDetailsDto save(DestinationDetailsDto destinationDetailsDto) {
-        if(!validator.isUnique(destinationDetailsDto.getName())){
+        if(!validator.isUnique(destinationDetailsDto)){
             throw new DuplicateDestinationException("Destination with name " + destinationDetailsDto.getName()+" already exist");
         }
         Destination destination = mapper.convert(destinationDetailsDto);

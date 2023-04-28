@@ -1,6 +1,7 @@
 package org.tms.travel_agency.services.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
     private final UserRepository repository;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullDescriptionDto save(UserFullDescriptionDto inputDto) {
-        if (!validator.isUnique(inputDto.getUsername())) {
+        if (!validator.isUnique(inputDto)) {
             throw new DuplicateUserException("A user with  username " + inputDto.getUsername() + " already exist");
         }
         User user = mapper.convert(inputDto);
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = repository.findByUsername(username).orElseThrow(() -> new NoSuchUserException("no user with username: " + username));
         if (!username.equals(inputDto.getUsername())) {
-            if (!validator.isUnique(inputDto.getUsername())) {
+            if (!validator.isUnique(inputDto)) {
                 throw new DuplicateUserException("A user with  username:" + inputDto.getUsername() + " already exist");
             }
         }

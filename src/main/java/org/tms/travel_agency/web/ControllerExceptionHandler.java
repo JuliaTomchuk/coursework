@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.tms.travel_agency.exception.DuplicateDestinationException;
+import org.tms.travel_agency.exception.DuplicateHotelException;
 import org.tms.travel_agency.exception.DuplicateRegionException;
 import org.tms.travel_agency.exception.DuplicateUserException;
 import org.tms.travel_agency.exception.NoSuchDestinationException;
+import org.tms.travel_agency.exception.NoSuchHotelException;
 import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.exception.NoSuchUserException;
 
@@ -47,6 +49,18 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(NoSuchUserException.class)
     public ModelAndView process(NoSuchUserException exception) {
+        ModelAndView modelAndView = new ModelAndView("/exception");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
+    }
+    @ExceptionHandler (NoSuchHotelException.class)
+    public ModelAndView process(NoSuchHotelException exception) {
+        ModelAndView modelAndView = new ModelAndView("/exception");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
+    }
+    @ExceptionHandler (DuplicateHotelException.class)
+    public ModelAndView process(DuplicateHotelException exception) {
         ModelAndView modelAndView = new ModelAndView("/exception");
         modelAndView.addObject("exception", exception.getMessage());
         return modelAndView;
