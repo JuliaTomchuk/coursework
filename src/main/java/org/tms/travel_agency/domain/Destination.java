@@ -33,8 +33,9 @@ public class Destination {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID id;
-    @NaturalId
+    @NaturalId()
     private String name;
+    @ToString.Exclude
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Region> regions = new HashSet<>();
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)

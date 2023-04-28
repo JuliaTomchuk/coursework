@@ -32,17 +32,19 @@ public class Review {
     @NaturalId
     @OneToOne
     private User user;
+    Rating rating;
     @Lob
     private String message;
 
     @ManyToOne
     private Hotel hotel;
 
-    public Review(LocalDateTime date, String message,  Hotel hotel) {
+    public Review(LocalDateTime date, String message,  Hotel hotel, Rating rating) {
         this.date = date;
         this.message = message;
 
         this.hotel = hotel;
+        this.rating = rating;
     }
 
     @Override

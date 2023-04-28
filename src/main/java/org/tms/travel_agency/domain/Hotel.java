@@ -32,7 +32,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "hotels")
 public class Hotel {
-    @NaturalId
     private String name;
 
     @Id
@@ -46,6 +45,7 @@ public class Hotel {
     @OneToOne
     private Address address;
     @ManyToOne
+    @NaturalId
     private Region region;
     @ElementCollection(targetClass = BoardBasisTypes.class)
     private Set<BoardBasisTypes> boardBasisSet = new HashSet<>();
@@ -94,17 +94,15 @@ public class Hotel {
 
     }
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Hotel hotel)) return false;
-        return getName().equals(hotel.getName()) && getAddress().equals(hotel.getAddress());
+        return getAddress().equals(hotel.getAddress()) && getRegion().equals(hotel.getRegion());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getAddress());
+        return Objects.hash(getAddress(), getRegion());
     }
 }

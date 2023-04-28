@@ -3,7 +3,7 @@ package org.tms.travel_agency.dto.tour;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.tms.travel_agency.dto.room.RoomFullDescriptionDto;
+import org.tms.travel_agency.dto.room.RoomDetailsDto;
 import org.tms.travel_agency.dto.round_trip.RoundTripFullDescriptionDto;
 
 import java.util.UUID;
@@ -15,7 +15,7 @@ public class TourFullDescriptionDto {
     private Long bookingNumber;
     private Integer numOfTourist;
     private RoundTripFullDescriptionDto roundTrip;
-    private RoomFullDescriptionDto room;
+    private RoomDetailsDto room;
     private String region;
 
 
