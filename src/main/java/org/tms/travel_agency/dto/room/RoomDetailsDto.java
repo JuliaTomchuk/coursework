@@ -3,6 +3,7 @@ package org.tms.travel_agency.dto.room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tms.travel_agency.domain.BoardBasisTypes;
 import org.tms.travel_agency.domain.Hotel;
 import org.tms.travel_agency.domain.RoomTypesByOccupancy;
 import org.tms.travel_agency.domain.RoomTypesByView;
@@ -22,9 +23,9 @@ public class RoomDetailsDto {
     @NotNull(groups = {OnUpdate.class})
     @Null(groups={OnCreate.class})
     private UUID id;
-    @NotBlank(groups = {OnUpdate.class, OnCreate.class})
+    @NotNull(groups = {OnUpdate.class, OnCreate.class})
     private Integer number;
-    @NotBlank(groups = {OnUpdate.class, OnCreate.class})
+    @NotNull(groups = {OnUpdate.class, OnCreate.class})
     private Integer numOfTourist;
     @NotNull(groups = {OnUpdate.class, OnCreate.class})
     private RoomTypesByOccupancy typesByOccupancy;
@@ -38,4 +39,7 @@ public class RoomDetailsDto {
     private LocalDate checkIn;
     private LocalDate checkOut;
     private BigDecimal price;
+    private BoardBasisTypes boardBases;
+    private boolean booked;
+    private boolean preBooked;
 }

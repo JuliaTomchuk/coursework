@@ -77,14 +77,23 @@
                     <th>number</th>
                     <th>types by occupancy</th>
                     <th>types by view</th>
+                    <th>pre-booked</th>
+                    <th>booked</th>
                     <th> delete</th>
                     <th> update</th>
+                    <th>details</th>
                 </tr>
-                <tr th:each="">
-                    <td th:text="*"></td>
-                    <td><button type="button" class="btn btn-danger">
-                        Delete</a></button> </td>
+                <tr th:each="room:${rooms}">
+                    <td th:text="*{room.number}"></td>
+                    <td th:text="*{room.typesByOccupancy}"></td>
+                    <td th:text="*{room.typesByView}"></td>
+                    <td th:text="*{room.preBooked}"></td>
+                    <td th:text="*{room.booked}"></td>
+                    <td><button type="button" class="btn btn-outline-danger"><a th:href="@{/rooms/delete/(id=${room.id})}">Delete</a></button></td>
+                    <td><button type="button" class="btn btn-outline-warning"><a th:href="@{/rooms/update/(id=${room.id})}">Update</a></button></td>
+                    <td><button type="button" class="btn btn-outline-info"><a th:href="@{/rooms/roomDetails/(id=${room.id})}">Details</a></button></td>
                 </tr>
+
             </table>
 
         </div>

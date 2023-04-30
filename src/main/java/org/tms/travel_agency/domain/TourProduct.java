@@ -4,6 +4,7 @@ package org.tms.travel_agency.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
+@Setter
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
@@ -23,11 +25,11 @@ import java.util.UUID;
     @Id
     @GeneratedValue
     private UUID id;
-    protected boolean booked;
     protected BigDecimal price;
-    protected abstract BigDecimal calculatePrice();
-    protected abstract void book();
-    protected abstract void cancelBooking();
+    protected boolean booked;
+    protected boolean preBooked;
+
+
 
 
 

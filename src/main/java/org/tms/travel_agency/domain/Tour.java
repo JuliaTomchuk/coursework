@@ -63,7 +63,7 @@ public class Tour extends TourProduct {
     }
 
 
-    @Override
+
     protected BigDecimal calculatePrice() {
         BigDecimal roomPrice = room.getPrice();
         BigDecimal roundTripsPrice = new BigDecimal(0.0);
@@ -73,7 +73,7 @@ public class Tour extends TourProduct {
         return roomPrice.add(roundTripsPrice);
     }
 
-    @Override
+
     protected void book() {
         roundTrips.stream().forEach(trip -> trip.book());
         room.book();
@@ -81,7 +81,7 @@ public class Tour extends TourProduct {
 
     }
 
-    @Override
+
     protected void cancelBooking() {
         roundTrips.stream().forEach(trip -> trip.cancelBooking());
         room.cancelBooking();

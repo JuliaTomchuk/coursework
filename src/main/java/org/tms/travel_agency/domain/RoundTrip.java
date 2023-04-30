@@ -35,6 +35,7 @@ public class RoundTrip extends TourProduct {
      private AirplaneTicket arrive;
     @ManyToOne
     private Destination destination;
+    private BigDecimal price;
 
 
 
@@ -45,19 +46,19 @@ public class RoundTrip extends TourProduct {
         this.destination=destination;
 
     }
-    @Override
+
     public BigDecimal calculatePrice() {
         return depart.getPrice().add(arrive.getPrice());
     }
 
-    @Override
+
     protected void book() {
         //переопределить методы нормально
         depart.setBooked(true);
         arrive.setBooked(true);
     }
 
-    @Override
+
     protected void cancelBooking() {
 
     }

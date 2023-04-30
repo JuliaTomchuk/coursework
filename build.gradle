@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
     implementation "org.mapstruct:mapstruct:1.5.3.Final"
     implementation "org.projectlombok:lombok:1.18.24"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"

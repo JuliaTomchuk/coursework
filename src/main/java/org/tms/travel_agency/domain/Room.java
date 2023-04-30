@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,13 +20,13 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "rooms")
+@Table(name = "rooms",uniqueConstraints = { @UniqueConstraint(columnNames = { "number", "hotel_id" }) })
 public class Room extends TourProduct{
 
     @Id
     @GeneratedValue
     private UUID id;
-    @Column(unique = true)
+
     private Integer number;
     private Integer numOfTourist;
     private RoomTypesByOccupancy typesByOccupancy;
@@ -33,17 +34,17 @@ public class Room extends TourProduct{
 
     private LocalDate checkIn;
     private LocalDate checkOut;
-    private boolean booked;
-    private BoardBasisTypes boardBases;
+     private BoardBasisTypes boardBases;
     @ManyToOne
     private Hotel hotel;
 
-    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Hotel hotel, boolean booked ) {
+
+    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Hotel hotel) {
         this.number = number;
         this.typesByOccupancy = typesByOccupancy;
         this.typesByView = typesByView;
         this.hotel = hotel;
-        this.booked=booked;
+
 
 
     }
@@ -61,7 +62,7 @@ public class Room extends TourProduct{
     }
 
 
-    @Override
+
     protected BigDecimal calculatePrice() {
         BigDecimal basicPriceOfRoomPerDay = hotel.getBasicPriceOfRoomPerDay();
         long numOfDays = checkOut.toEpochDay()-checkIn.toEpochDay();
@@ -72,12 +73,12 @@ public class Room extends TourProduct{
 
     }
 
-    @Override
+
     protected void book() {
         booked=true;
     }
 
-    @Override
+
     protected void cancelBooking() {
      booked=false;
     }

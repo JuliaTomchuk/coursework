@@ -13,8 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tms.travel_agency.dto.hotel.HotelDetailsDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
+import org.tms.travel_agency.dto.room.RoomDetailsDto;
+import org.tms.travel_agency.dto.room.RoomLightDto;
 import org.tms.travel_agency.services.HotelService;
 import org.tms.travel_agency.services.RegionService;
+import org.tms.travel_agency.services.RoomService;
 import org.tms.travel_agency.validator.OnCreate;
 import org.tms.travel_agency.validator.OnUpdate;
 
@@ -27,6 +30,7 @@ import java.util.UUID;
 public class HotelController {
     private final RegionService regionService;
     private final HotelService hotelService;
+    private final RoomService roomService;
 
     @GetMapping("/create")
     public ModelAndView getHotelCreatorPage(){
@@ -70,17 +74,21 @@ public class HotelController {
      }
      @PostMapping("/update")
       public String update(@Validated(OnUpdate.class) @ModelAttribute("hotel") HotelDetailsDto dto, BindingResult result){
-        if(result.hasErrors()){
+             if(result.hasErrors()){
             return "updateHotel";
         }
         hotelService.update(dto);
         return "redirect:/hotels/hotelManager";
      }
      @GetMapping("/details")
-    public ModelAndView getHotelDetails(@RequestParam UUID uuid){
-         HotelDetailsDto byId = hotelService.getById(uuid);
+    public ModelAndView getHotelDetails(@RequestParam UUID id){
+         HotelDetailsDto byId = hotelService.getById(id);
+         RoomDetailsDto roomDetailsDto = new RoomDetailsDto();
+         roomDetailsDto.setIdHotel(id);
+         List<RoomLightDto> rooms = roomService.search(roomDetailsDto);
          ModelAndView modelAndView = new ModelAndView("hotelDetailsForAdmin");
          modelAndView.addObject("hotel", byId);
+         modelAndView.addObject("rooms", rooms);
          return modelAndView;
      }
 
