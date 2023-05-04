@@ -62,42 +62,6 @@ public class Room extends TourProduct{
     }
 
 
-
-    protected BigDecimal calculatePrice() {
-        BigDecimal basicPriceOfRoomPerDay = hotel.getBasicPriceOfRoomPerDay();
-        long numOfDays = checkOut.toEpochDay()-checkIn.toEpochDay();
-        BigDecimal priceForView = calculatePriceByView();
-        BigDecimal priceForOccupancy= calculatePriceByOccupancy();
-        BigDecimal boardBasisPricePerDay = calculateBoardBasisPricePerDay();
-        return basicPriceOfRoomPerDay.add(priceForOccupancy).add(priceForView).add(boardBasisPricePerDay).multiply(BigDecimal.valueOf(numOfDays));
-
-    }
-
-
-    protected void book() {
-        booked=true;
-    }
-
-
-    protected void cancelBooking() {
-     booked=false;
-    }
-    private BigDecimal calculatePriceByView(){
-        BigDecimal price= new BigDecimal(0.0);
-        switch(typesByView){
-            case INSIDE ->  price = new BigDecimal(15.2);
-            case CITY ->  price = new BigDecimal(30.8);
-            case LAND -> price =  new BigDecimal(25.7);
-            case PARK ->  price = new BigDecimal(35.4);
-            case GARDEN -> price =  new BigDecimal(20.9);
-            case POOL ->  price = new BigDecimal(40.6);
-            case MOUNTAIN -> price =  new BigDecimal(50.5);
-            case SIDE_SEA ->  price = new BigDecimal(60.2);
-            case SEA ->  price = new BigDecimal(70.5);
-
-        }
-        return price;
-    }
     private BigDecimal calculatePriceByOccupancy(){
         BigDecimal price = new BigDecimal(0.0);
         switch(typesByOccupancy){

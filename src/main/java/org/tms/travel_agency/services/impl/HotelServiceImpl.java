@@ -2,6 +2,7 @@ package org.tms.travel_agency.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.tms.travel_agency.domain.BoardBasisTypes;
 import org.tms.travel_agency.domain.Hotel;
 import org.tms.travel_agency.dto.hotel.HotelDetailsDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
@@ -60,4 +61,27 @@ public class HotelServiceImpl implements HotelService {
     }
 
 
+    @Override
+    @Transactional
+    public List<HotelLightDto> getByRegionName(String name) {
+        List<Hotel> byRegionName = repository.findByRegionName(name);
+        return mapper.convert(byRegionName);
+    }
+
+    @Override
+
+    public void addBoardBasis(BoardBasisTypes type, UUID id) {
+        repository.findById(id).ifPresentOrElse(hotel -> {
+            hotel.addBoardBasisType(type);
+            repository.save(hotel);
+            },()->new NoSuchHotelException("no hotel with id: "+id));
+    }
+
+    @Override
+    public void deleteBoardBasis(BoardBasisTypes type, UUID id) {
+        repository.findById(id).ifPresentOrElse(hotel -> {
+            hotel.deleteBoardBasisType(type);
+            repository.save(hotel);
+        },()->new NoSuchHotelException("no hotel with id: "+id));
+    }
 }

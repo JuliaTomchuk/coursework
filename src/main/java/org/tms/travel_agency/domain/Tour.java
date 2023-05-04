@@ -74,16 +74,5 @@ public class Tour extends TourProduct {
     }
 
 
-    protected void book() {
-        roundTrips.stream().forEach(trip -> trip.book());
-        room.book();
 
-
-    }
-
-
-    protected void cancelBooking() {
-        roundTrips.stream().forEach(trip -> trip.cancelBooking());
-        room.cancelBooking();
-    }
 }

@@ -93,6 +93,12 @@ public class Hotel {
         review.setHotel(null);
 
     }
+    public void addBoardBasisType(BoardBasisTypes type){
+        boardBasisSet.add(type);
+    }
+    public void deleteBoardBasisType(BoardBasisTypes type){
+        boardBasisSet.remove(type);
+    }
 
     @Override
     public boolean equals(Object o) {

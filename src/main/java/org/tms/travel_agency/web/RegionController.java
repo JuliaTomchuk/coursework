@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.tms.travel_agency.dto.destination.DestinationLightDto;
 import org.tms.travel_agency.dto.region.RegionDetailsDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
@@ -59,6 +60,7 @@ public class RegionController {
         service.delete(id);
         return"redirect:/regionManager";
     }
+
 
 
 

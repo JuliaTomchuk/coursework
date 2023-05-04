@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+import org.tms.travel_agency.domain.BoardBasisTypes;
 import org.tms.travel_agency.dto.hotel.HotelDetailsDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
@@ -21,7 +24,9 @@ import org.tms.travel_agency.services.RoomService;
 import org.tms.travel_agency.validator.OnCreate;
 import org.tms.travel_agency.validator.OnUpdate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -91,5 +96,26 @@ public class HotelController {
          modelAndView.addObject("rooms", rooms);
          return modelAndView;
      }
+     @GetMapping("/addBoardBasis")
+    public ModelAndView getAddBoardBasisType(@RequestParam UUID id){
+        ModelAndView modelAndView = new ModelAndView("addBoardBasis");
+        modelAndView.addObject("idHotel",id);
+        return modelAndView;
+     }
+     @PostMapping("/addBoardBasis")
+    public RedirectView addBoardBasisType(@RequestParam(name="idHotel") UUID id, @RequestParam(name = "boardBasisType") BoardBasisTypes type, RedirectAttributes attributes){
+        hotelService.addBoardBasis(type,id);
+        RedirectView redirectView = new RedirectView("/hotels/details");
+        attributes.addAttribute("id",id);
+        return  redirectView;
+     }
+     @GetMapping("/deleteBoardBasis")
+     public RedirectView deleteBoardBasisType(@RequestParam(name="idHotel") UUID id, @RequestParam(name = "boardBasisType") BoardBasisTypes type, RedirectAttributes attributes){
+         hotelService.deleteBoardBasis(type,id);
+         RedirectView redirectView = new RedirectView("/hotels/details");
+         attributes.addAttribute("id",id);
+         return  redirectView;
+     }
+
 
 }

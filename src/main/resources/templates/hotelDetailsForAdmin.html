@@ -63,13 +63,17 @@
     </div>
         <div class="col-6">
             <H1>Board basis types</H1>
-            <ul class="list-group">
-                <li class="list-group-item">An item</li>
-                <li class="list-group-item">A second item</li>
-                <li class="list-group-item">A third item</li>
-                <li class="list-group-item">A fourth item</li>
-                <li class="list-group-item">And a fifth one</li>
-            </ul>
+            <table class="table table-striped">
+                <tr>
+                    <th>Board basis type</th>
+                    <th> delete</th>
+                </tr>
+                <tr th:each="boardBasis:${hotel.getBoardBasisSet()}">
+                    <td th:text="*{boardBasis}"></td>
+                    <td><button type="button" class="btn btn-outline-danger"><a th:href="@{/hotels/deleteBoardBasis/(idHotel=${hotel.id},boardBasisType=${boardBasis})}">Delete</a></button></td>
+                </tr>
+
+            </table>
 
             <h1> Rooms </h1>
             <table class="table table-striped">
@@ -91,7 +95,7 @@
                     <td th:text="*{room.booked}"></td>
                     <td><button type="button" class="btn btn-outline-danger"><a th:href="@{/rooms/delete/(id=${room.id})}">Delete</a></button></td>
                     <td><button type="button" class="btn btn-outline-warning"><a th:href="@{/rooms/update/(id=${room.id})}">Update</a></button></td>
-                    <td><button type="button" class="btn btn-outline-info"><a th:href="@{/rooms/roomDetails/(id=${room.id})}">Details</a></button></td>
+                    <td><button type="button" class="btn btn-outline-info"><a th:href="@{/rooms/details/(id=${room.id})}">Details</a></button></td>
                 </tr>
 
             </table>

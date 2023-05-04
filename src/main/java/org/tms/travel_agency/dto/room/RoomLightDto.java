@@ -25,4 +25,5 @@ public class RoomLightDto {
     private BoardBasisTypes boardBases;
     private boolean booked;
     private boolean preBooked;
+
 }

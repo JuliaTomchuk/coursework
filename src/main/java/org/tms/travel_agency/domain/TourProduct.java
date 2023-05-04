@@ -26,8 +26,8 @@ import java.util.UUID;
     @GeneratedValue
     private UUID id;
     protected BigDecimal price;
-    protected boolean booked;
-    protected boolean preBooked;
+    protected Boolean booked;
+    protected Boolean preBooked;
 
 
 

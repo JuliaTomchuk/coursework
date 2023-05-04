@@ -14,6 +14,7 @@ import org.tms.travel_agency.exception.NoSuchHotelException;
 import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.exception.NoSuchRoomException;
 import org.tms.travel_agency.exception.NoSuchUserException;
+import org.tms.travel_agency.exception.TravelDateException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -75,6 +76,13 @@ public class ControllerExceptionHandler {
     }
     @ExceptionHandler (DuplicateRoomException.class)
     public ModelAndView process(DuplicateRoomException exception) {
+        ModelAndView modelAndView = new ModelAndView("/exception");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler (TravelDateException.class)
+    public ModelAndView process(TravelDateException exception) {
         ModelAndView modelAndView = new ModelAndView("/exception");
         modelAndView.addObject("exception", exception.getMessage());
         return modelAndView;
