@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 
 @Getter
+@ToString
 @Setter
 @Entity
 @NoArgsConstructor
@@ -39,6 +41,7 @@ public class Hotel {
     @Setter(AccessLevel.NONE)
     private UUID id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
+    @ToString.Exclude
     private Set<Room> rooms = new HashSet<>();
     private BigDecimal basicPriceOfRoomPerDay;
     @NaturalId

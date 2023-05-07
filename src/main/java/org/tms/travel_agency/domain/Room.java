@@ -1,12 +1,12 @@
 package org.tms.travel_agency.domain;
 
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,9 +16,11 @@ import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
-@Data
-@NoArgsConstructor
+@Getter
+//@ToString
+@Setter
 @Entity
 @Table(name = "rooms",uniqueConstraints = { @UniqueConstraint(columnNames = { "number", "hotel_id" }) })
 public class Room extends TourProduct{
@@ -34,9 +36,9 @@ public class Room extends TourProduct{
 
     private LocalDate checkIn;
     private LocalDate checkOut;
-     private BoardBasisTypes boardBases;
+    private BoardBasisTypes boardBases;
     @ManyToOne
-    private Hotel hotel;
+     private Hotel hotel;
 
 
     public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Hotel hotel) {
@@ -44,7 +46,10 @@ public class Room extends TourProduct{
         this.typesByOccupancy = typesByOccupancy;
         this.typesByView = typesByView;
         this.hotel = hotel;
+        description=getDescription();
 
+    }
+    public Room() {
 
 
     }
@@ -83,5 +88,24 @@ public class Room extends TourProduct{
        }
       return price.multiply(BigDecimal.valueOf(numOfTourist));
 
+    }
+
+
+
+
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", number=" + number +
+                ", numOfTourist=" + numOfTourist +
+                ", typesByOccupancy=" + typesByOccupancy +
+                ", typesByView=" + typesByView +
+                ", checkIn=" + checkIn +
+                ", checkOut=" + checkOut +
+                ", boardBases=" + boardBases +
+                ", hotel=" + hotel +
+                '}';
     }
 }

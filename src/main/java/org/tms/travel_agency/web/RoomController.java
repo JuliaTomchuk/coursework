@@ -34,7 +34,11 @@ public class RoomController {
     private final RoomService roomService;
     private final HotelService hotelService;
 
-
+    @GetMapping("book")
+    public String book(UUID uuid){
+        roomService.book(uuid);
+        return "/cart";
+    }
     @GetMapping("/add")
     public ModelAndView getAddRoomPage(@RequestParam UUID id){
         RoomDetailsDto newRoom = new RoomDetailsDto();
@@ -103,13 +107,26 @@ public class RoomController {
         }
         List<RoomDetailsDto> rooms = roomService.getRoomsListForBooking(dto);
         modelAndView.addObject("rooms",rooms);
+        modelAndView.addObject("roomForm", new RoomDetailsDto());
+
         return modelAndView;
     }
 
-    @GetMapping("/detailsForUser")
-    public ModelAndView getDetailsPage(RoomDetailsDto dto){
+    @PostMapping("/detailsForUser")
+    public ModelAndView getDetailsPage( RoomDetailsDto room){
         ModelAndView modelAndView = new ModelAndView("roomDetailsForUser");
-        modelAndView.addObject("currentRoom",dto);
+        modelAndView.addObject("currentRoom",room);
+        return modelAndView;
+    }
+    @PostMapping("/prebook")
+    public ModelAndView prebook(RoomDetailsDto dto){
+        ModelAndView modelAndView = new ModelAndView("roomSearch");
+        roomService.prebook(dto);
+        RoomDetailsDto searchRoom = new RoomDetailsDto();
+        searchRoom.setRegion(dto.getRegion());
+        searchRoom.setDestination(dto.getDestination());
+        modelAndView.addObject("hotels", hotelService.getByRegionName(dto.getRegion()));
+        modelAndView.addObject("searchRoom", searchRoom);
         return modelAndView;
     }
 

@@ -9,11 +9,13 @@ import org.tms.travel_agency.exception.DuplicateHotelException;
 import org.tms.travel_agency.exception.DuplicateRegionException;
 import org.tms.travel_agency.exception.DuplicateRoomException;
 import org.tms.travel_agency.exception.DuplicateUserException;
+import org.tms.travel_agency.exception.NoSuchCartException;
 import org.tms.travel_agency.exception.NoSuchDestinationException;
 import org.tms.travel_agency.exception.NoSuchHotelException;
 import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.exception.NoSuchRoomException;
 import org.tms.travel_agency.exception.NoSuchUserException;
+import org.tms.travel_agency.exception.NotAllowedException;
 import org.tms.travel_agency.exception.TravelDateException;
 
 @ControllerAdvice
@@ -87,5 +89,18 @@ public class ControllerExceptionHandler {
         modelAndView.addObject("exception", exception.getMessage());
         return modelAndView;
     }
+    @ExceptionHandler (NoSuchCartException.class)
+    public ModelAndView process(NoSuchCartException exception) {
+        ModelAndView modelAndView = new ModelAndView("/exception");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
+    }
+    @ExceptionHandler (NotAllowedException.class)
+    public ModelAndView process(NotAllowedException exception) {
+        ModelAndView modelAndView = new ModelAndView("/exception");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
+    }
+
 
 }

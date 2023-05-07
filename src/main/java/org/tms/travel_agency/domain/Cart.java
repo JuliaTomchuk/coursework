@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -28,12 +29,19 @@ public class Cart {
     @NaturalId
     @OneToOne
     private User user;
-    @OneToMany
+    @OneToMany()
     private List<TourProduct> tourProductList = new ArrayList<>();
 
     public Cart(User user, List <TourProduct> tourProductList) {
         this.user = user;
         this.tourProductList = tourProductList;
+    }
+
+    public void addTourProduct(TourProduct tourProduct){
+        tourProductList.add(tourProduct);
+    }
+    public void deleteTourProduct(TourProduct tourProduct){
+        tourProductList.remove(tourProduct);
     }
 
 

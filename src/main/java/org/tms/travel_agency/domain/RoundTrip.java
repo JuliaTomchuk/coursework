@@ -35,9 +35,6 @@ public class RoundTrip extends TourProduct {
      private AirplaneTicket arrive;
     @ManyToOne
     private Destination destination;
-    private BigDecimal price;
-
-
 
     public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive,Destination destination) {
 
@@ -47,21 +44,6 @@ public class RoundTrip extends TourProduct {
 
     }
 
-    public BigDecimal calculatePrice() {
-        return depart.getPrice().add(arrive.getPrice());
-    }
-
-
-    protected void book() {
-        //переопределить методы нормально
-        depart.setBooked(true);
-        arrive.setBooked(true);
-    }
-
-
-    protected void cancelBooking() {
-
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -75,4 +57,6 @@ public class RoundTrip extends TourProduct {
     public int hashCode() {
         return Objects.hash(super.hashCode(), getDepart(), getArrive());
     }
+
+
 }

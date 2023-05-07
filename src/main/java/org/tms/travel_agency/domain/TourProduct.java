@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -28,9 +29,8 @@ import java.util.UUID;
     protected BigDecimal price;
     protected Boolean booked;
     protected Boolean preBooked;
-
-
-
-
+    protected String type;
+    @Lob
+    protected String description;
 
 }

@@ -28,8 +28,6 @@ public class AirplaneTicket extends TourProduct
     @ManyToOne
     private OneWayFlight oneWayFlight;
     private AirplaneSeatsTypes airplaneSeatsTypes;
-     private boolean booked;
-     private BigDecimal price;
 
     public AirplaneTicket(Integer numberOfSeat, OneWayFlight oneWayFlight, AirplaneSeatsTypes airplaneSeatsTypes) {
         this.numberOfSeat = numberOfSeat;
@@ -82,12 +80,5 @@ public class AirplaneTicket extends TourProduct
     }
 
 
-    protected void book() {
-      booked =true;
-    }
 
-
-    protected void cancelBooking() {
-    booked =false;
-    }
 }

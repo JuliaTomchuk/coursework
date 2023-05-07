@@ -20,7 +20,10 @@
     </div>
   </div>
   <div class ="row" >
-    <form method="post" action="@{/rooms/addToCart}" th:object="${currentRoom}">
+    <form th:method="post" th:action="@{/rooms/prebook}" th:object="${currentRoom}">
+      <div class="form-floating mb-3" >
+        <input type="hidden" th:field="*{id}" class="form-control" id="floatingInput20" placeholder="destination" readonly="readonly">
+         </div>
       <div class="form-floating mb-3" >
         <input type="text" th:field="*{destination}" class="form-control" id="floatingInput0" placeholder="destination" readonly="readonly">
         <label for="floatingInput">Destination</label>

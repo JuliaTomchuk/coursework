@@ -34,6 +34,7 @@ public class Region {
      @NaturalId
     private String name;
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Set<Hotel> hotels = new HashSet<>();
 
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)

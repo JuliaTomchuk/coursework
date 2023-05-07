@@ -27,9 +27,9 @@
             <div class="row">
                 <div class="col-2">
                     <div class="col-3"><h6>Destination</h6>
-                        <input type="text" th:field="*{destination}"  readonly="readonly"></input><br></div>
+                        <input type="text" th:field="*{destination}"  readonly="readonly"><br></div>
                     <div class="col-3"><h6>Region</h6>
-                        <input type="text" th:field="*{region}"   readonly="readonly"></input></div>
+                        <input type="text" th:field="*{region}"   readonly="readonly"></div>
                 </div>
                     <div class="col-2">
                     <h6>Select hotel</h6>
@@ -127,8 +127,36 @@
                 <td th:text="*{room.typesByView}"></td>
                 <td th:text="*{room.boardBases}"></td>
                 <td th:text="*{room.price}"></td>
-                <td><button type="button" class="btn btn-outline-danger"><a th:href="@{/rooms/addToCart/(id=${room.id})}">Prebook</a></button></td>
-                <td><button type="button" class="btn btn-outline-info"><a th:href="@{/rooms/detailsForUser/(dto=room)}">Details</a></button></td>
+                <td><form th:method="post" th:action="@{/rooms/prebook/}" th:object="${room}">
+                    <input type="hidden" th:name="checkOut"  th:value="${room.checkOut}" >
+                    <input type="hidden" th:name="checkIn"  th:value="${room.checkIn}" >
+                    <input type="hidden" th:name="boardBases"  th:value="${room.boardBases}" >
+                    <input type="hidden" th:name="region"  th:value="${room.region}" >
+                    <input type="hidden" th:name="destination"  th:value="${room.destination}" >
+                    <input type="hidden" th:name="numOfTourist"  th:value="${room.numOfTourist}" >
+                    <input type="hidden" th:name="hotelName"  th:value="${room.hotelName}" >
+                    <input type="hidden" th:name="typesByOccupancy"  th:value="${room.typesByOccupancy}" >
+                    <input type="hidden" th:name="typesByView"  th:value="${room.typesByView}" >
+                    <input type="hidden" th:name="id"  th:value="${room.id}" >
+                    <input type="hidden" th:name="number"  th:value="${room.number}" >
+                    <input type="hidden" th:name="price"  th:value="${room.price}" >
+                    <button type="submit" class="btn btn-outline-danger">Prebook</a></button>
+                </form></td>
+                <td><form th:method="post" th:action="@{/rooms/detailsForUser/}" th:object="${room}">
+                    <input type="hidden" th:name="checkOut"  th:value="${room.checkOut}" >
+                    <input type="hidden" th:name="checkIn"  th:value="${room.checkIn}" >
+                    <input type="hidden" th:name="boardBases"  th:value="${room.boardBases}" >
+                    <input type="hidden" th:name="region"  th:value="${room.region}" >
+                    <input type="hidden" th:name="destination"  th:value="${room.destination}" >
+                    <input type="hidden" th:name="numOfTourist"  th:value="${room.numOfTourist}" >
+                    <input type="hidden" th:name="hotelName"  th:value="${room.hotelName}" >
+                    <input type="hidden" th:name="typesByOccupancy"  th:value="${room.typesByOccupancy}" >
+                    <input type="hidden" th:name="typesByView"  th:value="${room.typesByView}" >
+                    <input type="hidden" th:name="id"  th:value="${room.id}" >
+                    <input type="hidden" th:name="number"  th:value="${room.number}" >
+                    <input type="hidden" th:name="price"  th:value="${room.price}" >
+                    <button type="submit" class="btn btn-outline-info">Details</a></button>
+                    </form></td>
             </tr>
 
         </table>
