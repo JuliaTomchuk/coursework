@@ -9,10 +9,10 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
+import java.util.UUID;
 
 @ToString
 @NoArgsConstructor
@@ -21,11 +21,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "addresses")
 public class Address {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(value = AccessLevel.NONE)
-    private Integer id;
-    private String country;
+    @GeneratedValue
+    @Setter(AccessLevel.NONE)
+    private UUID id;
     @NaturalId
     private String city;
     @NaturalId
@@ -34,9 +34,9 @@ public class Address {
     @NaturalId
     private String home;
 
-    public Address(String country, String city, String street, String home) {
+    public Address( String city, String street, String home) {
 
-        this.country = country;
+
         this.city = city;
         this.street = street;
         this.home=home;

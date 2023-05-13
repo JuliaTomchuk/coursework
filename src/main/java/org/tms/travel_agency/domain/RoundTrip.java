@@ -1,17 +1,22 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,32 +24,39 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "round_trips")
 @NoArgsConstructor
-public class RoundTrip {
+public class RoundTrip extends TourProduct {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
     @OneToOne
-    private AirplaneSeat depart;
+    private AirplaneTicket depart;
     @OneToOne
-    private AirplaneSeat arrive;
+     private AirplaneTicket arrive;
+    @ManyToOne
+    private Destination destination;
 
-
-
-    public RoundTrip(AirplaneSeat depart, AirplaneSeat arrive) {
+    public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive,Destination destination) {
 
         this.depart = depart;
         this.arrive = arrive;
+        this.destination=destination;
 
     }
 
-    public int calculatePrice() {
-        return depart.getPrice() + arrive.getPrice();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RoundTrip trip)) return false;
+        if (!super.equals(o)) return false;
+        return getDepart().equals(trip.getDepart()) && getArrive().equals(trip.getArrive());
     }
 
-    public void bookSeat(){
-        depart.setBooked(true);
-        arrive.setBooked(true);
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getDepart(), getArrive());
     }
+
 
 }

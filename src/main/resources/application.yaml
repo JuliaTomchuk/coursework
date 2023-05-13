@@ -4,8 +4,18 @@ spring:
       ddl-auto: create-drop
     show-sql: true
   datasource:
+    hikari:
+      auto-commit: off
     password: 14271915
     username: postgres
     url: jdbc:postgresql://localhost:5432/postgres
+
+
+
+
+
+
+
+
 
 

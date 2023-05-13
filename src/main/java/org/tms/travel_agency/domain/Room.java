@@ -1,49 +1,58 @@
 package org.tms.travel_agency.domain;
 
-import lombok.AccessLevel;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.NaturalId;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
-
+import java.util.Optional;
+import java.util.UUID;
 @Getter
+//@ToString
 @Setter
-@ToString
 @Entity
-@NoArgsConstructor
-@Table(name = "rooms")
-public class Room {
+@Table(name = "rooms",uniqueConstraints = { @UniqueConstraint(columnNames = { "number", "hotel_id" }) })
+public class Room extends TourProduct{
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(AccessLevel.NONE)
-    private Integer id;
-    @NaturalId
+    @GeneratedValue
+    private UUID id;
+
     private Integer number;
+    private Integer numOfTourist;
     private RoomTypesByOccupancy typesByOccupancy;
     private RoomTypesByView typesByView;
-    private Integer price;
-    private boolean booked;
-    @ManyToOne
-    @NaturalId
-    private Hotel hotel;
 
-    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Integer price, Hotel hotel) {
+    private LocalDate checkIn;
+    private LocalDate checkOut;
+    private BoardBasisTypes boardBases;
+    @ManyToOne
+     private Hotel hotel;
+
+
+    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Hotel hotel) {
         this.number = number;
         this.typesByOccupancy = typesByOccupancy;
         this.typesByView = typesByView;
-        this.price = price;
         this.hotel = hotel;
-    }
+        description=getDescription();
 
+    }
+    public Room() {
+
+
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -55,5 +64,48 @@ public class Room {
     @Override
     public int hashCode() {
         return Objects.hash(getNumber(), getHotel());
+    }
+
+
+    private BigDecimal calculatePriceByOccupancy(){
+        BigDecimal price = new BigDecimal(0.0);
+        switch(typesByOccupancy){
+            case SINGLE -> price = new BigDecimal(100.60);
+            case DOUBLE,TWIN -> price = new BigDecimal(180.60);
+            case TRIPLE -> price= new BigDecimal(300.60);
+            case QUAD -> price= new BigDecimal(460.10);
+        }
+        return price;
+    }
+    private BigDecimal calculateBoardBasisPricePerDay(){
+        BigDecimal price = new BigDecimal(0.0);
+       switch (boardBases){
+           case BED_AND_BREAKFAST -> new BigDecimal(100.9);
+           case HALF_BOARD -> new BigDecimal(250.8);
+           case FULL_BOARD -> new BigDecimal(350.6);
+           case All_INCLUSIVE -> new BigDecimal(550.80);
+           case ULTRA_All_INCLUSIVE -> new BigDecimal(690.9);
+       }
+      return price.multiply(BigDecimal.valueOf(numOfTourist));
+
+    }
+
+
+
+
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", number=" + number +
+                ", numOfTourist=" + numOfTourist +
+                ", typesByOccupancy=" + typesByOccupancy +
+                ", typesByView=" + typesByView +
+                ", checkIn=" + checkIn +
+                ", checkOut=" + checkOut +
+                ", boardBases=" + boardBases +
+                ", hotel=" + hotel +
+                '}';
     }
 }

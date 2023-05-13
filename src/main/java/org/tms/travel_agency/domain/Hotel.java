@@ -4,47 +4,54 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
-@ToString
+
 @Getter
+@ToString
 @Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "hotels")
 public class Hotel {
-    @NaturalId
     private String name;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Setter(value = AccessLevel.NONE)
-    private Integer id;
+    @GeneratedValue
+    @Setter(AccessLevel.NONE)
+    private UUID id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
+    @ToString.Exclude
     private Set<Room> rooms = new HashSet<>();
-    @OneToOne
+    private BigDecimal basicPriceOfRoomPerDay;
     @NaturalId
+    @OneToOne
     private Address address;
     @ManyToOne
+    @NaturalId
     private Region region;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "hotel")
-    private Set<BoardBasis> boardBasisSet = new HashSet<>();
+    @ElementCollection(targetClass = BoardBasisTypes.class)
+    private Set<BoardBasisTypes> boardBasisSet = new HashSet<>();
     @Basic(fetch = FetchType.LAZY)
     @Lob
     private String description;
@@ -53,7 +60,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
-    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasis> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket) {
+    public Hotel(String name, Set<Room> rooms, Address address, Region region, Set<BoardBasisTypes> boardBasisSet, String description,HotelTypeByStars typeByStars, HotelTypeByTargetMarket typeByTargetMarket,BigDecimal basicPriceOfRoomPerDay) {
         this.name = name;
         this.rooms = rooms;
         this.address = address;
@@ -62,42 +69,49 @@ public class Hotel {
         this.description = description;
         this.typeByStars =typeByStars;
         this.typeByTargetMarket = typeByTargetMarket;
+        this.basicPriceOfRoomPerDay =basicPriceOfRoomPerDay;
     }
 
 
-    public boolean addRoom(Room room) {
-        boolean isAdded = rooms.add(room);
+    public void addRoom(Room room) {
+        rooms.add(room);
         room.setHotel(this);
-        return isAdded;
     }
 
-    public boolean deleteRoom(Room room) {
-        boolean isDeleted = rooms.remove(room);
+    public void deleteRoom(Room room) {
+        rooms.remove(room);
         room.setHotel(null);
-        return isDeleted;
+
     }
 
-    public boolean addBoardBasis(BoardBasis boardBasis) {
-        boolean isAdded = boardBasisSet.add(boardBasis);
-        boardBasis.setHotel(this);
-        return isAdded;
+
+    public void addReview(Review review) {
+        reviews.add(review);
+        review.setHotel(this);
+
     }
 
-    public boolean deleteBoardBasis(BoardBasis boardBasis) {
-        boolean isDeleted = boardBasisSet.remove(boardBasis);
-        boardBasis.setHotel(null);
-        return isDeleted;
+    public void deleteReview(Review review) {
+        reviews.remove(review);
+        review.setHotel(null);
+
+    }
+    public void addBoardBasisType(BoardBasisTypes type){
+        boardBasisSet.add(type);
+    }
+    public void deleteBoardBasisType(BoardBasisTypes type){
+        boardBasisSet.remove(type);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Hotel hotel)) return false;
-        return getName().equals(hotel.getName()) && getAddress().equals(hotel.getAddress());
+        return getAddress().equals(hotel.getAddress()) && getRegion().equals(hotel.getRegion());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getAddress());
+        return Objects.hash(getAddress(), getRegion());
     }
 }

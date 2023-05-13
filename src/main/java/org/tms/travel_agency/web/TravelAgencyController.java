@@ -1,0 +1,37 @@
+package org.tms.travel_agency.web;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+import org.tms.travel_agency.dto.region.RegionLightDto;
+import org.tms.travel_agency.services.DestinationService;
+import org.tms.travel_agency.services.RegionService;
+
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping("/")
+@RequiredArgsConstructor
+public class TravelAgencyController {
+    private final RegionService regionService;
+
+    @GetMapping
+    public ModelAndView getHomePage(){
+        ModelAndView modelAndView = new ModelAndView("home");
+        return modelAndView;
+    }
+    @GetMapping("/allDestinations")
+    public ModelAndView getAllDestinations(@RequestParam String type){
+        Map<String, List<RegionLightDto>> regionsByDestinations = regionService.getRegionsByDestinations();
+        ModelAndView modelAndView = new ModelAndView("allDestinations");
+        modelAndView.addObject("regionsByDestinations",regionsByDestinations);
+        modelAndView.addObject("type", type);
+        return modelAndView;
+    }
+}
