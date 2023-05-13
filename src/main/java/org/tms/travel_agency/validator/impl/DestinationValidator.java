@@ -15,10 +15,6 @@ public class DestinationValidator implements DuplicateValidator<DestinationDetai
     private final DestinationRepository repository;
     @Override
     public boolean isUnique(DestinationDetailsDto dto) {
-        Optional<Destination> destination = repository.findByNameIgnoreCase(dto.getName());
-        if(destination.isEmpty()){
-            return true;
-        }
-        return false;
-    }
-}
+       return repository.findByNameIgnoreCase(dto.getName()).isEmpty();
+
+}}

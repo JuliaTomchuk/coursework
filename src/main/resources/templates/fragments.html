@@ -1,0 +1,17 @@
+
+</div>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="allDestinations">
+
+    <div class="list-group" th:each="destination:${allDestinations}">
+        <a th:href="@{/destinations/details/(id=${destination.id})}" class="list-group-item list-group-item-action" th:text="${destination.name}">A second link item</a>
+
+    </div>
+</div>
+
+</body>
+
+</html>

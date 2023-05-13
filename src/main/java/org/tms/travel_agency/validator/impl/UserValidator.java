@@ -19,10 +19,7 @@ public class UserValidator implements DuplicateValidator <UserFullDescriptionDto
 
     @Override
     public boolean isUnique(UserFullDescriptionDto dto) {
-        Optional<User> optionalUser = repository.findByUsername(dto.getUsername());
-        if (optionalUser.isPresent()) {
-            return false;
-        }
-        return true;
+        return repository.findByUsername(dto.getUsername()).isEmpty();
+
     }
 }

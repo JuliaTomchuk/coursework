@@ -17,8 +17,9 @@ public interface HotelRepository extends JpaRepository<Hotel, UUID>, JpaSpecific
 
     @Override
     List<Hotel> findAll(Specification<Hotel> spec);
+
     List<Hotel> findByRegionName(String name);
 
 
-    Optional<Hotel> findByAddress_City_AndAddress_Street_AndAddress_Home_AndRegion_Name(String city,String street,String home,String regionName );
+    Optional<Hotel> findByAddressANDRegion(String city, String street, String home, String regionName);
 }

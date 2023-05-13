@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,8 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 @Entity
-@Table(name="carts")
+@Table(name = "carts")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -29,18 +31,19 @@ public class Cart {
     @NaturalId
     @OneToOne
     private User user;
-    @OneToMany()
+    @OneToMany
     private List<TourProduct> tourProductList = new ArrayList<>();
 
-    public Cart(User user, List <TourProduct> tourProductList) {
+    public Cart(User user, List<TourProduct> tourProductList) {
         this.user = user;
         this.tourProductList = tourProductList;
     }
 
-    public void addTourProduct(TourProduct tourProduct){
+    public void addTourProduct(TourProduct tourProduct) {
         tourProductList.add(tourProduct);
     }
-    public void deleteTourProduct(TourProduct tourProduct){
+
+    public void deleteTourProduct(TourProduct tourProduct) {
         tourProductList.remove(tourProduct);
     }
 

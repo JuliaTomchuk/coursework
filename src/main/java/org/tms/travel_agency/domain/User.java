@@ -22,8 +22,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name="accounts")
-public class User  implements UserDetails{
+@Table(name = "accounts")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -39,8 +39,6 @@ public class User  implements UserDetails{
     private Role role;
 
 
-
-
     public User(String firstName, String secondName, String username, String password, String passportNumber, Integer age, String patronymic, Role role) {
         this.firstName = firstName;
         this.secondName = secondName;
@@ -48,8 +46,8 @@ public class User  implements UserDetails{
         this.password = password;
         this.passportNumber = passportNumber;
         this.age = age;
-        this.patronymic=patronymic;
-        this.role=role;
+        this.patronymic = patronymic;
+        this.role = role;
 
     }
 
@@ -68,7 +66,7 @@ public class User  implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List <SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(role.toString()));
         return grantedAuthorities;
     }

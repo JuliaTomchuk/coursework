@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface RegionRepository extends JpaRepository<Region, UUID> {
     Optional<Region> findByNameIgnoreCase(String name);
-    List<Region> findByDestinationName(String name);
+    List<Region> findByDestinationNameIgnoreCase(String name);
 
 }

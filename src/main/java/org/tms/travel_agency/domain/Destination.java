@@ -39,7 +39,7 @@ public class Destination {
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Region> regions = new HashSet<>();
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<RoundTrip>  roundTripSet = new HashSet<>();
+    private Set<RoundTrip> roundTripSet = new HashSet<>();
     @OneToMany(mappedBy = "destination", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<OneWayFlight> oneWayFlightSet = new HashSet<>();
     @Lob
@@ -63,7 +63,7 @@ public class Destination {
     public void removeRegion(Region region) {
         regions.remove(region);
         region.setDestination(null);
-           }
+    }
 
 
     public void addOneWayFlight(OneWayFlight oneWayFlight) {
@@ -77,11 +77,13 @@ public class Destination {
         oneWayFlight.setDestination(null);
 
     }
-    public void addRoundTrip(RoundTrip trip){
+
+    public void addRoundTrip(RoundTrip trip) {
         roundTripSet.add(trip);
         trip.setDestination(this);
     }
-    public void deleteRoundTrip(RoundTrip trip){
+
+    public void deleteRoundTrip(RoundTrip trip) {
         roundTripSet.remove(trip);
         trip.setDestination(null);
     }

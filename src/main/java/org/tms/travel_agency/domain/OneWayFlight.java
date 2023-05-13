@@ -38,18 +38,18 @@ public class OneWayFlight {
     private String departureAirport;
     private String arrivalAirport;
     @NaturalId
-     private LocalDateTime departureTime;
+    private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private Integer flightTime;
-     @NaturalId
-     private String flightNumber;
+    @NaturalId
+    private String flightNumber;
     private Integer cabinBaggage;
     private Integer checkedBaggage;
     private BigDecimal pricePerHour;
-    @OneToMany(cascade= CascadeType.ALL,mappedBy = "oneWayFlight",orphanRemoval = true)
-    private Set<AirplaneTicket> airplaneTickets=new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "oneWayFlight", orphanRemoval = true)
+    private Set<AirplaneTicket> airplaneTickets = new HashSet<>();
 
-    public OneWayFlight(Destination destination,String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, String flightNumber, Integer cabinBaggage, Integer checkedBaggage, BigDecimal pricePerHour) {
+    public OneWayFlight(Destination destination, String departureAirport, String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer flightTime, String flightNumber, Integer cabinBaggage, Integer checkedBaggage, BigDecimal pricePerHour) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureTime = departureTime;
@@ -58,21 +58,20 @@ public class OneWayFlight {
         this.flightNumber = flightNumber;
         this.cabinBaggage = cabinBaggage;
         this.checkedBaggage = checkedBaggage;
-        this.destination=destination;
-        this.pricePerHour=pricePerHour;
+        this.destination = destination;
+        this.pricePerHour = pricePerHour;
     }
 
-    public void addTicket(AirplaneTicket ticket){
+    public void addTicket(AirplaneTicket ticket) {
         boolean isAdded = airplaneTickets.add(ticket);
         ticket.setOneWayFlight(this);
-         }
-    public void deleteTicket(AirplaneTicket ticket){
+    }
+
+    public void deleteTicket(AirplaneTicket ticket) {
         boolean isDeleted = airplaneTickets.remove(ticket);
         ticket.setOneWayFlight(null);
 
     }
-
-
 
 
     @Override

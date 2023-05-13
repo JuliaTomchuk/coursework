@@ -15,13 +15,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TourInputDto {
-    @Null(groups = {OnCreate.class})
-    @NotNull(groups = {OnUpdate.class})
+    @Null(groups = OnCreate.class)
+    @NotNull(groups = OnUpdate.class)
     private UUID id;
-    @Null(groups = {OnCreate.class})
-    @NotNull(groups = {OnUpdate.class})
+    @Null(groups = OnCreate.class)
+    @NotNull(groups = OnUpdate.class)
     private Integer numOfTourist;
-    @NotNull(groups = {OnUpdate.class})
+    @NotNull(groups = OnUpdate.class)
     private List<UUID> roundTripIds;
     private UUID roomId;
     private String region;

@@ -10,6 +10,7 @@ import org.tms.travel_agency.domain.Role;
 import org.tms.travel_agency.domain.User;
 import org.tms.travel_agency.dto.user.UserFullDescriptionDto;
 import org.tms.travel_agency.dto.user.UserLightDescriptionDto;
+import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.exception.NoSuchUserException;
 import org.tms.travel_agency.exception.DuplicateUserException;
 import org.tms.travel_agency.mapper.UserMapper;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresentOrElse((user) -> repository.delete(user), NoSuchUserException::new);
+        repository.findById(id).ifPresentOrElse((user) -> repository.delete(user), ()-> new NoSuchUserException("no user with id: " + id));
     }
 
     @Override
@@ -84,14 +85,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullDescriptionDto getById(UUID id) {
-        User user = repository.findById(id).orElseThrow(NoSuchUserException::new);
+        User user = repository.findById(id).orElseThrow(()->new NoSuchRegionException("no user with id: "+id));
         return mapper.convert(user);
     }
 
     @Override
     @Transactional
     public void changeRole(String role, UUID id) {
-        repository.findById(id).ifPresentOrElse(user -> user.setRole(Role.valueOf(role)), NoSuchUserException::new);
+        repository.findById(id).ifPresentOrElse(user -> user.setRole(Role.valueOf(role)), ()-> new NoSuchUserException("no user with id: "+id));
 
     }
 

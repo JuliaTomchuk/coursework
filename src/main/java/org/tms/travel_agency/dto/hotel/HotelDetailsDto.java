@@ -51,6 +51,6 @@ public class HotelDetailsDto {
     private Set<BoardBasisTypes> boardBasisSet;
     private Set<RoomTypesByView> roomTypesByViewSet;
     private Set <RoomTypesByOccupancy> roomTypesByOccupancySet;
-    private Set<ReviewLightDto> reviews = new HashSet<>();
+
 
 }

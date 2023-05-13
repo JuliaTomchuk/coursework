@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
- public abstract class TourProduct {
+public abstract class TourProduct {
     @Id
     @GeneratedValue
     private UUID id;
@@ -30,7 +31,4 @@ import java.util.UUID;
     protected Boolean booked;
     protected Boolean preBooked;
     protected String type;
-    @Lob
-    protected String description;
-
 }

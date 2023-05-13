@@ -17,9 +17,8 @@ public class RegionValidator implements DuplicateValidator<RegionDetailsDto> {
     private final RegionRepository repository;
     @Override
     public boolean isUnique(RegionDetailsDto dto) {
-        Optional<Region> regionOptional = repository.findByNameIgnoreCase(dto.getName());
-        if(regionOptional.isPresent())
-            return false;
-        return true;
+
+        return repository.findByNameIgnoreCase(dto.getName()).isEmpty();
+
     }
 }

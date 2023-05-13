@@ -16,10 +16,12 @@ import org.tms.travel_agency.domain.BoardBasisTypes;
 import org.tms.travel_agency.dto.hotel.HotelDetailsDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
+import org.tms.travel_agency.dto.review.ReviewLightDto;
 import org.tms.travel_agency.dto.room.RoomDetailsDto;
 import org.tms.travel_agency.dto.room.RoomLightDto;
 import org.tms.travel_agency.services.HotelService;
 import org.tms.travel_agency.services.RegionService;
+import org.tms.travel_agency.services.ReviewService;
 import org.tms.travel_agency.services.RoomService;
 import org.tms.travel_agency.validator.OnCreate;
 import org.tms.travel_agency.validator.OnUpdate;
@@ -36,6 +38,7 @@ public class HotelController {
     private final RegionService regionService;
     private final HotelService hotelService;
     private final RoomService roomService;
+    private final ReviewService reviewService;
 
     @GetMapping("/create")
     public ModelAndView getHotelCreatorPage(){
@@ -47,7 +50,6 @@ public class HotelController {
        return modelAndView;
     }
     @PostMapping("/create")
-
     public String saveHotel(@Validated(OnCreate.class) @ModelAttribute("newHotel") HotelDetailsDto newHotel, BindingResult result){
         if(result.hasErrors()){
             return "hotelCreator";
@@ -115,6 +117,15 @@ public class HotelController {
          RedirectView redirectView = new RedirectView("/hotels/details");
          attributes.addAttribute("id",id);
          return  redirectView;
+     }
+     @GetMapping("/detailsForUser")
+    public ModelAndView getDetailsForUser(@RequestParam(name="id") UUID id){
+         HotelDetailsDto hotel = hotelService.getById(id);
+         ModelAndView modelAndView = new ModelAndView("hotelDetailsForUser");
+         List<ReviewLightDto> reviewLightDtos = reviewService.getByHotel(id);
+         modelAndView.addObject("hotel",hotel);
+         modelAndView.addObject("reviews", reviewLightDtos);
+         return modelAndView;
      }
 
 

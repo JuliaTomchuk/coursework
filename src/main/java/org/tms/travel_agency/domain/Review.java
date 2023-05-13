@@ -13,7 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class Review {
     @GeneratedValue
     private UUID id;
     @NaturalId
-    private LocalDateTime date;
+    private LocalDate date;
     @NaturalId
     @OneToOne
     private User user;
@@ -37,9 +37,10 @@ public class Review {
     private String message;
 
     @ManyToOne
+    @NaturalId
     private Hotel hotel;
 
-    public Review(LocalDateTime date, String message,  Hotel hotel, Rating rating) {
+    public Review(LocalDate date, String message, Hotel hotel, Rating rating) {
         this.date = date;
         this.message = message;
 

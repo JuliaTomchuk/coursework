@@ -14,25 +14,25 @@ import java.io.IOException;
 
 @Configuration
 public class SecurityConfiguration {
-//изменить доступ к usersManager,hotelcreator,"/destinationManager","/regionManager" когда настрою flyway
+    //изменить доступ к usersManager,hotelcreator,"/destinationManager","/regionManager" когда настрою flyway
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests((auth)->{
+        httpSecurity.authorizeHttpRequests((auth) -> {
             try {
-                auth.antMatchers("/allDestinations","/user/registration","/hotel/hotelCreator","/destinationManager","/regionManager").permitAll()
+                auth.antMatchers("/allDestinations", "/user/registration", "/hotel/hotelCreator", "/destinationManager", "/regionManager").permitAll()
 //                        .antMatchers("/destinationManager").hasRole("ADMIN")
-                        .antMatchers("user/accountManager","/user/update","/user/userManager").authenticated()
+                        .antMatchers("user/accountManager", "/user/update", "/user/userManager").authenticated()
                         .and()
                         .formLogin()
                         .loginPage("/user/login")
                         .loginProcessingUrl("/try-login")
                         .successHandler((request, response, authentication) -> {
                             response.sendRedirect("/user/accountManager");
-                                })
+                        })
                         .and()
                         .logout()
                         .logoutUrl("/try-logout")
-                        .addLogoutHandler((request, response, authentication) ->{
+                        .addLogoutHandler((request, response, authentication) -> {
 
                                     try {
                                         response.sendRedirect("/user/login");
@@ -40,11 +40,10 @@ public class SecurityConfiguration {
                                         throw new RuntimeException(e);
                                     }
                                 }
-                         );
+                        );
 
 
-
-                                                  } catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
@@ -52,8 +51,9 @@ public class SecurityConfiguration {
         return httpSecurity.build();
 
     }
+
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 }

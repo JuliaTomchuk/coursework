@@ -1,5 +1,6 @@
 package org.tms.travel_agency.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -19,18 +20,9 @@ public abstract class RoomMapper {
     @Autowired
     private HotelRepository hotelRepository;
 
-    public Room convert(RoomDetailsDto dto){
-        Room entity = new Room();
-        entity.setNumber(dto.getNumber());
-        entity.setNumOfTourist(dto.getNumOfTourist());
-        entity.setTypesByOccupancy(dto.getTypesByOccupancy());
-        entity.setTypesByView(dto.getTypesByView());
-        entity.setCheckIn(dto.getCheckIn());
-        entity.setCheckOut(dto.getCheckOut());
-        entity.setBoardBases(dto.getBoardBases());
-        entity.setPrice(dto.getPrice());
-        entity.setBooked(dto.isBooked());
-        entity.setPreBooked(dto.isPreBooked());
+    public abstract Room convert(RoomDetailsDto dto);
+    @AfterMapping
+    public Room addHotel(RoomDetailsDto dto,@MappingTarget Room entity){
         if(dto.getIdHotel()!=null) {
             Hotel hotel = hotelRepository.findById(dto.getIdHotel()).orElseThrow(() -> new NoSuchHotelException("No hotel with id " + dto.getIdHotel()));
             entity.setHotel(hotel);
