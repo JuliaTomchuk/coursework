@@ -23,4 +23,7 @@ public class RoomLightDto {
     private Integer numOfTourist;
     private BigDecimal price;
     private BoardBasisTypes boardBases;
+    private boolean booked;
+    private boolean preBooked;
+
 }

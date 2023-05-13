@@ -48,7 +48,7 @@ public class HotelDetailsDto {
     private HotelTypeByStars typeByStars;
     @NotNull(groups = {OnCreate.class, OnUpdate.class})
     private HotelTypeByTargetMarket typeByTargetMarket;
-    private Set<BoardBasisTypes> boardBasisTypesSet;
+    private Set<BoardBasisTypes> boardBasisSet;
     private Set<RoomTypesByView> roomTypesByViewSet;
     private Set <RoomTypesByOccupancy> roomTypesByOccupancySet;
     private Set<ReviewLightDto> reviews = new HashSet<>();

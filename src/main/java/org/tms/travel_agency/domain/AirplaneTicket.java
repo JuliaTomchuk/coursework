@@ -28,7 +28,6 @@ public class AirplaneTicket extends TourProduct
     @ManyToOne
     private OneWayFlight oneWayFlight;
     private AirplaneSeatsTypes airplaneSeatsTypes;
-     private boolean booked;
 
     public AirplaneTicket(Integer numberOfSeat, OneWayFlight oneWayFlight, AirplaneSeatsTypes airplaneSeatsTypes) {
         this.numberOfSeat = numberOfSeat;
@@ -49,7 +48,7 @@ public class AirplaneTicket extends TourProduct
         return Objects.hash(getNumberOfSeat(), getOneWayFlight());
     }
 
-    @Override
+
     protected BigDecimal calculatePrice() {
         Integer flightTime = oneWayFlight.getFlightTime();
         BigDecimal pricePerHour = oneWayFlight.getPricePerHour();
@@ -80,13 +79,6 @@ public class AirplaneTicket extends TourProduct
 
     }
 
-    @Override
-    protected void book() {
-      booked =true;
-    }
 
-    @Override
-    protected void cancelBooking() {
-    booked =false;
-    }
+
 }

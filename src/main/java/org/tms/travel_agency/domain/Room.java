@@ -1,31 +1,34 @@
 package org.tms.travel_agency.domain;
 
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
-@Data
-@NoArgsConstructor
+@Getter
+//@ToString
+@Setter
 @Entity
-@Table(name = "rooms")
+@Table(name = "rooms",uniqueConstraints = { @UniqueConstraint(columnNames = { "number", "hotel_id" }) })
 public class Room extends TourProduct{
 
     @Id
     @GeneratedValue
     private UUID id;
-    @Column(unique = true)
+
     private Integer number;
     private Integer numOfTourist;
     private RoomTypesByOccupancy typesByOccupancy;
@@ -33,17 +36,20 @@ public class Room extends TourProduct{
 
     private LocalDate checkIn;
     private LocalDate checkOut;
-    private boolean booked;
     private BoardBasisTypes boardBases;
     @ManyToOne
-    private Hotel hotel;
+     private Hotel hotel;
 
-    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Hotel hotel, boolean booked ) {
+
+    public Room(Integer number, RoomTypesByOccupancy typesByOccupancy, RoomTypesByView typesByView, Hotel hotel) {
         this.number = number;
         this.typesByOccupancy = typesByOccupancy;
         this.typesByView = typesByView;
         this.hotel = hotel;
-        this.booked=booked;
+        description=getDescription();
+
+    }
+    public Room() {
 
 
     }
@@ -61,42 +67,6 @@ public class Room extends TourProduct{
     }
 
 
-    @Override
-    protected BigDecimal calculatePrice() {
-        BigDecimal basicPriceOfRoomPerDay = hotel.getBasicPriceOfRoomPerDay();
-        long numOfDays = checkOut.toEpochDay()-checkIn.toEpochDay();
-        BigDecimal priceForView = calculatePriceByView();
-        BigDecimal priceForOccupancy= calculatePriceByOccupancy();
-        BigDecimal boardBasisPricePerDay = calculateBoardBasisPricePerDay();
-        return basicPriceOfRoomPerDay.add(priceForOccupancy).add(priceForView).add(boardBasisPricePerDay).multiply(BigDecimal.valueOf(numOfDays));
-
-    }
-
-    @Override
-    protected void book() {
-        booked=true;
-    }
-
-    @Override
-    protected void cancelBooking() {
-     booked=false;
-    }
-    private BigDecimal calculatePriceByView(){
-        BigDecimal price= new BigDecimal(0.0);
-        switch(typesByView){
-            case INSIDE ->  price = new BigDecimal(15.2);
-            case CITY ->  price = new BigDecimal(30.8);
-            case LAND -> price =  new BigDecimal(25.7);
-            case PARK ->  price = new BigDecimal(35.4);
-            case GARDEN -> price =  new BigDecimal(20.9);
-            case POOL ->  price = new BigDecimal(40.6);
-            case MOUNTAIN -> price =  new BigDecimal(50.5);
-            case SIDE_SEA ->  price = new BigDecimal(60.2);
-            case SEA ->  price = new BigDecimal(70.5);
-
-        }
-        return price;
-    }
     private BigDecimal calculatePriceByOccupancy(){
         BigDecimal price = new BigDecimal(0.0);
         switch(typesByOccupancy){
@@ -118,5 +88,24 @@ public class Room extends TourProduct{
        }
       return price.multiply(BigDecimal.valueOf(numOfTourist));
 
+    }
+
+
+
+
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", number=" + number +
+                ", numOfTourist=" + numOfTourist +
+                ", typesByOccupancy=" + typesByOccupancy +
+                ", typesByView=" + typesByView +
+                ", checkIn=" + checkIn +
+                ", checkOut=" + checkOut +
+                ", boardBases=" + boardBases +
+                ", hotel=" + hotel +
+                '}';
     }
 }

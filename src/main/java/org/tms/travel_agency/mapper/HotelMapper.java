@@ -2,6 +2,7 @@ package org.tms.travel_agency.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tms.travel_agency.domain.Address;
 import org.tms.travel_agency.domain.Hotel;
@@ -47,13 +48,11 @@ public abstract class HotelMapper {
 
     public abstract List<HotelLightDto> convert(List<Hotel> hotels);
 
-    public Hotel update(HotelDetailsDto dto, Hotel entity){
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setBasicPriceOfRoomPerDay(dto.getBasicPriceOfRoom());
-        entity.setTypeByTargetMarket(dto.getTypeByTargetMarket());
-        entity.setTypeByStars(dto.getTypeByStars());
-        return entity;
-
-    }
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="rooms", ignore = true)
+    @Mapping(target="address", ignore = true)
+    @Mapping(target="region", ignore = true)
+    @Mapping(target="boardBasisSet", ignore = true)
+    @Mapping(target="reviews", ignore = true)
+    public abstract Hotel update(HotelDetailsDto dto,@MappingTarget Hotel entity);
 }

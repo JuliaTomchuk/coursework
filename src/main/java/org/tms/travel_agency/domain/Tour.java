@@ -62,28 +62,4 @@ public class Tour extends TourProduct {
         return Objects.hash(getBookingNumber());
     }
 
-
-    @Override
-    protected BigDecimal calculatePrice() {
-        BigDecimal roomPrice = room.getPrice();
-        BigDecimal roundTripsPrice = new BigDecimal(0.0);
-        for(RoundTrip trip: roundTrips){
-            roundTripsPrice.add(trip.getPrice());
-        }
-        return roomPrice.add(roundTripsPrice);
-    }
-
-    @Override
-    protected void book() {
-        roundTrips.stream().forEach(trip -> trip.book());
-        room.book();
-
-
-    }
-
-    @Override
-    protected void cancelBooking() {
-        roundTrips.stream().forEach(trip -> trip.cancelBooking());
-        room.cancelBooking();
-    }
 }

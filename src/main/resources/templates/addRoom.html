@@ -21,7 +21,7 @@
   </div>
   <div class ="row" >
     <H1>Add new room</H1>
-    <form th:method="post" th:action="/hotels/addRoom" th:object="${newRoom}">
+    <form th:method="post" th:action="@{/rooms/add}" th:object="${newRoom}">
       <div class="form-floating mb-3" >
         <input type="number" th:field="*{number}" class="form-control" id="floatingInput" placeholder="number">
         <p th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></p>
@@ -33,12 +33,11 @@
         <label for="floatingInput">Number of tourist</label>
       </div>
       <div class="form-floating mb-3" >
-        <input type="text" th:object="idHotel" class="form-control" id="floatingInput2" placeholder="hotel id" readonly="readonly">
+        <input type="text" th:field="*{idHotel}"  class="form-control" id="floatingInput2" placeholder="hotel id" readonly="readonly">
         <label for="floatingInput">Hotel id</label>
       </div>
       <div>
       <select th:field="*{typesByOccupancy}" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-        <p th:if="${#fields.hasErrors('typeByOccupancy')}" th:errors="*{typesByOccupancy}"></p>
         <option selected value="">Select room type by occupancy</option>
         <option value="SINGLE">single</option>
         <option value="DOUBLE">double</option>
@@ -46,10 +45,10 @@
         <option value="TRIPLE">triple</option>
         <option value="QUAD">quad</option>
       </select>
+        <p th:if="${#fields.hasErrors('typesByOccupancy')}" th:errors="*{typesByOccupancy}"></p>
       </div>
       <div>
         <select th:field="*{typesByView}" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-          <p th:if="${#fields.hasErrors('typeByView')}" th:errors="*{typesByView}"></p>
           <option selected value="">Select room type by view</option>
           <option value="SEA">sea</option>
           <option value="POOL">pool</option>
@@ -61,6 +60,10 @@
           <option value="MOUNTAIN">mountain</option>
           <option value="SIDE_SEA">side sea</option>
         </select>
+        <p th:if="${#fields.hasErrors('typesByView')}" th:errors="*{typesByView}"></p>
+      </div>
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="submit">Add</button>
       </div>
     </form>
 

@@ -2,18 +2,24 @@ package org.tms.travel_agency.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.tms.travel_agency.domain.Destination;
 import org.tms.travel_agency.domain.Region;
+import org.tms.travel_agency.dto.destination.DestinationLightDto;
 import org.tms.travel_agency.dto.region.RegionDetailsDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
+import org.tms.travel_agency.dto.room.RoomLightDto;
 import org.tms.travel_agency.exception.DuplicateRegionException;
 import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.mapper.RegionMapper;
 import org.tms.travel_agency.repository.RegionRepository;
+import org.tms.travel_agency.services.DestinationService;
 import org.tms.travel_agency.services.RegionService;
 import org.tms.travel_agency.validator.DuplicateValidator;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 @Service
 @AllArgsConstructor
@@ -21,6 +27,7 @@ public class RegionServiceImpl implements RegionService {
     private final RegionRepository repository;
     private final DuplicateValidator<RegionDetailsDto> validator;
     private final RegionMapper mapper;
+    private final DestinationService service;
     @Override
     @Transactional
     public RegionDetailsDto save(RegionDetailsDto dto) {
@@ -58,4 +65,20 @@ public class RegionServiceImpl implements RegionService {
     public void delete(UUID id) {
         repository.findById(id).ifPresentOrElse(region->repository.delete(region), NoSuchRegionException::new);
     }
+
+    @Override
+    @Transactional
+    public Map<String,List<RegionLightDto>> getRegionsByDestinations(){
+        Map<String,List<RegionLightDto>> regionsByDestination = new HashMap<>();
+        List<DestinationLightDto> destinations = service.getAll();
+        for(DestinationLightDto destination:destinations){
+            List<Region> regions = repository.findByDestinationName(destination.getName());
+            List<RegionLightDto> converted = mapper.convert(regions);
+            regionsByDestination.put(destination.getName(), converted);
+        }
+        return regionsByDestination;
+    }
+
+
+
 }
