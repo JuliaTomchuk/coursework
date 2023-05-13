@@ -57,7 +57,7 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.findById(id).ifPresentOrElse(room -> {
             room.setBooked(true);
             roomRepository.save(room);
-        }, () -> new NoSuchRoomException("no room with id" + id));
+        }, () -> { throw new NoSuchRoomException("no room with id" + id);});
     }
 
     private void addToCart(Room room) {
@@ -68,9 +68,9 @@ public class RoomServiceImpl implements RoomService {
             cart = optionalCart.get();
         } else {
             cart = new Cart();
-            userRepository.findByUsername(username).ifPresentOrElse(user -> cart.setUser(user), () -> new NoSuchUserException("No user with username: " + username));
+            userRepository.findByUsername(username).ifPresentOrElse(cart::setUser, () -> { throw new NoSuchUserException("No user with username: " + username);});
         }
-        room.setType("room");
+        room.setType("Room");
         cart.addTourProduct(room);
         cartRepository.save(cart);
     }
@@ -213,7 +213,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void delete(UUID id) {
-        roomRepository.findById(id).ifPresentOrElse((room) -> roomRepository.delete(room), () -> new NoSuchRoomException("no room with id: " + id));
+        roomRepository.findById(id).ifPresentOrElse(roomRepository::delete, () -> {throw new NoSuchRoomException("no room with id: " + id);});
     }
 
 
@@ -228,13 +228,12 @@ public class RoomServiceImpl implements RoomService {
             throw new NoSuchRoomException("no such rooms");
         }
         List<RoomDetailsDto> roomDtos = roomMapper.convertToListDto(rooms);
-        List<RoomDetailsDto> roomsForBooking = roomDtos.stream().peek(room -> {
+        return roomDtos.stream().peek(room -> {
             room.setCheckIn(dto.getCheckIn());
             room.setBoardBases(dto.getBoardBases());
             room.setCheckOut(dto.getCheckOut());
             room.setPrice(calculatePrice(room));
         }).collect(Collectors.toList());
-        return roomsForBooking;
     }
 
     private BigDecimal calculatePrice(RoomDetailsDto room) {
