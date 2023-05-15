@@ -34,9 +34,9 @@ public class DestinationController {
 
     @GetMapping
     public ModelAndView getAllDestinations(){
-        ModelAndView modelAndView = new ModelAndView("allDestinations");
+        ModelAndView modelAndView = new ModelAndView("destinations");
         List<DestinationLightDto> destinationsList = service.getAll();
-        modelAndView.addObject("destinationsList");
+        modelAndView.addObject("allDestinations",destinationsList);
         return modelAndView;
     }
     @GetMapping("/destinationManager")
@@ -59,7 +59,7 @@ public class DestinationController {
          service.delete(id);
         return "redirect:/destinations/destinationManager";
     }
-    @PostMapping("destinationManager/update")
+    @PostMapping("/destinationManager/update")
     public String updateDestination(@Valid @ModelAttribute("newDestination") DestinationDetailsDto dto,BindingResult result){
         if(result.hasErrors()){
             return "destinationManager";

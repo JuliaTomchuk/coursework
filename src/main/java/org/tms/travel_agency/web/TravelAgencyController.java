@@ -34,8 +34,15 @@ public class TravelAgencyController {
     public ModelAndView getAllDestinations(@RequestParam String type){
         Map<String, List<RegionLightDto>> regionsByDestinations = regionService.getRegionsByDestinations();
         ModelAndView modelAndView = new ModelAndView("allDestinations");
+        List<DestinationLightDto> allDestinations = destinationService.getAll();
+        modelAndView.addObject("allDestinations", allDestinations);
         modelAndView.addObject("regionsByDestinations",regionsByDestinations);
         modelAndView.addObject("type", type);
         return modelAndView;
+    }
+    @GetMapping("/adminPage")
+    public ModelAndView getAdminPage(){
+        ModelAndView modelAndView = new ModelAndView("adminPage");
+        return  modelAndView;
     }
 }

@@ -34,7 +34,7 @@ public class RoomController {
     private final RoomService roomService;
     private final HotelService hotelService;
 
-    @GetMapping("book")
+    @GetMapping("/book")
     public String book(UUID uuid){
         roomService.book(uuid);
         return "/cart";
@@ -129,7 +129,5 @@ public class RoomController {
         modelAndView.addObject("searchRoom", searchRoom);
         return modelAndView;
     }
-
-
 
 }

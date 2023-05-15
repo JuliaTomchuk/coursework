@@ -51,9 +51,9 @@
           <input type="text" th:field="*{home}" class="form-control" id="floatingInput5" placeholder="Home" readonly="readonly">
           <label for="floatingInput">Home</label>
         </div>
-        <div class="form-floating mb-3" >
-          <input type="text" th:field="*{description}" class="form-control" id="floatingInput7" placeholder="Description" readonly="readonly">
-          <label for="floatingInput">Description</label>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+          <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea1" rows="6" readonly="readonly"></textarea>
         </div>
 
       </form>

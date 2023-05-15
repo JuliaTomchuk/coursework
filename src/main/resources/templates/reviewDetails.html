@@ -33,9 +33,9 @@
         <input type="text" th:field="*{rating}"  class="form-control" id="floatingInput4" placeholder="rating" readonly="readonly">
         <label for="floatingInput4">Rating</label>
       </div>
-      <div class="form-floating mb-3" >
-        <input type="text" th:field="*{message}"  class="form-control" id="floatingInput3" placeholder="message" readonly="readonly">
-        <label for="floatingInput3">Review</label>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Review</label>
+        <textarea th:field="*{message}" class="form-control" id="exampleFormControlTextarea1" rows="6"  readonly="readonly"></textarea>
       </div>
        </form>
 

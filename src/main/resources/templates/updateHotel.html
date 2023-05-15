@@ -37,12 +37,8 @@
         <p th:if="${#fields.hasErrors('basicPriceOfRoom')}" th:errors="*{basicPriceOfRoom}"></p>
         <label for="floatingInput">Basic price of room</label>
       </div>
-      <div class="form-floating mb-3" >
-        <input type="text" th:field="*{description}" class="form-control" id="floatingInput7" placeholder="Description">
-        <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
-        <label for="floatingInput">Description</label>
-      </div>
-      <select th:field="*{typeByStars}" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+
+           <select th:field="*{typeByStars}" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
         <p th:if="${#fields.hasErrors('typeByStars')}" th:errors="*{typeByStars}"></p>
         <option selected value="">Select hotel type by stars</option>
         <option value="ONE_STAR">*</option>
@@ -62,6 +58,11 @@
         <option value="ADULT_ONLY">ADULT_ONLY</option>
       </select>
       <p th:if="${#fields.hasErrors('typeByTargetMarket')}" th:errors="*{typeByTargetMarket}"></p>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+        <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea1" rows="6" ></textarea>
+        <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+      </div>
 
       <div class="d-grid gap-2">
         <button class="btn btn-primary" type="submit">Update</button>
