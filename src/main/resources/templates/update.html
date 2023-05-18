@@ -8,22 +8,13 @@
 
 </head>
 <body>
-<div class="container text-center">
+<div class="container-fluid">
     <div class="row">
-        first row
-        <div class="col">
-            Column
-        </div>
-        <div class="col">
-            Column
-        </div>
-        <div class="col">
-            Column
-        </div>
+        <div class="col" th:insert="~{fragments.html :: navbar}"></div>
     </div>
-    <div class="row">
+    <div class="container text-center mt-5">
         <H1>Update Account Information </H1>
-    </div>
+
     <div class="row">
         <form th:method="post" th:action="@{/user/update}" th:object="${currentUser}">
             <div class="form-floating mb-3">
@@ -81,9 +72,8 @@
 
     </div>
     <div class="row">
-        3 row
-
-    </div>
+        <div class="col mb-1" th:insert="~{fragments.html::bottom}"></div>
+            </div>
 </div>
 
 

@@ -7,26 +7,21 @@
   <title>Destinations</title>
 </head>
 <body>
-<div class="container text-center">
+<div class="container-fluid">
 
-  <div class="row">
-    first row
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-4">
+  <div class="row" >
+    <div class="col" th:insert="~{fragments.html :: navbar}"></div>
+
+     </div>
+
+
+  <div class="row mt-5 text-center">
+    <div class="col-2">
       <div  th:insert="~{fragments.html :: allDestinations}">
       </div>
     </div>
-    <div class="col-8">
+      <div class="col-8 text-center ">
+        <div class="w-50 mx-auto">
       <div class="row shadow-lg p-3 mb-5 bg-body-tertiary rounded">
         <h1>
           <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor"
@@ -54,14 +49,11 @@
           Book flights
         </h1>
       </div>
-
-    </div>
+      </div>
+      </div>
   </div>
-      <div>
-
-
   <div class="row">
-    3 row
+    <div class="col mb-1" th:insert="~{fragments.html::bottom}"></div>
 
   </div>
 </div>

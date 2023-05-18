@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.tms.travel_agency.domain.Role;
 import org.tms.travel_agency.dto.review.ReviewDetailsDto;
 import org.tms.travel_agency.services.ReviewService;
+import org.tms.travel_agency.services.UserService;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -24,18 +26,21 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService service;
+    private final UserService userService;
 
     @GetMapping("/details")
     public ModelAndView getDetails(@RequestParam(name="id")UUID id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-        boolean isAdmin = authentication.getAuthorities().contains("ROLE_ADMIN");
+        boolean isAdmin = userService.isAdmin();
         ReviewDetailsDto review = service.getById(id);
         ModelAndView modelAndView = new ModelAndView("reviewDetails");
         modelAndView.addObject("review",review);
+        modelAndView.addObject("isAdmin",isAdmin);
         if(isAdmin||name.equals(review.getUsername())){
             modelAndView= new ModelAndView("reviewDetailsEditable");
             modelAndView.addObject("review", review);
+            modelAndView.addObject("isAdmin",isAdmin);
             return modelAndView;
         }
 
@@ -46,7 +51,9 @@ public class ReviewController {
         ModelAndView modelAndView = new ModelAndView("addReview");
         ReviewDetailsDto reviewDetailsDto = new ReviewDetailsDto();
         reviewDetailsDto.setHotelId(idHotel);
+        boolean isAdmin = userService.isAdmin();
         modelAndView.addObject("review",reviewDetailsDto);
+        modelAndView.addObject("isAdmin",isAdmin);
         return modelAndView;
     }
     @PostMapping("/save")

@@ -10,6 +10,7 @@ import org.tms.travel_agency.domain.TourProduct;
 import org.tms.travel_agency.exception.NoSuchServiceException;
 import org.tms.travel_agency.services.CartService;
 import org.tms.travel_agency.services.TourProductService;
+import org.tms.travel_agency.services.UserService;
 
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,15 @@ import java.util.UUID;
 public class CartController {
     private final CartService cartService;
     private final List<TourProductService> services;
+    private final UserService userService;
 
     @GetMapping()
     public ModelAndView getAll() {
         List<TourProduct> products = cartService.preview();
         ModelAndView modelAndView = new ModelAndView("cart");
+        boolean isAdmin = userService.isAdmin();
         modelAndView.addObject("products", products);
+        modelAndView.addObject("isAdmin",isAdmin);
         return modelAndView;
     }
 
@@ -56,7 +60,9 @@ public class CartController {
     public ModelAndView getAllBooking() {
         Map<UUID, List<TourProduct>> allBooking = cartService.getAllBookings();
         ModelAndView modelAndView = new ModelAndView("bookingManager");
+        boolean isAdmin= userService.isAdmin();
         modelAndView.addObject("allBooking", allBooking);
+        modelAndView.addObject("isAdmin",isAdmin);
         return modelAndView;
     }
 
