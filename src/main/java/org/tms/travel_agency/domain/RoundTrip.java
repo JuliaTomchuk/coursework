@@ -32,18 +32,17 @@ public class RoundTrip extends TourProduct {
     @OneToOne
     private AirplaneTicket depart;
     @OneToOne
-     private AirplaneTicket arrive;
+    private AirplaneTicket arrive;
     @ManyToOne
     private Destination destination;
 
-    public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive,Destination destination) {
+    public RoundTrip(AirplaneTicket depart, AirplaneTicket arrive, Destination destination) {
 
         this.depart = depart;
         this.arrive = arrive;
-        this.destination=destination;
+        this.destination = destination;
 
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -26,8 +26,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomDetailsDto implements Serializable {
-    @NotNull(groups = {OnUpdate.class})
-    @Null(groups={OnCreate.class})
+    @NotNull(groups = OnUpdate.class)
+    @Null(groups=OnCreate.class)
     private UUID id;
     @NotNull(groups = {OnUpdate.class, OnCreate.class})
     private Integer number;
@@ -42,16 +42,16 @@ public class RoomDetailsDto implements Serializable {
     private String hotelName;
     private String destination;
     private String region;
-    @NotNull(groups = {OnSearch.class})
-    @FutureOrPresent(groups = {OnSearch.class})
+    @NotNull(groups = OnSearch.class)
+    @FutureOrPresent(groups = OnSearch.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkIn;
-    @NotNull(groups = {OnSearch.class})
-    @Future(groups = {OnSearch.class})
+    @NotNull(groups = OnSearch.class)
+    @Future(groups = OnSearch.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkOut;
     private BigDecimal price;
-    @NotNull(groups = {OnSearch.class})
+    @NotNull(groups = OnSearch.class)
     private BoardBasisTypes boardBases;
     private boolean booked;
     private boolean preBooked;

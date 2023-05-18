@@ -1,12 +1,11 @@
 package org.tms.travel_agency.services;
 
-import org.tms.travel_agency.domain.TourProduct;
 import org.tms.travel_agency.dto.room.RoomDetailsDto;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface BookingService <T,V> {
+public interface TourProductService<T,V> {
 
     void book ( UUID id);
 

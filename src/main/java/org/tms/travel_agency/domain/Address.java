@@ -34,12 +34,12 @@ public class Address {
     @NaturalId
     private String home;
 
-    public Address( String city, String street, String home) {
+    public Address(String city, String street, String home) {
 
 
         this.city = city;
         this.street = street;
-        this.home=home;
+        this.home = home;
     }
 
     @Override

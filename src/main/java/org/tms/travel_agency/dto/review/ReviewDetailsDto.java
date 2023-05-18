@@ -4,23 +4,23 @@ package org.tms.travel_agency.dto.review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.tms.travel_agency.validator.OnCreate;
-import org.tms.travel_agency.validator.OnUpdate;
+import org.tms.travel_agency.domain.Rating;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewInputDto {
-    @Null(groups = {OnCreate.class})
-    @NotNull(groups ={OnUpdate.class})
+public class ReviewDetailsDto {
     private UUID id;
-    @NotBlank(groups = {OnUpdate.class, OnCreate.class})
+    @NotBlank
     private String message;
-    @NotNull(groups = {OnUpdate.class, OnCreate.class})
     private UUID hotelId;
+    private String username;
+    private LocalDate date;
+    @NotNull
+    private Rating rating;
 }

@@ -1,5 +1,6 @@
 package org.tms.travel_agency.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tms.travel_agency.domain.Address;
 import org.tms.travel_agency.domain.Hotel;
 import org.tms.travel_agency.domain.Review;
+import org.tms.travel_agency.domain.RoomTypesByOccupancy;
+import org.tms.travel_agency.domain.RoomTypesByView;
 import org.tms.travel_agency.dto.hotel.HotelDetailsDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.review.ReviewLightDto;
@@ -14,7 +17,9 @@ import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.repository.AddressRepository;
 import org.tms.travel_agency.repository.RegionRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public abstract class HotelMapper {
@@ -22,20 +27,16 @@ public abstract class HotelMapper {
     private RegionRepository regionRepository;
     @Autowired
     private AddressRepository addressRepository;
-
-    public Hotel convert(HotelDetailsDto dto) {
-        Hotel hotel = new Hotel();
-        hotel.setName(dto.getName());
+    @Mapping(target="region",ignore = true)
+    @Mapping(target="basicPriceOfRoomPerDay", source = "basicPriceOfRoom")
+    public abstract  Hotel convert(HotelDetailsDto dto);
+    @AfterMapping
+    public Hotel addAddressAndRegion(HotelDetailsDto dto, @MappingTarget Hotel entity){
         Address  address = new Address(dto.getCity(), dto.getStreet(), dto.getHome());
         Address saved= addressRepository.save(address);
-        hotel.setAddress(saved);
-        hotel.setRegion(regionRepository.findByNameIgnoreCase(dto.getRegion()).orElseThrow(() -> new NoSuchRegionException("no region with name: " + dto.getRegion())));
-        hotel.setDescription(dto.getDescription());
-        hotel.setTypeByStars(dto.getTypeByStars());
-        hotel.setTypeByTargetMarket(dto.getTypeByTargetMarket());
-        hotel.setBasicPriceOfRoomPerDay(dto.getBasicPriceOfRoom());
-        return hotel;
-
+        entity.setAddress(saved);
+        entity.setRegion(regionRepository.findByNameIgnoreCase(dto.getRegion()).orElseThrow(() -> new NoSuchRegionException("no region with name: " + dto.getRegion())));
+        return entity;
     }
 
     @Mapping(target = "region", source = "region.name")
@@ -44,7 +45,17 @@ public abstract class HotelMapper {
     @Mapping(target = "home", source = "address.home")
     @Mapping(target="basicPriceOfRoom", source = "basicPriceOfRoomPerDay")
     public abstract HotelDetailsDto convert(Hotel hotel);
-     public abstract ReviewLightDto convert(Review value);
+     @AfterMapping
+     public HotelDetailsDto createSetOfRoomTypes(Hotel entity, @MappingTarget HotelDetailsDto dto){
+          Set<RoomTypesByView> roomTypesByViewSet = new HashSet<>();
+          Set <RoomTypesByOccupancy> roomTypesByOccupancySet = new HashSet<>();
+          entity.getRooms().stream().forEach(r->{roomTypesByViewSet.add(r.getTypesByView());
+              roomTypesByOccupancySet.add(r.getTypesByOccupancy());
+          });
+          dto.setRoomTypesByViewSet(roomTypesByViewSet);
+          dto.setRoomTypesByOccupancySet(roomTypesByOccupancySet);
+          return dto;
+     }
 
     public abstract List<HotelLightDto> convert(List<Hotel> hotels);
 

@@ -1,6 +1,7 @@
 package org.tms.travel_agency.web;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,20 +14,23 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tms.travel_agency.domain.Destination;
 import org.tms.travel_agency.dto.destination.DestinationDetailsDto;
 import org.tms.travel_agency.dto.destination.DestinationLightDto;
+import org.tms.travel_agency.dto.region.RegionLightDto;
 import org.tms.travel_agency.exception.DuplicateDestinationException;
 import org.tms.travel_agency.exception.NoSuchDestinationException;
 import org.tms.travel_agency.services.DestinationService;
+import org.tms.travel_agency.services.RegionService;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/destinations")
 public class DestinationController {
 
     private final DestinationService service;
+    private final RegionService regionService;
 
     @GetMapping
     public ModelAndView getAllDestinations(){
@@ -63,6 +67,16 @@ public class DestinationController {
         service.update(dto);
         return "redirect:/destinations/destinationManager";
     }
+    @GetMapping("/details")
+    public ModelAndView getDetails(@RequestParam(name="id") UUID id){
+        DestinationDetailsDto destination = service.getById(id);
+        List<RegionLightDto> regions = regionService.getByDestinationName(destination.getName());
+        ModelAndView modelAndView = new ModelAndView("destinationDetails");
+        modelAndView.addObject("destination",destination);
+        modelAndView.addObject("regions", regions);
+        return modelAndView;
+    }
+
 
 
 }

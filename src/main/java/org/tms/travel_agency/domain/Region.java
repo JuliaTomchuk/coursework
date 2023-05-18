@@ -31,7 +31,7 @@ public class Region {
     @Id
     @GeneratedValue
     private UUID id;
-     @NaturalId
+    @NaturalId
     private String name;
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -40,7 +40,7 @@ public class Region {
     @OneToMany(mappedBy = "region", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Tour> tours = new HashSet<>();
 
-     @ManyToOne
+    @ManyToOne
     private Destination destination;
     @Basic(fetch = FetchType.LAZY)
     @Lob
@@ -61,16 +61,17 @@ public class Region {
     }
 
     public void deleteHotel(Hotel hotel) {
-       hotels.remove(hotel);
+        hotels.remove(hotel);
         hotel.setRegion(null);
 
     }
 
-    public void addTour(Tour tour){
+    public void addTour(Tour tour) {
         tours.add(tour);
         tour.setRegion(this);
     }
-    public void deleteTour(Tour tour){
+
+    public void deleteTour(Tour tour) {
         tours.add(tour);
         tour.setRegion(null);
     }

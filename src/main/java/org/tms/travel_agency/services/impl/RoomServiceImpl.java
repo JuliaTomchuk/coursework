@@ -5,17 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.tms.travel_agency.domain.BoardBasisTypes;
 import org.tms.travel_agency.domain.Cart;
-import org.tms.travel_agency.domain.Destination;
 import org.tms.travel_agency.domain.Hotel;
-import org.tms.travel_agency.domain.HotelTypeByStars;
-import org.tms.travel_agency.domain.HotelTypeByTargetMarket;
 import org.tms.travel_agency.domain.Hotel_;
-import org.tms.travel_agency.domain.Region;
 import org.tms.travel_agency.domain.Room;
-import org.tms.travel_agency.domain.RoomTypesByOccupancy;
-import org.tms.travel_agency.domain.RoomTypesByView;
 import org.tms.travel_agency.domain.Room_;
 import org.tms.travel_agency.dto.room.RoomDetailsDto;
 import org.tms.travel_agency.dto.room.RoomLightDto;
@@ -36,6 +29,7 @@ import org.tms.travel_agency.validator.DuplicateValidator;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -51,7 +45,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final UserRepository userRepository;
-
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
     private final RoomMapper roomMapper;
@@ -61,7 +54,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void book(UUID id) {
-        roomRepository.findById(id).ifPresentOrElse(room ->{ room.setBooked(true); roomRepository.save(room);}, () -> new NoSuchRoomException("no room with id" + id));
+        roomRepository.findById(id).ifPresentOrElse(room -> {
+            room.setBooked(true);
+            roomRepository.save(room);
+        }, () -> new NoSuchRoomException("no room with id" + id));
     }
 
     private void addToCart(Room room) {
@@ -84,10 +80,10 @@ public class RoomServiceImpl implements RoomService {
     public void deleteFromCart(UUID id) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Room room = roomRepository.findById(id).orElseThrow(() -> new NoSuchRoomException("no room with id: " + id));
-        if(room.getBooked()){
+        if (room.getBooked()) {
             throw new NotAllowedException("Product has been booked, you can't delete it from cart");
 
-        }else{
+        } else {
             Cart cart = cartRepository.findByUserUsername(name).orElseThrow(() -> new NoSuchCartException("No cart for user: " + name));
             cart.deleteTourProduct(room);
             room.setCheckOut(null);
@@ -95,15 +91,13 @@ public class RoomServiceImpl implements RoomService {
             room.setBoardBases(null);
             room.setPrice(null);
             room.setPreBooked(false);
-            room.setDescription(null);
             roomRepository.save(room);
         }
     }
 
 
-
     @Override
-    public void cancelBooking( UUID idCart, UUID idProduct) {
+    public void cancelBooking(UUID idCart, UUID idProduct) {
         Cart cart = cartRepository.findById(idCart).orElseThrow(() -> new NoSuchCartException("No cart with id: " + idCart));
         Room room = roomRepository.findById(idProduct).orElseThrow(() -> new NoSuchRoomException("No room with id: " + idProduct));
         cart.deleteTourProduct(room);
@@ -113,7 +107,6 @@ public class RoomServiceImpl implements RoomService {
         room.setBoardBases(null);
         room.setCheckIn(null);
         room.setCheckOut(null);
-        room.setDescription(null);
         roomRepository.save(room);
     }
 
@@ -137,25 +130,7 @@ public class RoomServiceImpl implements RoomService {
         room.setCheckOut(dto.getCheckOut());
         room.setBoardBases(dto.getBoardBases());
         room.setPreBooked(true);
-        room.setDescription(generateDescription(room));
         addToCart(room);
-    }
-    private String generateDescription(Room room){
-        return "Room{" +
-                "id=" + room.getId() +"\n"+
-                ", destination: " + room.getHotel().getRegion().getDestination().getName()+"\n"+
-                ", region: " + room.getHotel().getRegion().getName() +"\n"+
-                ", hotel: " + room.getHotel().getName() +"\n"+
-                ", stars: " + room.getHotel().getTypeByStars() +"\n"+
-                ", type Of hotel: " + room.getHotel().getTypeByTargetMarket() +"\n"+
-                ", room number: " + room.getNumber() +"\n"+
-                ", numOfTourist: " + room.getNumOfTourist() +"\n"+
-                ", typesByOccupancy: " + room.getTypesByOccupancy() +"\n"+
-                ", typesByView: " + room.getTypesByView() +"\n"+
-                ", checkIn: " + room.getCheckIn() +"\n"+
-                ", checkOut: " + room.getCheckOut() +"\n"+
-                ", boardBases: " + room.getBoardBases() +
-                '}';
     }
 
     private Specification<Room> createSpecification(Room room) {
@@ -223,6 +198,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public RoomDetailsDto update(RoomDetailsDto roomDetailsDto) {
         Room room = roomRepository.findById(roomDetailsDto.getId()).orElseThrow(() -> new NoSuchRoomException("No room with id: " + roomDetailsDto.getId()));
         if (!room.getNumber().equals(roomDetailsDto.getNumber())) {
@@ -231,8 +207,7 @@ public class RoomServiceImpl implements RoomService {
             }
         }
         Room update = roomMapper.update(roomDetailsDto, room);
-        Room saved = roomRepository.save(update);
-        return roomMapper.convert(saved);
+        return roomMapper.convert(update);
 
     }
 
@@ -265,53 +240,12 @@ public class RoomServiceImpl implements RoomService {
     private BigDecimal calculatePrice(RoomDetailsDto room) {
         BigDecimal basicPriceOfRoomPerDay = hotelService.getById(room.getIdHotel()).getBasicPriceOfRoom();
         long numOfDays = room.getCheckOut().toEpochDay() - room.getCheckIn().toEpochDay();
-        BigDecimal priceForView = calculatePriceByView(room.getTypesByView());
-        BigDecimal priceForOccupancy = calculatePriceByOccupancy(room.getTypesByOccupancy());
-        BigDecimal boardBasisPricePerDay = calculateBoardBasisPricePerDay(room.getBoardBases(), room.getNumOfTourist());
+        BigDecimal priceForView = room.getTypesByView().price;
+        BigDecimal priceForOccupancy = room.getTypesByOccupancy().price;
+        BigDecimal boardBasisPricePerDay = room.getBoardBases().price.multiply(BigDecimal.valueOf(room.getNumOfTourist()));
         BigDecimal price = basicPriceOfRoomPerDay.add(priceForOccupancy).add(priceForView).add(boardBasisPricePerDay).multiply(BigDecimal.valueOf(numOfDays));
         price = price.setScale(2, RoundingMode.UP);
         return price;
     }
 
-    private BigDecimal calculatePriceByView(RoomTypesByView typesByView) {
-        BigDecimal price = new BigDecimal(0.0);
-        switch (typesByView) {
-            case INSIDE -> price = new BigDecimal(15.2);
-            case CITY -> price = new BigDecimal(30.8);
-            case LAND -> price = new BigDecimal(25.7);
-            case PARK -> price = new BigDecimal(35.4);
-            case GARDEN -> price = new BigDecimal(20.9);
-            case POOL -> price = new BigDecimal(40.6);
-            case MOUNTAIN -> price = new BigDecimal(50.5);
-            case SIDE_SEA -> price = new BigDecimal(60.2);
-            case SEA -> price = new BigDecimal(70.5);
-
-        }
-        return price;
-    }
-
-    private BigDecimal calculatePriceByOccupancy(RoomTypesByOccupancy typesByOccupancy) {
-
-        BigDecimal price = new BigDecimal("0.0");
-        switch (typesByOccupancy) {
-            case SINGLE -> price = new BigDecimal(100.60);
-            case DOUBLE, TWIN -> price = new BigDecimal(180.60);
-            case TRIPLE -> price = new BigDecimal(300.60);
-            case QUAD -> price = new BigDecimal(460.10);
-        }
-        return price;
-    }
-
-    private BigDecimal calculateBoardBasisPricePerDay(BoardBasisTypes boardBases, Integer numOfTourist) {
-        BigDecimal price = new BigDecimal(0.0);
-        switch (boardBases) {
-            case BED_AND_BREAKFAST -> new BigDecimal(100.9);
-            case HALF_BOARD -> new BigDecimal(250.8);
-            case FULL_BOARD -> new BigDecimal(350.6);
-            case All_INCLUSIVE -> new BigDecimal(550.80);
-            case ULTRA_All_INCLUSIVE -> new BigDecimal(690.9);
-        }
-        return price.multiply(BigDecimal.valueOf(numOfTourist));
-
-    }
 }

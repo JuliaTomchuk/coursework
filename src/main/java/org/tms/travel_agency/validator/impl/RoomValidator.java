@@ -18,10 +18,7 @@ public class RoomValidator implements DuplicateValidator<RoomDetailsDto> {
     @Transactional
     public boolean isUnique(RoomDetailsDto roomDetailsDto) {
 
-        Optional<Room> byNumberAndHotelId = roomRepository.findByNumberAndHotelId(roomDetailsDto.getNumber(), roomDetailsDto.getIdHotel());
-        if(byNumberAndHotelId.isEmpty()){
-            return true;
-        }
-        return false;
+        return roomRepository.findByNumberAndHotelId(roomDetailsDto.getNumber(), roomDetailsDto.getIdHotel()).isEmpty();
+
     }
 }

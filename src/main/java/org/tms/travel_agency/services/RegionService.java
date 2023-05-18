@@ -10,5 +10,6 @@ import java.util.UUID;
 
 public interface RegionService extends CRUDService<RegionDetailsDto, RegionLightDto>{
      Map<String,List<RegionLightDto>> getRegionsByDestinations();
+     List<RegionLightDto> getByDestinationName(String name);
 
 }

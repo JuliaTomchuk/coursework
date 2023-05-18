@@ -20,15 +20,7 @@ public class HotelValidatorImpl implements DuplicateValidator<HotelDetailsDto> {
     @Override
 
     public boolean isUnique(HotelDetailsDto dto) {
-        Optional<Hotel> hotelOptional = repository.findByAddress_City_AndAddress_Street_AndAddress_Home_AndRegion_Name(dto.getCity(), dto.getStreet(), dto.getHome(), dto.getRegion());
-
-            if (hotelOptional.isEmpty()) {
-                return true;
-            }
-            return false;
-        }
-
-
+        return repository.findByAddressANDRegion(dto.getCity(), dto.getStreet(), dto.getHome(), dto.getRegion()).isEmpty();
     }
 
-
+}

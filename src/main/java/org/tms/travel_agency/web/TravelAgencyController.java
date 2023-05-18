@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.tms.travel_agency.dto.destination.DestinationLightDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
 import org.tms.travel_agency.services.DestinationService;
 import org.tms.travel_agency.services.RegionService;
@@ -20,10 +21,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TravelAgencyController {
     private final RegionService regionService;
+    private final DestinationService destinationService;
 
     @GetMapping
     public ModelAndView getHomePage(){
         ModelAndView modelAndView = new ModelAndView("home");
+        List<DestinationLightDto> allDestinations = destinationService.getAll();
+        modelAndView.addObject("allDestinations", allDestinations);
         return modelAndView;
     }
     @GetMapping("/allDestinations")

@@ -8,8 +8,8 @@ import java.util.UUID;
 
 public interface CartService {
     List<TourProduct> preview();
-    void book(UUID id, String type);
-    void deleteFromCart(UUID id,String type);
+    void book(TourProductService tourProductService, UUID id);
+    void deleteFromCart(TourProductService tourProductService,UUID id);
     Map<UUID,List<TourProduct>> getAllBookings();
-    void cancelBooking(UUID idCart, UUID idProduct,String type);
+    void cancelBooking(UUID idCart, UUID idProduct,TourProductService tourProductService);
 }

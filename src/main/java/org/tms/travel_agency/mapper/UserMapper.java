@@ -15,10 +15,7 @@ public interface UserMapper {
     UserFullDescriptionDto convert(User user);
 
     User convert(UserFullDescriptionDto userFullDescriptionDto);
-
-
     List<UserLightDescriptionDto> convert(List<User> users);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     User update(UserFullDescriptionDto userFullDescriptionDto, @MappingTarget User user);

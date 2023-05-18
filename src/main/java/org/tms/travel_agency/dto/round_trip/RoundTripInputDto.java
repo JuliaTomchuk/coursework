@@ -15,8 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoundTripInputDto {
-    @Null(groups={OnCreate.class})
-    @NotNull(groups = {OnUpdate.class})
+    @Null(groups=OnCreate.class)
+    @NotNull(groups = OnUpdate.class)
     private UUID id;
     @NotBlank(groups = {OnCreate.class, OnUpdate.class})
     private String destination;

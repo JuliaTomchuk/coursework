@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.tms.travel_agency.domain.TourProduct;
+import org.tms.travel_agency.dto.room.RoomDetailsDto;
 import org.tms.travel_agency.services.CartService;
+import org.tms.travel_agency.services.RoomService;
+import org.tms.travel_agency.services.TourProductService;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+    private final RoomService roomService;
 
     @GetMapping()
     public ModelAndView getAll(){
@@ -28,18 +32,25 @@ public class CartController {
     }
     @GetMapping("/book")
     public String book(@RequestParam(name="id") UUID id, @RequestParam(name="type") String type){
-        cartService.book(id, type);
+        if(type.equals("room")) {
+            cartService.book(roomService, id);
+        }
         return "redirect:/cart";
     }
+
     @GetMapping("/deleteFromCart")
     public String deleteFromCart(@RequestParam(name="id") UUID id, @RequestParam(name="type") String type){
-        cartService.deleteFromCart(id,type);
+        if(type.equals("room")) {
+            cartService.deleteFromCart(roomService, id);
+        }
         return "redirect:/cart";
     }
 
     @GetMapping("/cancelBooking")
     public String cancelBooking(@RequestParam (name="idCart") UUID idCart, @RequestParam(name="type")String type, @RequestParam(name="idProduct") UUID idProduct){
-        cartService.cancelBooking(idCart,idProduct,type);
+        if(type.equals("room")) {
+            cartService.cancelBooking(idCart, idProduct, roomService);
+        }
         return "redirect:/cart/allBooking";
     }
     @GetMapping("/allBooking")

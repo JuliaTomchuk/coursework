@@ -51,7 +51,7 @@ public class DestinationServiceImpl implements DestinationService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresentOrElse((destination)->repository.delete(destination),NoSuchDestinationException::new);
+        repository.findById(id).ifPresentOrElse((destination)->repository.delete(destination),()-> new NoSuchDestinationException("no destination with id " + id));
     }
 
     @Override

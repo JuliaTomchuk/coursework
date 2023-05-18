@@ -41,7 +41,7 @@
                                 </tr>
                                 <tr th:each="booking:${element.value}" >
                                 <td th:text="${booking.type}"></td>
-                                <td th:text="${booking.description}"></td>
+                                <td th:text="${booking}"></td>
                                 <td th:text="${booking.booked}"></td>
                                 <td th:text="${booking.preBooked}"></td>
                                 <td><button type="button" class="btn btn-danger"><a th:href=" @{/cart/cancelBooking/(idCart=${element.key},type=${booking.type},idProduct=${booking.id})}">

@@ -63,22 +63,28 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresentOrElse(region->repository.delete(region), NoSuchRegionException::new);
+        repository.findById(id).ifPresentOrElse(region->repository.delete(region), ()-> new NoSuchRegionException("no region with id: "+id));
     }
 
     @Override
     @Transactional
     public Map<String,List<RegionLightDto>> getRegionsByDestinations(){
-        Map<String,List<RegionLightDto>> regionsByDestination = new HashMap<>();
+        Map<String,List<RegionLightDto>> regionsByDestination=new HashMap<>();
         List<DestinationLightDto> destinations = service.getAll();
-        for(DestinationLightDto destination:destinations){
-            List<Region> regions = repository.findByDestinationName(destination.getName());
-            List<RegionLightDto> converted = mapper.convert(regions);
-            regionsByDestination.put(destination.getName(), converted);
-        }
+
+        destinations.stream().forEach((destination)->{
+            List<Region> regions = repository.findByDestinationNameIgnoreCase(destination.getName());
+            List<RegionLightDto> convert = mapper.convert(regions);
+            regionsByDestination.put(destination.getName(),convert);
+        });
         return regionsByDestination;
     }
 
+    @Override
+    public List<RegionLightDto> getByDestinationName(String name) {
+        List<Region> regions = repository.findByDestinationNameIgnoreCase(name);
+        return mapper.convert(regions);
+    }
 
 
 }

@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.tms.travel_agency.dto.destination.DestinationLightDto;
+import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.region.RegionDetailsDto;
 import org.tms.travel_agency.dto.region.RegionLightDto;
 import org.tms.travel_agency.services.DestinationService;
+import org.tms.travel_agency.services.HotelService;
 import org.tms.travel_agency.services.RegionService;
 
 import javax.validation.Valid;
@@ -26,6 +28,7 @@ import java.util.UUID;
 public class RegionController {
     private final RegionService service;
     private final DestinationService destinationService;
+    private final HotelService hotelService;
 
     @GetMapping()
     public ModelAndView getRegionManagerPage(){
@@ -59,6 +62,15 @@ public class RegionController {
     public String delete(@RequestParam UUID id){
         service.delete(id);
         return"redirect:/regionManager";
+    }
+    @GetMapping("/details")
+    public ModelAndView getDetails(@RequestParam(name="id") UUID id){
+        RegionDetailsDto region = service.getById(id);
+        List<HotelLightDto> hotels = hotelService.getByRegionName(region.getName());
+        ModelAndView modelAndView=new ModelAndView("regionDetails");
+        modelAndView.addObject("region", region);
+        modelAndView.addObject("hotels", hotels);
+        return modelAndView;
     }
 
 

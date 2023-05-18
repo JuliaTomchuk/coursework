@@ -18,8 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OneWayFlightInputDto {
-    @NotNull(groups = {OnUpdate.class})
-    @Null(groups = {OnCreate.class})
+    @NotNull(groups = OnUpdate.class)
+    @Null(groups = OnCreate.class)
     private UUID id;
     @NotBlank(groups = {OnUpdate.class, OnCreate.class})
     private String region;
