@@ -6,29 +6,20 @@
   <title>Add review</title>
 </head>
 <body>
-<div class="container text-center">
+<div class="container-fluid">
   <div class="row" >
-    first row
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
+    <div class="col" th:insert="~{fragments.html :: navbar}"></div>
     </div>
   </div>
-  <div class ="row" >
+  <div class ="container text-center" >
     <H1>Add review</H1>
 
     <form th:method="post" th:action="@{/review/save}" th:object="${review}">
-      <div class="form-floating mb-3" >
-        <p th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></p>
-        <input type="text" th:field="*{message}"  class="form-control" id="floatingInput2" placeholder="message">
-        <label for="floatingInput2">Review</label>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea2" class="form-label">Review</label>
+        <textarea th:field="*{message}" class="form-control" id="exampleFormControlTextarea2" rows="6"></textarea><p th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></p>
       </div>
-      <div>
+            <div>
         <p th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></p>
         <select th:field="*{rating}"  class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
           <option value="TERRIBLE">terrible</option>
@@ -49,7 +40,7 @@
 
   </div>
   <div class ="row">
-    3 row
+    <div class="col mb-1" th:insert="~{fragments.html::bottom}"></div>
 
   </div>
 </div>

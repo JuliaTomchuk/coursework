@@ -63,6 +63,8 @@ public class UserController {
         UserFullDescriptionDto current = service.getCurrent();
         ModelAndView modelAndView = new ModelAndView("/update");
         modelAndView.addObject("currentUser", current);
+        boolean isAdmin= service.isAdmin();
+        modelAndView.addObject("isAdmin",isAdmin);
         return modelAndView;
     }
 
@@ -88,7 +90,9 @@ public class UserController {
     public ModelAndView getAccountManager() {
         UserFullDescriptionDto current = service.getCurrent();
         ModelAndView modelAndView = new ModelAndView("/accountManager");
+        boolean isAdmin= service.isAdmin();
         modelAndView.addObject("currentUser", current);
+        modelAndView.addObject("isAdmin", isAdmin);
         return modelAndView;
 
     }
@@ -98,6 +102,7 @@ public class UserController {
         List<UserLightDescriptionDto> users = service.getAll();
         ModelAndView modelAndView = new ModelAndView("/usersManager");
         modelAndView.addObject("users", users);
+        modelAndView.addObject("isAdmin", true);
         return modelAndView;
 
     }

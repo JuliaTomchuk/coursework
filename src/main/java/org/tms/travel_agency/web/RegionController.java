@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.tms.travel_agency.dto.destination.DestinationLightDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.region.RegionDetailsDto;
@@ -17,6 +16,7 @@ import org.tms.travel_agency.dto.region.RegionLightDto;
 import org.tms.travel_agency.services.DestinationService;
 import org.tms.travel_agency.services.HotelService;
 import org.tms.travel_agency.services.RegionService;
+import org.tms.travel_agency.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +29,7 @@ public class RegionController {
     private final RegionService service;
     private final DestinationService destinationService;
     private final HotelService hotelService;
+    private final UserService userService;
 
     @GetMapping()
     public ModelAndView getRegionManagerPage(){
@@ -39,6 +40,7 @@ public class RegionController {
         modelAndView.addObject("newRegion", dto);
         modelAndView.addObject("destinations", destinations);
         modelAndView.addObject("regions", regions);
+        modelAndView.addObject("isAdmin", true);
         return modelAndView;
     }
     @PostMapping()
@@ -67,13 +69,11 @@ public class RegionController {
     public ModelAndView getDetails(@RequestParam(name="id") UUID id){
         RegionDetailsDto region = service.getById(id);
         List<HotelLightDto> hotels = hotelService.getByRegionName(region.getName());
+        boolean isAdmin = userService.isAdmin();
         ModelAndView modelAndView=new ModelAndView("regionDetails");
         modelAndView.addObject("region", region);
         modelAndView.addObject("hotels", hotels);
+        modelAndView.addObject("isAdmin", isAdmin);
         return modelAndView;
     }
-
-
-
-
 }

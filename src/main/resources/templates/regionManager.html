@@ -6,19 +6,12 @@
   <title>Region manager</title>
 </head>
 <body>
-<div class="container text-center">
+<div class="container-fluid">
   <div class="row">
-    <div class="col">
-      Column
+    <div class="col" th:insert="~{fragments.html :: navbar}"></div>
     </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="row ">
-
+    <div class="container text-center mt-5">
+      <div class="row">
       <div class="col-4 ">
         <h1>Create new region</h1>
         <form th:action="@{/regionManager}" method="post" th:object="${newRegion}">
@@ -26,11 +19,7 @@
             <label for="formGroupExampleInput" class="form-label">Name</label>
             <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter name" th:field="*{name}"><p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
           </div>
-          <div class="mb-3">
-            <label for="formGroupExampleInput2" class="form-label">Description</label>
-            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter description" th:field="*{description}"><p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
-          </div>
-          <div class="mb-3">
+              <div class="mb-3">
             <label for="select-destination" class="form-label">Choose destination</label>
             <select th:field="*{destination}" class="form-select" id="select-destination" aria-label="Default select example">
               <option selected value="">Select destination</option>
@@ -38,13 +27,15 @@
             </select>
             <p th:if="${#fields.hasErrors('destination')}" th:errors="*{destination}"></p>
           </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea><p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+          </div>
           <div class="d-grid gap-2">
             <button class="btn btn-primary" type="submit">Create</button>
           </div>
-
         </form>
         <br>
-
       </div>
       <div class="col-4">
         <h1>Update region</h1>
@@ -54,10 +45,6 @@
             <input type="text" class="form-control" id="formGroupExampleInput3" placeholder="Enter name" th:field="*{name}"><p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
           </div>
           <div class="mb-3">
-            <label for="formGroupExampleInput2" class="form-label">Description</label>
-            <input type="text" class="form-control" id="formGroupExampleInput4" placeholder="Enter description" th:field="*{description}"><p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
-          </div>
-          <div class="mb-3">
             <label for="select-destinationUpdate" class="form-label">Choose destination</label>
             <select th:field="*{destination}" class="form-select" id="select-destinationUpdate" aria-label="Default select example">
               <option selected value="">Select destination</option>
@@ -65,15 +52,18 @@
             </select>
             <p th:if="${#fields.hasErrors('destination')}" th:errors="*{destination}"></p>
           </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea2" rows="6"></textarea><p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+          </div>
           <div class="d-grid gap-2">
             <button class="btn btn-primary" type="submit">Update</button>
           </div>
-
         </form>
+      </div>
         <br>
       </div>
-    </div>
-    <div class="row">
+        <div class="row">
       <div class="col-12">
         <h1>All regions</h1>
         <table class="table table-striped">
@@ -94,6 +84,7 @@
           </tr>
         </table>
       </div>
+    </div>
     </div>
     <div class="row">
 

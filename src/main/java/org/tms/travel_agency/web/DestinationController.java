@@ -19,6 +19,7 @@ import org.tms.travel_agency.exception.DuplicateDestinationException;
 import org.tms.travel_agency.exception.NoSuchDestinationException;
 import org.tms.travel_agency.services.DestinationService;
 import org.tms.travel_agency.services.RegionService;
+import org.tms.travel_agency.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,18 +32,23 @@ public class DestinationController {
 
     private final DestinationService service;
     private final RegionService regionService;
+    private final UserService userService;
 
     @GetMapping
     public ModelAndView getAllDestinations(){
-        ModelAndView modelAndView = new ModelAndView("allDestinations");
+        ModelAndView modelAndView = new ModelAndView("destinations");
+        boolean isAdmin= userService.isAdmin();
         List<DestinationLightDto> destinationsList = service.getAll();
-        modelAndView.addObject("destinationsList");
+        modelAndView.addObject("allDestinations",destinationsList);
+        modelAndView.addObject("isAdmin", isAdmin);
         return modelAndView;
     }
     @GetMapping("/destinationManager")
     public ModelAndView getDestinationManagerPage(@ModelAttribute(name = "newDestination") DestinationDetailsDto destinationDetailsDto){
         List<DestinationLightDto> destinationList = service.getAll();
+        boolean isAdmin= userService.isAdmin();
         ModelAndView modelAndView = new ModelAndView("destinationManager");
+        modelAndView.addObject("isAdmin", isAdmin);
         return modelAndView.addObject("destinationList",destinationList);
     }
     @PostMapping("/destinationManager")
@@ -59,7 +65,7 @@ public class DestinationController {
          service.delete(id);
         return "redirect:/destinations/destinationManager";
     }
-    @PostMapping("destinationManager/update")
+    @PostMapping("/destinationManager/update")
     public String updateDestination(@Valid @ModelAttribute("newDestination") DestinationDetailsDto dto,BindingResult result){
         if(result.hasErrors()){
             return "destinationManager";
@@ -74,6 +80,8 @@ public class DestinationController {
         ModelAndView modelAndView = new ModelAndView("destinationDetails");
         modelAndView.addObject("destination",destination);
         modelAndView.addObject("regions", regions);
+        boolean isAdmin= userService.isAdmin();
+        modelAndView.addObject("isAdmin", isAdmin);
         return modelAndView;
     }
 

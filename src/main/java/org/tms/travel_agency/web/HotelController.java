@@ -23,6 +23,7 @@ import org.tms.travel_agency.services.HotelService;
 import org.tms.travel_agency.services.RegionService;
 import org.tms.travel_agency.services.ReviewService;
 import org.tms.travel_agency.services.RoomService;
+import org.tms.travel_agency.services.UserService;
 import org.tms.travel_agency.validator.OnCreate;
 import org.tms.travel_agency.validator.OnUpdate;
 
@@ -39,12 +40,14 @@ public class HotelController {
     private final HotelService hotelService;
     private final RoomService roomService;
     private final ReviewService reviewService;
+    private final UserService userService;
 
     @GetMapping("/create")
     public ModelAndView getHotelCreatorPage(){
         ModelAndView modelAndView = new ModelAndView("/hotelCreator");
         HotelDetailsDto newHotel = new HotelDetailsDto();
         List<RegionLightDto> allRegions = regionService.getAll();
+        modelAndView.addObject("isAdmin",true);
         modelAndView.addObject("newHotel",newHotel);
         modelAndView.addObject("regions",allRegions);
        return modelAndView;
@@ -64,6 +67,7 @@ public class HotelController {
         ModelAndView modelAndView = new ModelAndView("hotelManager");
          List<HotelLightDto> hotels = hotelService.getAll();
          modelAndView.addObject("hotels",hotels);
+         modelAndView.addObject("isAdmin",true);
          return modelAndView;
      }
      @GetMapping ("/delete")
@@ -77,6 +81,7 @@ public class HotelController {
         ModelAndView modelAndView = new ModelAndView("updateHotel");
          HotelDetailsDto hotel = hotelService.getById(id);
          modelAndView.addObject("hotel",hotel);
+         modelAndView.addObject("isAdmin",true);
          return modelAndView;
      }
      @PostMapping("/update")
@@ -96,13 +101,15 @@ public class HotelController {
          ModelAndView modelAndView = new ModelAndView("hotelDetailsForAdmin");
          modelAndView.addObject("hotel", byId);
          modelAndView.addObject("rooms", rooms);
+         modelAndView.addObject("isAdmin",true);
          return modelAndView;
      }
      @GetMapping("/addBoardBasis")
     public ModelAndView getAddBoardBasisType(@RequestParam UUID id){
         ModelAndView modelAndView = new ModelAndView("addBoardBasis");
         modelAndView.addObject("idHotel",id);
-        return modelAndView;
+        modelAndView.addObject("isAdmin", true);
+         return modelAndView;
      }
      @PostMapping("/addBoardBasis")
     public RedirectView addBoardBasisType(@RequestParam(name="idHotel") UUID id, @RequestParam(name = "boardBasisType") BoardBasisTypes type, RedirectAttributes attributes){
@@ -123,8 +130,10 @@ public class HotelController {
          HotelDetailsDto hotel = hotelService.getById(id);
          ModelAndView modelAndView = new ModelAndView("hotelDetailsForUser");
          List<ReviewLightDto> reviewLightDtos = reviewService.getByHotel(id);
+         boolean isAdmin= userService.isAdmin();
          modelAndView.addObject("hotel",hotel);
          modelAndView.addObject("reviews", reviewLightDtos);
+         modelAndView.addObject("isAdmin",isAdmin);
          return modelAndView;
      }
 
