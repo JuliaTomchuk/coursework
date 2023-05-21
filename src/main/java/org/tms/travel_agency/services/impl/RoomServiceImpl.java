@@ -219,7 +219,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDetailsDto> getRoomsListForBooking(RoomDetailsDto dto) {
-        if (!dateValidator.isCheckInLessThanCheckOut(dto.getCheckIn(), dto.getCheckOut())) {
+        if (!dateValidator.isCheckInEarlierThanCheckOut(dto.getCheckIn(), dto.getCheckOut())) {
             throw new TravelDateException("check in date should be less than check out date");
         }
         Room convert = roomMapper.convert(dto);

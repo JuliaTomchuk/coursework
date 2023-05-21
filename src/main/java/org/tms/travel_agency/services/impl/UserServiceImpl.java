@@ -1,6 +1,5 @@
 package org.tms.travel_agency.services.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,8 +31,7 @@ public class UserServiceImpl implements UserService {
 
 
     public UserDetails loadUserByUsername(String username) {
-        User byUsername = repository.findByUsername(username).orElseThrow(() -> new NoSuchUserException("no user with username: " + username));
-        return byUsername;
+        return repository.findByUsername(username).orElseThrow(() ->new NoSuchUserException("no user with username: " + username));
     }
 
 
@@ -45,10 +43,8 @@ public class UserServiceImpl implements UserService {
         User user = mapper.convert(inputDto);
         user.setRole(Role.ROLE_USER);
         User save = repository.save(user);
-        return mapper.convert(user);
+        return mapper.convert(save);
     }
-
-
     @Override
     public UserFullDescriptionDto update(UserFullDescriptionDto inputDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -66,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresentOrElse((user) -> repository.delete(user), ()-> new NoSuchUserException("no user with id: " + id));
+        repository.findById(id).ifPresentOrElse((user)->repository.delete(user),()->{throw new NoSuchUserException("no user with id: "+id);});
     }
 
     @Override
@@ -85,15 +81,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullDescriptionDto getById(UUID id) {
-        User user = repository.findById(id).orElseThrow(()->new NoSuchRegionException("no user with id: "+id));
+        User user = repository.findById(id).orElseThrow(()->new NoSuchUserException("no user with id: "+id));
         return mapper.convert(user);
     }
 
     @Override
     @Transactional
-    public void changeRole(String role, UUID id) {
-        repository.findById(id).ifPresentOrElse(user -> user.setRole(Role.valueOf(role)), ()-> new NoSuchUserException("no user with id: "+id));
-
+    public UserFullDescriptionDto changeRole(String role, UUID id) {
+        User user =repository.findById(id).orElseThrow( ()->new NoSuchUserException("no user with id: "+id));
+        user.setRole(Role.valueOf(role));
+        return mapper.convert(user);
     }
 
     @Override

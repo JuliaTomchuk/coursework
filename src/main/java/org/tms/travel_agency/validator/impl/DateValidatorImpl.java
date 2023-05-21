@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Service
 public class DateValidatorImpl implements DateValidator {
     @Override
-    public boolean isCheckInLessThanCheckOut(LocalDate checkIn, LocalDate checkOut) {
+    public boolean isCheckInEarlierThanCheckOut(LocalDate checkIn, LocalDate checkOut) {
       return  checkOut.isAfter(checkIn);
     }
 }

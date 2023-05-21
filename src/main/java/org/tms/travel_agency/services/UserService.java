@@ -13,6 +13,6 @@ public interface UserService extends UserDetailsService,CRUDService<UserFullDesc
 
     UserFullDescriptionDto getCurrent();
 
-    void changeRole(String role, UUID id);
+    UserFullDescriptionDto changeRole(String role, UUID id);
     boolean isAdmin();
 }
