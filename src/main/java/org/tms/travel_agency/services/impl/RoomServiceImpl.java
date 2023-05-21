@@ -68,7 +68,9 @@ public class RoomServiceImpl implements RoomService {
             cart = optionalCart.get();
         } else {
             cart = new Cart();
-            userRepository.findByUsername(username).ifPresentOrElse(cart::setUser, () -> { throw new NoSuchUserException("No user with username: " + username);});
+            userRepository.findByUsername(username).ifPresentOrElse(cart::setUser, () -> {
+                throw new NoSuchUserException("No user with username: " + username);
+            });
         }
         room.setType("Room");
         cart.addTourProduct(room);
@@ -79,12 +81,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void deleteFromCart(UUID id) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Room room = roomRepository.findById(id).orElseThrow(() -> new NoSuchRoomException("no room with id: " + id));
+        Room room = roomRepository.findById(id).orElseThrow(() ->{ throw new NoSuchRoomException("no room with id: " + id);});
         if (room.getBooked()) {
             throw new NotAllowedException("Product has been booked, you can't delete it from cart");
 
         } else {
-            Cart cart = cartRepository.findByUserUsername(name).orElseThrow(() -> new NoSuchCartException("No cart for user: " + name));
+            Cart cart = cartRepository.findByUserUsername(name).orElseThrow(() -> {throw new NoSuchCartException("No cart for user: " + name);});
             cart.deleteTourProduct(room);
             room.setCheckOut(null);
             room.setCheckIn(null);

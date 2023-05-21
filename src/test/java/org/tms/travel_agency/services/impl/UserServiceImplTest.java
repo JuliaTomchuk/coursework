@@ -1,7 +1,6 @@
 package org.tms.travel_agency.services.impl;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,11 +30,11 @@ import java.util.UUID;
 class UserServiceImplTest {
     private  UserMapper mapper;
     private  UserRepository repository;
-    private  UserValidator validator;
+    private   UserValidator validator;
     private  UserService service;
 
     @BeforeEach
-    public  void init(){
+    public void init(){
         mapper = Mockito.mock(UserMapper.class);
         repository = Mockito.mock(UserRepository.class);
         validator = Mockito.mock(UserValidator.class);
