@@ -42,7 +42,6 @@ public class Hotel {
 
     @Id
     @GeneratedValue
-    @Setter(AccessLevel.NONE)
     private UUID id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hotel")
     @ToString.Exclude

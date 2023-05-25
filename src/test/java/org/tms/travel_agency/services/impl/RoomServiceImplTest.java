@@ -4,6 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,9 +15,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.tms.travel_agency.domain.BoardBasisTypes;
 import org.tms.travel_agency.domain.Cart;
+import org.tms.travel_agency.domain.Destination;
+import org.tms.travel_agency.domain.Hotel;
+import org.tms.travel_agency.domain.Region;
 import org.tms.travel_agency.domain.Room;
+import org.tms.travel_agency.domain.RoomTypesByOccupancy;
+import org.tms.travel_agency.domain.RoomTypesByView;
 import org.tms.travel_agency.domain.User;
 import org.tms.travel_agency.dto.room.RoomDetailsDto;
+import org.tms.travel_agency.dto.room.RoomLightDto;
 import org.tms.travel_agency.exception.DuplicateRoomException;
 import org.tms.travel_agency.exception.NoSuchCartException;
 import org.tms.travel_agency.exception.NoSuchRoomException;
@@ -33,8 +42,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -115,30 +126,17 @@ class RoomServiceImplTest {
         Assertions.assertThatExceptionOfType(NotAllowedException.class).isThrownBy(()->roomService.deleteFromCart(id));
 
     }
-    @Test
+    @ParameterizedTest
+    @MethodSource("getRoomAndCart")
     @WithMockUser
-    public void deleteFromCartSuccess(){
-        UUID id = UUID.randomUUID();
-        Room room = new Room();
-        room.setId(id);
-        room.setBooked(false);
-        room.setPrice(BigDecimal.valueOf(600));
-        room.setCheckIn(LocalDate.now().plusDays(1));
-        room.setCheckOut(LocalDate.now().plusDays(8));
-        room.setBoardBases(BoardBasisTypes.FULL_BOARD);
-        room.setPreBooked(true);
-        User user = new User();
-        user.setUsername("user");
-        Cart cart= new Cart();
-        cart.addTourProduct(room);
-        cart.setUser(user);
-        Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
+    public void deleteFromCartSuccess(Room room, Cart cart){
+        Mockito.when(roomRepository.findById(room.getId())).thenReturn(Optional.of(room));
         Mockito.when(cartRepository.findByUserUsername("user")).thenReturn(Optional.of(cart));
-        roomService.deleteFromCart(id);
+        roomService.deleteFromCart(room.getId());
         Mockito.verify(roomRepository,Mockito.times(1)).save(room);
         ArgumentCaptor<Room> roomArgumentCaptor = ArgumentCaptor.forClass(Room.class);
         Mockito.verify(roomRepository).save(roomArgumentCaptor.capture());
-         Assertions.assertThat(room.getPreBooked()).isFalse();
+        Assertions.assertThat(room.getPreBooked()).isFalse();
         Assertions.assertThat(room.getCheckIn()).isNull();
         Assertions.assertThat(room.getCheckOut()).isNull();
         Assertions.assertThat(room.getBoardBases()).isNull();
@@ -166,36 +164,24 @@ class RoomServiceImplTest {
         Mockito.when(roomRepository.findById(idProduct)).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.cancelBooking(idCart,idProduct));
     }
-    @Test
-    public void cancelBookingSuccess(){
-        UUID idCart=UUID.randomUUID();
-        UUID idProduct=UUID.randomUUID();
-
-        Room room = new Room();
-        room.setId(idProduct);
+    @ParameterizedTest
+    @MethodSource("getRoomAndCart")
+    public void cancelBookingSuccess(Room room, Cart cart){
         room.setBooked(true);
-        room.setPrice(BigDecimal.valueOf(600));
-        room.setCheckIn(LocalDate.now().plusDays(1));
-        room.setCheckOut(LocalDate.now().plusDays(8));
-        room.setBoardBases(BoardBasisTypes.FULL_BOARD);
-        room.setPreBooked(true);
 
-        Cart cart= new Cart();
-        cart.setId(idCart);
-        cart.addTourProduct(room);
-
-        Mockito.when(cartRepository.findById(idCart)).thenReturn(Optional.of(cart));
-        Mockito.when(roomRepository.findById(idProduct)).thenReturn(Optional.of(room));
-        roomService.cancelBooking(idCart, idProduct);
+        Mockito.when(cartRepository.findById(cart.getId())).thenReturn(Optional.of(cart));
+        Mockito.when(roomRepository.findById(room.getId())).thenReturn(Optional.of(room));
+        roomService.cancelBooking(cart.getId(), room.getId());
         Mockito.verify(roomRepository,Mockito.times(1)).save(room);
-        ArgumentCaptor<Room> roomArgumentCaptor = ArgumentCaptor.forClass(Room.class);
-        Mockito.verify(roomRepository).save(roomArgumentCaptor.capture());
-
-        Assertions.assertThat(room.getPreBooked()).isFalse();
-        Assertions.assertThat(room.getCheckIn()).isNull();
-        Assertions.assertThat(room.getCheckOut()).isNull();
-        Assertions.assertThat(room.getBoardBases()).isNull();
-        Assertions.assertThat(room.getPrice()).isNull();
+        ArgumentCaptor<Room> capture = ArgumentCaptor.forClass(Room.class);
+        Mockito.verify(roomRepository).save(capture.capture());
+        Room roomSaved = capture.getValue();
+        Assertions.assertThat(roomSaved.getBooked()).isFalse();
+        Assertions.assertThat(roomSaved.getPreBooked()).isFalse();
+        Assertions.assertThat(roomSaved.getCheckIn()).isNull();
+        Assertions.assertThat(roomSaved.getCheckOut()).isNull();
+        Assertions.assertThat(roomSaved.getBoardBases()).isNull();
+        Assertions.assertThat(roomSaved.getPrice()).isNull();
         Assertions.assertThat(cart.getTourProductList()).isNullOrEmpty();
 
     }
@@ -208,21 +194,24 @@ class RoomServiceImplTest {
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(false);
         Assertions.assertThatExceptionOfType(DuplicateRoomException.class).isThrownBy(()->roomService.save(dto));
     }
-    @Test
-    public void saveSuccess(){
-        RoomDetailsDto dto=new RoomDetailsDto();
-        Room room = new Room();
+    @ParameterizedTest
+    @MethodSource("getEntityAndDto")
+    public void saveSuccess(Room entity, RoomDetailsDto dto){
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(true);
-        Mockito.when(roomMapper.convert(dto)).thenReturn(room);
-        roomService.save(dto);
-        Mockito.verify(roomRepository,Mockito.times(1)).save(room);
+        Mockito.when(roomMapper.convert(dto)).thenReturn(entity);
+        Mockito.when(roomRepository.save(entity)).thenReturn(entity);
+        Mockito.when(roomMapper.convert(entity)).thenReturn(dto);
+        RoomDetailsDto save = roomService.save(dto);
+        Assertions.assertThat(save).isEqualTo(dto);
     }
 
-    @Test
-    public void getAll(){
-        Mockito.when(roomRepository.findAll()).thenReturn(new ArrayList<>());
-        roomService.getAll();
-        Mockito.verify(roomRepository,Mockito.times(1)).findAll();
+    @ParameterizedTest
+    @MethodSource("getListsOfEntityAndDto")
+    public void getAll(List<Room>entityList, List<RoomLightDto> dtoList){
+        Mockito.when(roomRepository.findAll()).thenReturn(entityList);
+        Mockito.when(roomMapper.convert(entityList)).thenReturn(dtoList);
+        List<RoomLightDto> all = roomService.getAll();
+        Assertions.assertThat(all).isEqualTo(dtoList);
     }
 
     @Test
@@ -231,17 +220,13 @@ class RoomServiceImplTest {
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.getById(id));
     }
-    @Test
-    public void getByIdSuccess(){
-        UUID id=UUID.randomUUID();
-        Room room = new Room();
-        room.setId(id);
-        RoomDetailsDto dto = new RoomDetailsDto();
-        dto.setId(id);
-        Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
-        Mockito.when(roomMapper.convert(room)).thenReturn(dto);
-        RoomDetailsDto byId = roomService.getById(id);
-        Assertions.assertThat(byId.getId()).isEqualTo(id);
+    @ParameterizedTest
+    @MethodSource("getEntityAndDto")
+    public void getByIdSuccess(Room entity, RoomDetailsDto dto){
+        Mockito.when(roomRepository.findById(dto.getId())).thenReturn(Optional.of(entity));
+        Mockito.when(roomMapper.convert(entity)).thenReturn(dto);
+        RoomDetailsDto byId = roomService.getById(dto.getId());
+        Assertions.assertThat(byId).isEqualTo(dto);
     }
 
     @Test
@@ -266,23 +251,16 @@ class RoomServiceImplTest {
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(false);
         Assertions.assertThatExceptionOfType(DuplicateRoomException.class).isThrownBy(() -> roomService.update(dto));
     }
-    @Test
-    public void updateSuccess(){
-        UUID id = UUID.randomUUID();
-        RoomDetailsDto dto = new RoomDetailsDto();
-        dto.setId(id);
-        dto.setNumber(1);
-        Room room = new Room();
-        room.setNumber(2);
-        room.setId(id);
-
-        Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
+    @ParameterizedTest
+    @MethodSource("getEntityAndDto")
+    public void updateSuccess(Room entity, RoomDetailsDto dto){
+        dto.setNumber(2);
+        Mockito.when(roomRepository.findById(dto.getId())).thenReturn(Optional.of(entity));
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(true);
-        Mockito.when(roomMapper.update(dto,room)).thenReturn(room);
-        Mockito.when(roomMapper.convert(room)).thenReturn(dto);
-        roomService.update(dto);
-
-        Mockito.verify(roomMapper,Mockito.times(1)).update(dto,room);
+        Mockito.when(roomMapper.update(dto,entity)).thenReturn(entity);
+        Mockito.when(roomMapper.convert(entity)).thenReturn(dto);
+        RoomDetailsDto updated = roomService.update(dto);
+        Assertions.assertThat(updated).isEqualTo(dto);
 
     }
     @Test
@@ -291,14 +269,16 @@ class RoomServiceImplTest {
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.delete(id));
     }
-    @Test
-    public void deleteIfSuccess(){
-        UUID id =UUID.randomUUID();
-        Room room = new Room();
-        room.setId(id);
-        Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
-        roomService.delete(id);
-        Mockito.verify(roomRepository, Mockito.times(1)).delete(room);
+    @ParameterizedTest
+    @MethodSource("getEntity")
+    public void deleteSuccess(Room entity){
+        Mockito.when(roomRepository.findById(entity.getId())).thenReturn(Optional.of(entity));
+        roomService.delete(entity.getId());
+        ArgumentCaptor<Room> captor=ArgumentCaptor.forClass(Room.class);
+        Mockito.verify(roomRepository, Mockito.times(1)).delete(entity);
+        Mockito.verify(roomRepository).delete(captor.capture());
+        Room value = captor.getValue();
+        Assertions.assertThat(value).isEqualTo(entity);
     }
 
     @Test
@@ -310,6 +290,132 @@ class RoomServiceImplTest {
         dto.setCheckOut(checkOut);
         Mockito.when(dateValidator.isCheckInEarlierThanCheckOut(checkIn,checkOut)).thenReturn(false);
         Assertions.assertThatExceptionOfType(TravelDateException.class).isThrownBy(()->roomService.getRoomsListForBooking(dto));
+    }
+    public static Stream<Arguments> getRoomAndCart(){
+        UUID id = UUID.randomUUID();
+        Room room = new Room();
+        room.setId(id);
+        room.setBooked(false);
+        room.setPrice(BigDecimal.valueOf(600));
+        room.setCheckIn(LocalDate.now().plusDays(1));
+        room.setCheckOut(LocalDate.now().plusDays(8));
+        room.setBoardBases(BoardBasisTypes.FULL_BOARD);
+        room.setPreBooked(true);
+
+        User user = new User();
+        user.setUsername("user");
+
+        Cart cart= new Cart();
+        cart.addTourProduct(room);
+        cart.setUser(user);
+        return Stream.of(Arguments.arguments(room,cart));
+    }
+
+    public static Stream<Arguments> getEntityAndDto(){
+        Room entity = new Room();
+        entity.setId(UUID.randomUUID());
+        entity.setNumber(1);
+        entity.setNumOfTourist(2);
+        entity.setTypesByView(RoomTypesByView.GARDEN);
+        entity.setTypesByOccupancy(RoomTypesByOccupancy.TWIN);
+
+        Hotel hotel= new Hotel();
+        hotel.setName("TEST");
+        Destination destination = new Destination();
+        destination.setName("TEST");
+        Region region = new Region();
+        region.setName("TEST");
+        region.setDestination(destination);
+        hotel.setRegion(region);
+        hotel.setId(UUID.randomUUID());
+        entity.setHotel(hotel);
+
+        RoomDetailsDto dto =new RoomDetailsDto();
+        dto.setId(entity.getId());
+        dto.setNumber(entity.getNumber());
+        dto.setIdHotel(hotel.getId());
+        dto.setTypesByView(entity.getTypesByView());
+        dto.setTypesByOccupancy(entity.getTypesByOccupancy());
+        dto.setDestination(hotel.getRegion().getDestination().getName());
+        dto.setRegion(hotel.getRegion().getName());
+        dto.setHotelName(hotel.getName());
+        dto.setNumOfTourist(entity.getNumOfTourist());
+
+        return Stream.of(Arguments.arguments(entity,dto));
+    }
+
+    public static Stream<Arguments> getListsOfEntityAndDto(){
+        List<Room> entityList =new ArrayList<>();
+        Room entity = new Room();
+        entity.setId(UUID.randomUUID());
+        entity.setNumber(1);
+        entity.setNumOfTourist(2);
+        entity.setTypesByView(RoomTypesByView.GARDEN);
+        entity.setTypesByOccupancy(RoomTypesByOccupancy.TWIN);
+
+        Hotel hotel= new Hotel();
+        hotel.setName("TEST");
+        Destination destination = new Destination();
+        destination.setName("TEST");
+        Region region = new Region();
+        region.setName("TEST");
+        region.setDestination(destination);
+        hotel.setRegion(region);
+        hotel.setId(UUID.randomUUID());
+        entity.setHotel(hotel);
+
+        Room entity2 = new Room();
+        entity2.setId(UUID.randomUUID());
+        entity2.setNumber(2);
+        entity2.setNumOfTourist(4);
+        entity2.setTypesByView(RoomTypesByView.SEA);
+        entity2.setTypesByOccupancy(RoomTypesByOccupancy.QUAD);
+        entity2.setHotel(hotel);
+        entityList.add(entity);
+        entityList.add(entity2);
+
+        List<RoomLightDto> dtoList= new ArrayList<>();
+        RoomLightDto dto =new RoomLightDto();
+        dto.setId(entity.getId());
+        dto.setNumber(entity.getNumber());
+        dto.setTypesByView(entity.getTypesByView());
+        dto.setTypesByOccupancy(entity.getTypesByOccupancy());
+        dto.setDestination(hotel.getRegion().getDestination().getName());
+        dto.setHotelName(hotel.getName());
+        dto.setNumOfTourist(entity.getNumOfTourist());
+
+        RoomLightDto dto2 =new RoomLightDto();
+        dto2.setId(entity2.getId());
+        dto2.setNumber(entity2.getNumber());
+        dto2.setTypesByView(entity2.getTypesByView());
+        dto2.setTypesByOccupancy(entity2.getTypesByOccupancy());
+        dto2.setDestination(hotel.getRegion().getDestination().getName());
+        dto2.setHotelName(hotel.getName());
+        dto2.setNumOfTourist(entity2.getNumOfTourist());
+        dtoList.add(dto);
+        dtoList.add(dto2);
+
+        return Stream.of(Arguments.arguments(entityList,dtoList));
+    }
+    public static Stream<Room> getEntity(){
+        Room entity = new Room();
+        entity.setId(UUID.randomUUID());
+        entity.setNumber(1);
+        entity.setNumOfTourist(2);
+        entity.setTypesByView(RoomTypesByView.GARDEN);
+        entity.setTypesByOccupancy(RoomTypesByOccupancy.TWIN);
+
+        Hotel hotel= new Hotel();
+        hotel.setName("TEST");
+        Destination destination = new Destination();
+        destination.setName("TEST");
+        Region region = new Region();
+        region.setName("TEST");
+        region.setDestination(destination);
+        hotel.setRegion(region);
+        hotel.setId(UUID.randomUUID());
+        entity.setHotel(hotel);
+        return Stream.of(entity);
     }
 
 
