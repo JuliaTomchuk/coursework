@@ -52,7 +52,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void delete(UUID id) {
-     repository.findById(id).ifPresentOrElse((review)->repository.delete(review),()-> new NoSuchReviewException("no review with id: "+id));
+     repository.findById(id).ifPresentOrElse((review)->repository.delete(review),()-> {throw new NoSuchReviewException("no review with id: "+id);});
     }
 
     @Override
