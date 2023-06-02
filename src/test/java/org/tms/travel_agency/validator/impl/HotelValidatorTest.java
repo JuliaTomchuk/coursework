@@ -15,38 +15,39 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class HotelValidatorTest {
-   private HotelRepository repository;
-   private HotelValidator validator;
+    private HotelRepository repository;
+    private HotelValidator validator;
 
-   @BeforeEach
-   public void init(){
-      repository = Mockito.mock(HotelRepository.class);
-      validator = new HotelValidator(repository);
-   }
-   @Test
-   public void isUnique(){
-      HotelDetailsDto dto = new HotelDetailsDto();
-      dto.setRegion("TEST");
-      dto.setCity("TEST");
-      dto.setStreet("TEST");
-      dto.setHome("TEST");
+    @BeforeEach
+    void init() {
+        repository = Mockito.mock(HotelRepository.class);
+        validator = new HotelValidator(repository);
+    }
 
-      Mockito.when(repository.findByAddressANDRegion(dto.getCity(),dto.getStreet(),dto.getHome(),dto.getRegion())).thenReturn(Optional.empty());
-      boolean unique = validator.isUnique(dto);
-      Assertions.assertThat(unique).isTrue();
-   }
+    @Test
+    void isUnique() {
+        HotelDetailsDto dto = new HotelDetailsDto();
+        dto.setRegion("TEST");
+        dto.setCity("TEST");
+        dto.setStreet("TEST");
+        dto.setHome("TEST");
 
-   @Test
-   public void isNotUnique(){
-      HotelDetailsDto dto = new HotelDetailsDto();
-      dto.setRegion("TEST");
-      dto.setCity("TEST");
-      dto.setStreet("TEST");
-      dto.setHome("TEST");
+        Mockito.when(repository.findByAddressANDRegion(dto.getCity(), dto.getStreet(), dto.getHome(), dto.getRegion())).thenReturn(Optional.empty());
+        boolean unique = validator.isUnique(dto);
+        Assertions.assertThat(unique).isTrue();
+    }
 
-      Mockito.when(repository.findByAddressANDRegion(dto.getCity(),dto.getStreet(),dto.getHome(),dto.getRegion())).thenReturn(Optional.of(new Hotel()));
-      boolean unique = validator.isUnique(dto);
-      Assertions.assertThat(unique).isFalse();
-   }
+    @Test
+    void isNotUnique() {
+        HotelDetailsDto dto = new HotelDetailsDto();
+        dto.setRegion("TEST");
+        dto.setCity("TEST");
+        dto.setStreet("TEST");
+        dto.setHome("TEST");
+
+        Mockito.when(repository.findByAddressANDRegion(dto.getCity(), dto.getStreet(), dto.getHome(), dto.getRegion())).thenReturn(Optional.of(new Hotel()));
+        boolean unique = validator.isUnique(dto);
+        Assertions.assertThat(unique).isFalse();
+    }
 
 }

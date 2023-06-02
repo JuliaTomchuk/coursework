@@ -4,7 +4,6 @@ package org.tms.travel_agency.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,11 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.tms.travel_agency.domain.User;
 import org.tms.travel_agency.dto.user.UserFullDescriptionDto;
 import org.tms.travel_agency.dto.user.UserLightDescriptionDto;
-import org.tms.travel_agency.exception.NoSuchUserException;
-import org.tms.travel_agency.exception.DuplicateUserException;
 import org.tms.travel_agency.services.UserService;
 
 
@@ -30,19 +26,21 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-    private final UserService service;
+
+
+    private final  UserService service;
 
 
     @GetMapping("/login")
     public ModelAndView getLoginPage() {
-        ModelAndView modelAndView = new ModelAndView("/login");
-        return modelAndView;
+        return new ModelAndView("/login");
+
     }
 
     @GetMapping("/registration")
     public ModelAndView getRegistrationPage(@ModelAttribute(name = "newUser") UserFullDescriptionDto userDto) {
-        ModelAndView modelAndView = new ModelAndView("/registration");
-        return modelAndView;
+       return new ModelAndView("/registration");
+
     }
 
     @PostMapping("/registration")
@@ -70,8 +68,7 @@ public class UserController {
 
     @PostMapping("/update")
     public ModelAndView update(@Valid @ModelAttribute("currentUser") UserFullDescriptionDto userDto, BindingResult result) {
-        ModelAndView modelAndView;
-        if (result.hasErrors()) {
+         if (result.hasErrors()) {
             return new ModelAndView("/update");
         }
         service.update(userDto);

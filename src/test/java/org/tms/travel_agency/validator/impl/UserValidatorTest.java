@@ -16,27 +16,29 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 class UserValidatorTest {
 
-    private  UserRepository repository;
+    private UserRepository repository;
     private UserValidator validator;
+
     @BeforeEach
-    public  void initServices(){
-      repository = Mockito.mock(UserRepository.class);
-        validator=new UserValidator(repository);
+    void initServices() {
+        repository = Mockito.mock(UserRepository.class);
+        validator = new UserValidator(repository);
     }
 
     @Test
-    public void isUniqueSuccess() {
+    void isUniqueSuccess() {
         UserFullDescriptionDto dto = new UserFullDescriptionDto();
         dto.setUsername("TEST");
         Mockito.when(repository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
         boolean unique = validator.isUnique(dto);
         Assertions.assertThat(unique).isTrue();
     }
+
     @Test
-    public void isNotUnique() {
+    void isNotUnique() {
         UserFullDescriptionDto dto = new UserFullDescriptionDto();
         dto.setUsername("TEST");
-        User user =new User();
+        User user = new User();
         user.setUsername("TEST");
         Mockito.when(repository.findByUsername(dto.getUsername())).thenReturn(Optional.of(user));
         boolean unique = validator.isUnique(dto);

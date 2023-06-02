@@ -14,9 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
 import org.tms.travel_agency.dto.room.RoomDetailsDto;
-import org.tms.travel_agency.dto.room.RoomLightDto;
 import org.tms.travel_agency.services.HotelService;
-import org.tms.travel_agency.services.RegionService;
 import org.tms.travel_agency.services.RoomService;
 import org.tms.travel_agency.services.UserService;
 import org.tms.travel_agency.validator.OnCreate;
@@ -24,7 +22,6 @@ import org.tms.travel_agency.validator.OnSearch;
 import org.tms.travel_agency.validator.OnUpdate;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,12 +34,12 @@ public class RoomController {
     private final UserService userService;
 
     @GetMapping("/book")
-    public String book(UUID uuid){
+    public String book(@RequestParam(name="id") UUID uuid){
         roomService.book(uuid);
         return "/cart";
     }
     @GetMapping("/add")
-    public ModelAndView getAddRoomPage(@RequestParam UUID id){
+    public ModelAndView getAddRoomPage(@RequestParam(name="id") UUID id){
         RoomDetailsDto newRoom = new RoomDetailsDto();
         newRoom.setIdHotel(id);
         ModelAndView modelAndView = new ModelAndView("addRoom");
@@ -61,8 +58,8 @@ public class RoomController {
     @GetMapping("/delete")
     public RedirectView delete(@RequestParam UUID id){
         roomService.delete(id);
-        RedirectView redirectView = new RedirectView("/hotels/hotelManager");
-        return redirectView;
+        return new RedirectView("/hotels/hotelManager");
+
     }
     @PostMapping("/update")
     public String update(@ModelAttribute("currentRoom")@Validated(OnUpdate.class) RoomDetailsDto roomDetailsDto,BindingResult result, RedirectAttributes attributes){
