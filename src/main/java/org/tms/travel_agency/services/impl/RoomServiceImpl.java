@@ -117,7 +117,6 @@ public class RoomServiceImpl implements RoomService {
         Room convert = roomMapper.convert(dto);
         List<Room> rooms = roomRepository.findAll(createSpecification(convert));
         return roomMapper.convert(rooms);
-
     }
 
     @Override
@@ -146,6 +145,7 @@ public class RoomServiceImpl implements RoomService {
                 Predicate equalTypeByOccupancy = builder.equal(root.get(Room_.TYPES_BY_OCCUPANCY), room.getTypesByOccupancy());
                 conditions.add(equalTypeByOccupancy);
             }
+
             if (room.getTypesByView() != null) {
                 Predicate equalTypeByView = builder.equal(root.get(Room_.TYPES_BY_VIEW), room.getTypesByView());
                 conditions.add(equalTypeByView);
@@ -226,10 +226,11 @@ public class RoomServiceImpl implements RoomService {
         }
         Room convert = roomMapper.convert(dto);
         List<Room> rooms = roomRepository.findAll(createSpecification(convert));
-        if (rooms.size() == 0) {
+        List<Room> collect = rooms.stream().filter(r -> r.getHotel().getRegion().getName().equals(dto.getRegion())).toList();
+        if (collect.size() == 0) {
             throw new NoSuchRoomException("no such rooms");
         }
-        List<RoomDetailsDto> roomDtos = roomMapper.convertToListDto(rooms);
+        List<RoomDetailsDto> roomDtos = roomMapper.convertToListDto(collect);
         return roomDtos.stream().peek(room -> {
             room.setCheckIn(dto.getCheckIn());
             room.setBoardBases(dto.getBoardBases());

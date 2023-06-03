@@ -11,7 +11,7 @@
     <div class="col" th:insert="~{fragments.html :: navbar}"></div>
     </div>
   </div>
-  <div class ="container text-center" >
+  <div class ="container text-center p-5" >
     <H1>Add review</H1>
 
     <form th:method="post" th:action="@{/review/save}" th:object="${review}">
