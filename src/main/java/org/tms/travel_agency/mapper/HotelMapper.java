@@ -7,18 +7,17 @@ import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tms.travel_agency.domain.Address;
 import org.tms.travel_agency.domain.Hotel;
-import org.tms.travel_agency.domain.Review;
 import org.tms.travel_agency.domain.RoomTypesByOccupancy;
 import org.tms.travel_agency.domain.RoomTypesByView;
 import org.tms.travel_agency.dto.hotel.HotelDetailsDto;
 import org.tms.travel_agency.dto.hotel.HotelLightDto;
-import org.tms.travel_agency.dto.review.ReviewLightDto;
 import org.tms.travel_agency.exception.NoSuchRegionException;
 import org.tms.travel_agency.repository.AddressRepository;
 import org.tms.travel_agency.repository.RegionRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")
@@ -33,8 +32,13 @@ public abstract class HotelMapper {
     @AfterMapping
     public Hotel addAddressAndRegion(HotelDetailsDto dto, @MappingTarget Hotel entity){
         Address  address = new Address(dto.getCity(), dto.getStreet(), dto.getHome());
-        Address saved= addressRepository.save(address);
-        entity.setAddress(saved);
+        Optional<Address> byCityAndStreetAndHome = addressRepository.findIdentical(dto.getCity(), dto.getStreet(), dto.getHome());
+        if(byCityAndStreetAndHome.isEmpty()) {
+            Address save = addressRepository.save(address);
+            entity.setAddress(save);
+        }else{
+            entity.setAddress(byCityAndStreetAndHome.get());
+        }
         entity.setRegion(regionRepository.findByNameIgnoreCase(dto.getRegion()).orElseThrow(() -> new NoSuchRegionException("no region with name: " + dto.getRegion())));
         return entity;
     }
@@ -49,7 +53,7 @@ public abstract class HotelMapper {
      public HotelDetailsDto createSetOfRoomTypes(Hotel entity, @MappingTarget HotelDetailsDto dto){
           Set<RoomTypesByView> roomTypesByViewSet = new HashSet<>();
           Set <RoomTypesByOccupancy> roomTypesByOccupancySet = new HashSet<>();
-          entity.getRooms().stream().forEach(r->{roomTypesByViewSet.add(r.getTypesByView());
+          entity.getRooms().forEach(r->{roomTypesByViewSet.add(r.getTypesByView());
               roomTypesByOccupancySet.add(r.getTypesByOccupancy());
           });
           dto.setRoomTypesByViewSet(roomTypesByViewSet);

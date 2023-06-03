@@ -52,36 +52,37 @@ import java.util.stream.Stream;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 class RoomServiceImplTest {
-    private  UserRepository userRepository;
-    private  RoomRepository roomRepository;
-    private  HotelService hotelService;
-    private  RoomMapper roomMapper;
+    private UserRepository userRepository;
+    private RoomRepository roomRepository;
+    private HotelService hotelService;
+    private RoomMapper roomMapper;
     private RoomValidator roomValidator;
-    private  DateValidator dateValidator;
-    private  CartRepository cartRepository;
+    private DateValidator dateValidator;
+    private CartRepository cartRepository;
     private RoomServiceImpl roomService;
 
     @BeforeEach
-    public void init(){
+    void init() {
         userRepository = Mockito.mock(UserRepository.class);
-        roomRepository=Mockito.mock(RoomRepository.class);
-        hotelService=Mockito.mock(HotelService.class);
-        roomMapper=Mockito.mock(RoomMapper.class);
-        roomValidator=Mockito.mock(RoomValidator.class);
-        dateValidator=Mockito.mock(DateValidator.class);
-        cartRepository=Mockito.mock(CartRepository.class);
-        roomService = new RoomServiceImpl(userRepository,roomRepository,hotelService,roomMapper,roomValidator,dateValidator,cartRepository);
+        roomRepository = Mockito.mock(RoomRepository.class);
+        hotelService = Mockito.mock(HotelService.class);
+        roomMapper = Mockito.mock(RoomMapper.class);
+        roomValidator = Mockito.mock(RoomValidator.class);
+        dateValidator = Mockito.mock(DateValidator.class);
+        cartRepository = Mockito.mock(CartRepository.class);
+        roomService = new RoomServiceImpl(userRepository, roomRepository, hotelService, roomMapper, roomValidator, dateValidator, cartRepository);
     }
+
     @Test
-    public void bookSuccess(){
-        UUID id =UUID.randomUUID();
+    void bookSuccess() {
+        UUID id = UUID.randomUUID();
         Room room = new Room();
         ArgumentCaptor<Room> roomArgumentCaptor = ArgumentCaptor.forClass(Room.class);
         room.setId(id);
 
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
         roomService.book(id);
-        Mockito.verify(roomRepository,Mockito.times(1)).save(room);
+        Mockito.verify(roomRepository, Mockito.times(1)).save(room);
         Mockito.verify(roomRepository).save(roomArgumentCaptor.capture());
         Room value = roomArgumentCaptor.getValue();
 
@@ -89,51 +90,56 @@ class RoomServiceImplTest {
         Assertions.assertThat(value.getId()).isEqualTo(id);
 
     }
+
     @Test
-    public void bookIfNotExist(){
+    void bookIfNotExist() {
         UUID id = UUID.randomUUID();
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.book(id));
+        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(() -> roomService.book(id));
     }
+
     @Test
     @WithMockUser
-    public void deleteFromCartIfRoomNotExist(){
+    void deleteFromCartIfRoomNotExist() {
         UUID id = UUID.randomUUID();
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.deleteFromCart(id));
+        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(() -> roomService.deleteFromCart(id));
 
     }
+
     @Test
     @WithMockUser
-    public void deleteFromCartIfCartNotExist(){
-        UUID id =UUID.randomUUID();
+    void deleteFromCartIfCartNotExist() {
+        UUID id = UUID.randomUUID();
         Room room = new Room();
         room.setBooked(false);
         room.setId(id);
 
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
         Mockito.when(cartRepository.findByUserUsername("user")).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchCartException.class).isThrownBy(()->roomService.deleteFromCart(id));
+        Assertions.assertThatExceptionOfType(NoSuchCartException.class).isThrownBy(() -> roomService.deleteFromCart(id));
     }
+
     @Test
     @WithMockUser
-    public void deleteFromCartIfRoomBooked(){
+    void deleteFromCartIfRoomBooked() {
         UUID id = UUID.randomUUID();
         Room room = new Room();
         room.setBooked(true);
         room.setId(id);
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.of(room));
-        Assertions.assertThatExceptionOfType(NotAllowedException.class).isThrownBy(()->roomService.deleteFromCart(id));
+        Assertions.assertThatExceptionOfType(NotAllowedException.class).isThrownBy(() -> roomService.deleteFromCart(id));
 
     }
+
     @ParameterizedTest
     @MethodSource("getRoomAndCart")
     @WithMockUser
-    public void deleteFromCartSuccess(Room room, Cart cart){
+    void deleteFromCartSuccess(Room room, Cart cart) {
         Mockito.when(roomRepository.findById(room.getId())).thenReturn(Optional.of(room));
         Mockito.when(cartRepository.findByUserUsername("user")).thenReturn(Optional.of(cart));
         roomService.deleteFromCart(room.getId());
-        Mockito.verify(roomRepository,Mockito.times(1)).save(room);
+        Mockito.verify(roomRepository, Mockito.times(1)).save(room);
         ArgumentCaptor<Room> roomArgumentCaptor = ArgumentCaptor.forClass(Room.class);
         Mockito.verify(roomRepository).save(roomArgumentCaptor.capture());
         Assertions.assertThat(room.getPreBooked()).isFalse();
@@ -146,33 +152,35 @@ class RoomServiceImplTest {
     }
 
     @Test
-    public void cancelBookingIfCartNotExist(){
-        UUID idCart=UUID.randomUUID();
-        UUID idProduct=UUID.randomUUID();
+    void cancelBookingIfCartNotExist() {
+        UUID idCart = UUID.randomUUID();
+        UUID idProduct = UUID.randomUUID();
 
         Mockito.when(cartRepository.findById(idCart)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchCartException.class).isThrownBy(()->roomService.cancelBooking(idCart,idProduct));
+        Assertions.assertThatExceptionOfType(NoSuchCartException.class).isThrownBy(() -> roomService.cancelBooking(idCart, idProduct));
     }
+
     @Test
-    public void cancelBookingIfRoomNotExist(){
-        UUID idCart=UUID.randomUUID();
-        UUID idProduct=UUID.randomUUID();
-        Cart cart= new Cart();
+    void cancelBookingIfRoomNotExist() {
+        UUID idCart = UUID.randomUUID();
+        UUID idProduct = UUID.randomUUID();
+        Cart cart = new Cart();
         cart.setId(idCart);
 
         Mockito.when(cartRepository.findById(idCart)).thenReturn(Optional.of(cart));
         Mockito.when(roomRepository.findById(idProduct)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.cancelBooking(idCart,idProduct));
+        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(() -> roomService.cancelBooking(idCart, idProduct));
     }
+
     @ParameterizedTest
     @MethodSource("getRoomAndCart")
-    public void cancelBookingSuccess(Room room, Cart cart){
+    void cancelBookingSuccess(Room room, Cart cart) {
         room.setBooked(true);
 
         Mockito.when(cartRepository.findById(cart.getId())).thenReturn(Optional.of(cart));
         Mockito.when(roomRepository.findById(room.getId())).thenReturn(Optional.of(room));
         roomService.cancelBooking(cart.getId(), room.getId());
-        Mockito.verify(roomRepository,Mockito.times(1)).save(room);
+        Mockito.verify(roomRepository, Mockito.times(1)).save(room);
         ArgumentCaptor<Room> capture = ArgumentCaptor.forClass(Room.class);
         Mockito.verify(roomRepository).save(capture.capture());
         Room roomSaved = capture.getValue();
@@ -185,18 +193,20 @@ class RoomServiceImplTest {
         Assertions.assertThat(cart.getTourProductList()).isNullOrEmpty();
 
     }
+
     @Test
-   public void saveIfDuplicate(){
-        UUID idHotel=UUID.randomUUID();
-        RoomDetailsDto dto=new RoomDetailsDto();
+    void saveIfDuplicate() {
+        UUID idHotel = UUID.randomUUID();
+        RoomDetailsDto dto = new RoomDetailsDto();
         dto.setIdHotel(idHotel);
         dto.setNumber(1);
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(false);
-        Assertions.assertThatExceptionOfType(DuplicateRoomException.class).isThrownBy(()->roomService.save(dto));
+        Assertions.assertThatExceptionOfType(DuplicateRoomException.class).isThrownBy(() -> roomService.save(dto));
     }
+
     @ParameterizedTest
     @MethodSource("getEntityAndDto")
-    public void saveSuccess(Room entity, RoomDetailsDto dto){
+    void saveSuccess(Room entity, RoomDetailsDto dto) {
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(true);
         Mockito.when(roomMapper.convert(dto)).thenReturn(entity);
         Mockito.when(roomRepository.save(entity)).thenReturn(entity);
@@ -207,7 +217,7 @@ class RoomServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getListsOfEntityAndDto")
-    public void getAll(List<Room>entityList, List<RoomLightDto> dtoList){
+    void getAll(List<Room> entityList, List<RoomLightDto> dtoList) {
         Mockito.when(roomRepository.findAll()).thenReturn(entityList);
         Mockito.when(roomMapper.convert(entityList)).thenReturn(dtoList);
         List<RoomLightDto> all = roomService.getAll();
@@ -215,14 +225,15 @@ class RoomServiceImplTest {
     }
 
     @Test
-    public void getByIdIfRoomNotExist(){
-        UUID id=UUID.randomUUID();
+    void getByIdIfRoomNotExist() {
+        UUID id = UUID.randomUUID();
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.getById(id));
+        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(() -> roomService.getById(id));
     }
+
     @ParameterizedTest
     @MethodSource("getEntityAndDto")
-    public void getByIdSuccess(Room entity, RoomDetailsDto dto){
+    void getByIdSuccess(Room entity, RoomDetailsDto dto) {
         Mockito.when(roomRepository.findById(dto.getId())).thenReturn(Optional.of(entity));
         Mockito.when(roomMapper.convert(entity)).thenReturn(dto);
         RoomDetailsDto byId = roomService.getById(dto.getId());
@@ -230,16 +241,16 @@ class RoomServiceImplTest {
     }
 
     @Test
-    public void updateIfRoomNotExist(){
-        UUID id =UUID.randomUUID();
-        RoomDetailsDto dto= new RoomDetailsDto();
+    void updateIfRoomNotExist() {
+        UUID id = UUID.randomUUID();
+        RoomDetailsDto dto = new RoomDetailsDto();
         dto.setId(id);
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.update(dto));
+        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(() -> roomService.update(dto));
     }
 
     @Test
-    public void updateIfDuplicate() {
+    void updateIfDuplicate() {
         UUID id = UUID.randomUUID();
         RoomDetailsDto dto = new RoomDetailsDto();
         dto.setId(id);
@@ -251,30 +262,33 @@ class RoomServiceImplTest {
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(false);
         Assertions.assertThatExceptionOfType(DuplicateRoomException.class).isThrownBy(() -> roomService.update(dto));
     }
+
     @ParameterizedTest
     @MethodSource("getEntityAndDto")
-    public void updateSuccess(Room entity, RoomDetailsDto dto){
+    void updateSuccess(Room entity, RoomDetailsDto dto) {
         dto.setNumber(2);
         Mockito.when(roomRepository.findById(dto.getId())).thenReturn(Optional.of(entity));
         Mockito.when(roomValidator.isUnique(dto)).thenReturn(true);
-        Mockito.when(roomMapper.update(dto,entity)).thenReturn(entity);
+        Mockito.when(roomMapper.update(dto, entity)).thenReturn(entity);
         Mockito.when(roomMapper.convert(entity)).thenReturn(dto);
         RoomDetailsDto updated = roomService.update(dto);
         Assertions.assertThat(updated).isEqualTo(dto);
 
     }
+
     @Test
-    public void deleteIfRoomNotExist(){
-        UUID id =UUID.randomUUID();
+    void deleteIfRoomNotExist() {
+        UUID id = UUID.randomUUID();
         Mockito.when(roomRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(()->roomService.delete(id));
+        Assertions.assertThatExceptionOfType(NoSuchRoomException.class).isThrownBy(() -> roomService.delete(id));
     }
+
     @ParameterizedTest
     @MethodSource("getEntity")
-    public void deleteSuccess(Room entity){
+    void deleteSuccess(Room entity) {
         Mockito.when(roomRepository.findById(entity.getId())).thenReturn(Optional.of(entity));
         roomService.delete(entity.getId());
-        ArgumentCaptor<Room> captor=ArgumentCaptor.forClass(Room.class);
+        ArgumentCaptor<Room> captor = ArgumentCaptor.forClass(Room.class);
         Mockito.verify(roomRepository, Mockito.times(1)).delete(entity);
         Mockito.verify(roomRepository).delete(captor.capture());
         Room value = captor.getValue();
@@ -282,16 +296,17 @@ class RoomServiceImplTest {
     }
 
     @Test
-    public void getRoomListForBookingIfCheckInLaterThanCheckOut(){
+    void getRoomListForBookingIfCheckInLaterThanCheckOut() {
         LocalDate checkIn = LocalDate.now().plusDays(10);
         LocalDate checkOut = LocalDate.now();
         RoomDetailsDto dto = new RoomDetailsDto();
         dto.setCheckIn(checkIn);
         dto.setCheckOut(checkOut);
-        Mockito.when(dateValidator.isCheckInEarlierThanCheckOut(checkIn,checkOut)).thenReturn(false);
-        Assertions.assertThatExceptionOfType(TravelDateException.class).isThrownBy(()->roomService.getRoomsListForBooking(dto));
+        Mockito.when(dateValidator.isCheckInEarlierThanCheckOut(checkIn, checkOut)).thenReturn(false);
+        Assertions.assertThatExceptionOfType(TravelDateException.class).isThrownBy(() -> roomService.getRoomsListForBooking(dto));
     }
-    public static Stream<Arguments> getRoomAndCart(){
+
+    public static Stream<Arguments> getRoomAndCart() {
         UUID id = UUID.randomUUID();
         Room room = new Room();
         room.setId(id);
@@ -305,13 +320,13 @@ class RoomServiceImplTest {
         User user = new User();
         user.setUsername("user");
 
-        Cart cart= new Cart();
+        Cart cart = new Cart();
         cart.addTourProduct(room);
         cart.setUser(user);
-        return Stream.of(Arguments.arguments(room,cart));
+        return Stream.of(Arguments.arguments(room, cart));
     }
 
-    public static Stream<Arguments> getEntityAndDto(){
+    public static Stream<Arguments> getEntityAndDto() {
         Room entity = new Room();
         entity.setId(UUID.randomUUID());
         entity.setNumber(1);
@@ -319,7 +334,7 @@ class RoomServiceImplTest {
         entity.setTypesByView(RoomTypesByView.GARDEN);
         entity.setTypesByOccupancy(RoomTypesByOccupancy.TWIN);
 
-        Hotel hotel= new Hotel();
+        Hotel hotel = new Hotel();
         hotel.setName("TEST");
         Destination destination = new Destination();
         destination.setName("TEST");
@@ -330,7 +345,7 @@ class RoomServiceImplTest {
         hotel.setId(UUID.randomUUID());
         entity.setHotel(hotel);
 
-        RoomDetailsDto dto =new RoomDetailsDto();
+        RoomDetailsDto dto = new RoomDetailsDto();
         dto.setId(entity.getId());
         dto.setNumber(entity.getNumber());
         dto.setIdHotel(hotel.getId());
@@ -341,11 +356,11 @@ class RoomServiceImplTest {
         dto.setHotelName(hotel.getName());
         dto.setNumOfTourist(entity.getNumOfTourist());
 
-        return Stream.of(Arguments.arguments(entity,dto));
+        return Stream.of(Arguments.arguments(entity, dto));
     }
 
-    public static Stream<Arguments> getListsOfEntityAndDto(){
-        List<Room> entityList =new ArrayList<>();
+    public static Stream<Arguments> getListsOfEntityAndDto() {
+        List<Room> entityList = new ArrayList<>();
         Room entity = new Room();
         entity.setId(UUID.randomUUID());
         entity.setNumber(1);
@@ -353,7 +368,7 @@ class RoomServiceImplTest {
         entity.setTypesByView(RoomTypesByView.GARDEN);
         entity.setTypesByOccupancy(RoomTypesByOccupancy.TWIN);
 
-        Hotel hotel= new Hotel();
+        Hotel hotel = new Hotel();
         hotel.setName("TEST");
         Destination destination = new Destination();
         destination.setName("TEST");
@@ -374,8 +389,8 @@ class RoomServiceImplTest {
         entityList.add(entity);
         entityList.add(entity2);
 
-        List<RoomLightDto> dtoList= new ArrayList<>();
-        RoomLightDto dto =new RoomLightDto();
+        List<RoomLightDto> dtoList = new ArrayList<>();
+        RoomLightDto dto = new RoomLightDto();
         dto.setId(entity.getId());
         dto.setNumber(entity.getNumber());
         dto.setTypesByView(entity.getTypesByView());
@@ -384,7 +399,7 @@ class RoomServiceImplTest {
         dto.setHotelName(hotel.getName());
         dto.setNumOfTourist(entity.getNumOfTourist());
 
-        RoomLightDto dto2 =new RoomLightDto();
+        RoomLightDto dto2 = new RoomLightDto();
         dto2.setId(entity2.getId());
         dto2.setNumber(entity2.getNumber());
         dto2.setTypesByView(entity2.getTypesByView());
@@ -395,9 +410,10 @@ class RoomServiceImplTest {
         dtoList.add(dto);
         dtoList.add(dto2);
 
-        return Stream.of(Arguments.arguments(entityList,dtoList));
+        return Stream.of(Arguments.arguments(entityList, dtoList));
     }
-    public static Stream<Room> getEntity(){
+
+    public static Stream<Room> getEntity() {
         Room entity = new Room();
         entity.setId(UUID.randomUUID());
         entity.setNumber(1);
@@ -405,7 +421,7 @@ class RoomServiceImplTest {
         entity.setTypesByView(RoomTypesByView.GARDEN);
         entity.setTypesByOccupancy(RoomTypesByOccupancy.TWIN);
 
-        Hotel hotel= new Hotel();
+        Hotel hotel = new Hotel();
         hotel.setName("TEST");
         Destination destination = new Destination();
         destination.setName("TEST");

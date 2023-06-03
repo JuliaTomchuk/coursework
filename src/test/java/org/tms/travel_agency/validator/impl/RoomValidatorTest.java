@@ -13,18 +13,19 @@ import org.tms.travel_agency.repository.RoomRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class RoomValidatorTest {
     private RoomValidator validator;
     private RoomRepository repository;
+
     @BeforeEach
-    public void initServices(){
-        repository= Mockito.mock(RoomRepository.class);
-        validator= new RoomValidator(repository);
-           }
+    void initServices() {
+        repository = Mockito.mock(RoomRepository.class);
+        validator = new RoomValidator(repository);
+    }
+
     @Test
-    public void isUniqueSuccess() {
+    void isUniqueSuccess() {
         RoomDetailsDto dto = new RoomDetailsDto();
         dto.setNumber(1);
         dto.setIdHotel(UUID.randomUUID());
@@ -34,7 +35,7 @@ class RoomValidatorTest {
     }
 
     @Test
-    public void isNotUnique() {
+    void isNotUnique() {
         RoomDetailsDto dto = new RoomDetailsDto();
         dto.setNumber(1);
         dto.setIdHotel(UUID.randomUUID());

@@ -35,20 +35,21 @@ import java.util.stream.Stream;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 class ReviewServiceImplTest {
-    private  ReviewRepository repository;
-    private  ReviewMapper mapper;
+    private ReviewRepository repository;
+    private ReviewMapper mapper;
     private ReviewService service;
+
     @BeforeEach
-    public void init(){
-        repository= Mockito.mock(ReviewRepository.class);
-        mapper =Mockito.mock(ReviewMapper.class);
-        service = new ReviewServiceImpl(repository,mapper);
+     void init() {
+        repository = Mockito.mock(ReviewRepository.class);
+        mapper = Mockito.mock(ReviewMapper.class);
+        service = new ReviewServiceImpl(repository, mapper);
     }
 
     @ParameterizedTest
     @MethodSource("save")
     @WithMockUser
-    public void save(ReviewDetailsDto input, ReviewDetailsDto convert,Review entity){
+     void save(ReviewDetailsDto input, ReviewDetailsDto convert, Review entity) {
         Mockito.when(mapper.convert(input)).thenReturn(entity);
         Mockito.when(repository.save(entity)).thenReturn(entity);
         Mockito.when(mapper.convert(entity)).thenReturn(convert);
@@ -56,41 +57,46 @@ class ReviewServiceImplTest {
         Assertions.assertThat(convert).isEqualTo(saved);
 
     }
+
     @ParameterizedTest
     @MethodSource("findAll")
-    public void findAll(List<Review> entityList, List<ReviewLightDto> dtoList){
+    void findAll(List<Review> entityList, List<ReviewLightDto> dtoList) {
         Mockito.when(repository.findAll()).thenReturn(entityList);
         Mockito.when(mapper.convert(entityList)).thenReturn(dtoList);
         List<ReviewLightDto> all = service.getAll();
         Assertions.assertThat(all).isEqualTo(dtoList);
     }
+
     @Test
-    public void getByIdIfNotExist(){
+    void getByIdIfNotExist() {
         UUID id = UUID.randomUUID();
         Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchReviewException.class).isThrownBy(()->service.getById(id));
+        Assertions.assertThatExceptionOfType(NoSuchReviewException.class).isThrownBy(() -> service.getById(id));
     }
+
     @ParameterizedTest
     @MethodSource("getEntityAndDto")
-    public void getByIdSuccess(Review entity, ReviewDetailsDto dto){
+    void getByIdSuccess(Review entity, ReviewDetailsDto dto) {
         Mockito.when(repository.findById(dto.getId())).thenReturn(Optional.of(entity));
         Mockito.when(mapper.convert(entity)).thenReturn(dto);
         ReviewDetailsDto byId = service.getById(dto.getId());
         Assertions.assertThat(byId).isEqualTo(dto);
     }
+
     @Test
-    public void updateIfNotExist(){
-        UUID id =UUID.randomUUID();
+    void updateIfNotExist() {
+        UUID id = UUID.randomUUID();
         ReviewDetailsDto dto = new ReviewDetailsDto();
         dto.setId(id);
         Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchReviewException.class).isThrownBy(()->service.update(dto));
+        Assertions.assertThatExceptionOfType(NoSuchReviewException.class).isThrownBy(() -> service.update(dto));
     }
+
     @ParameterizedTest
     @MethodSource("getEntityAndDto")
-    public void updateSuccess(Review entity, ReviewDetailsDto dto){
+    void updateSuccess(Review entity, ReviewDetailsDto dto) {
         Mockito.when(repository.findById(dto.getId())).thenReturn(Optional.of(entity));
-        Mockito.when(mapper.update(dto,entity)).thenReturn(entity);
+        Mockito.when(mapper.update(dto, entity)).thenReturn(entity);
         Mockito.when(repository.save(entity)).thenReturn(entity);
         Mockito.when(mapper.convert(entity)).thenReturn(dto);
         ReviewDetailsDto update = service.update(dto);
@@ -98,17 +104,18 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    public void deleteIfNotExist(){
-        UUID id =UUID.randomUUID();
+    void deleteIfNotExist() {
+        UUID id = UUID.randomUUID();
         Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NoSuchReviewException.class).isThrownBy(()->service.delete(id));
+        Assertions.assertThatExceptionOfType(NoSuchReviewException.class).isThrownBy(() -> service.delete(id));
     }
+
     @ParameterizedTest
     @MethodSource("getEntity")
-    public void deleteSuccess(Review entity){
+    void deleteSuccess(Review entity) {
         Mockito.when(repository.findById(entity.getId())).thenReturn(Optional.of(entity));
         service.delete(entity.getId());
-        Mockito.verify(repository,Mockito.times(1)).delete(entity);
+        Mockito.verify(repository, Mockito.times(1)).delete(entity);
         ArgumentCaptor<Review> reviewArgumentCaptor = ArgumentCaptor.forClass(Review.class);
         Mockito.verify(repository).delete(reviewArgumentCaptor.capture());
         Review value = reviewArgumentCaptor.getValue();
@@ -117,15 +124,16 @@ class ReviewServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("findAll")
-    public void getByHotel(List<Review> entityList, List<ReviewLightDto> dtoList){
-        UUID id= UUID.randomUUID();
+    void getByHotel(List<Review> entityList, List<ReviewLightDto> dtoList) {
+        UUID id = UUID.randomUUID();
         Mockito.when(repository.findByHotelId(id)).thenReturn(entityList);
         Mockito.when(mapper.convert(entityList)).thenReturn(dtoList);
         List<ReviewLightDto> resultList = service.getByHotel(id);
         Assertions.assertThat(resultList).isEqualTo(dtoList);
 
     }
-    public static Stream<Arguments> save(){
+
+    public static Stream<Arguments> save() {
         ReviewDetailsDto dtoInput = new ReviewDetailsDto();
         dtoInput.setHotelId(UUID.randomUUID());
         dtoInput.setRating(Rating.EXCELLENT);
@@ -150,9 +158,10 @@ class ReviewServiceImplTest {
         convert.setRating(dtoInput.getRating());
         convert.setHotelId(dtoInput.getHotelId());
         convert.setUsername(entity.getUser().getUsername());
-        return Stream.of(Arguments.arguments(dtoInput,convert,entity));
+        return Stream.of(Arguments.arguments(dtoInput, convert, entity));
     }
-    public static Stream<Arguments> findAll(){
+
+    public static Stream<Arguments> findAll() {
         List<Review> entityList = new ArrayList<>();
         Review entity = new Review();
         User user = new User();
@@ -176,8 +185,8 @@ class ReviewServiceImplTest {
         entityList.add(entity);
         entityList.add(entity2);
 
-        List<ReviewLightDto> dtoList= new ArrayList<>();
-        ReviewLightDto dto= new ReviewLightDto();
+        List<ReviewLightDto> dtoList = new ArrayList<>();
+        ReviewLightDto dto = new ReviewLightDto();
         dto.setId(entity.getId());
         dto.setDate(entity.getDate());
         dto.setRating(entity.getRating());
@@ -187,11 +196,11 @@ class ReviewServiceImplTest {
         dto2.setDate(entity2.getDate());
         dtoList.add(dto);
         dtoList.add(dto2);
-        return Stream.of(Arguments.arguments(entityList,dtoList));
+        return Stream.of(Arguments.arguments(entityList, dtoList));
 
     }
 
-    public static Stream<Arguments> getEntityAndDto(){
+    public static Stream<Arguments> getEntityAndDto() {
         Review entity = new Review();
         User user = new User();
         user.setUsername("user");
@@ -211,9 +220,10 @@ class ReviewServiceImplTest {
         dto.setRating(entity.getRating());
         dto.setHotelId(hotel.getId());
         dto.setUsername(user.getUsername());
-        return Stream.of(Arguments.arguments(entity,dto));
+        return Stream.of(Arguments.arguments(entity, dto));
     }
-    public static Stream<Review> getEntity(){
+
+    public static Stream<Review> getEntity() {
         Review entity = new Review();
         User user = new User();
         user.setUsername("user");

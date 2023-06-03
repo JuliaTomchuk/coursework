@@ -20,21 +20,22 @@ class DestinationValidatorTest {
     private DestinationValidator validator;
 
     @BeforeEach
-    public void init(){
+    void init() {
         repository = Mockito.mock(DestinationRepository.class);
         validator = new DestinationValidator(repository);
     }
 
     @Test
-    public void isUnique(){
+    void isUnique() {
         DestinationDetailsDto dto = new DestinationDetailsDto();
         dto.setName("TEST");
         Mockito.when(repository.findByNameIgnoreCase(dto.getName())).thenReturn(Optional.empty());
         boolean unique = validator.isUnique(dto);
         Assertions.assertThat(unique).isTrue();
     }
+
     @Test
-    public void isNotUnique(){
+    void isNotUnique() {
         DestinationDetailsDto dto = new DestinationDetailsDto();
         dto.setName("TEST");
         Mockito.when(repository.findByNameIgnoreCase(dto.getName())).thenReturn(Optional.of(new Destination()));

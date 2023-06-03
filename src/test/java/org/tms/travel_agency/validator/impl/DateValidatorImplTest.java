@@ -11,7 +11,7 @@ class DateValidatorImplTest {
     private DateValidator dateValidator = new DateValidatorImpl();
 
     @Test
-    public void checkInEarlierThanCheckOut() {
+    void checkInEarlierThanCheckOut() {
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = checkIn.plusDays(7);
         boolean checkInEarlierThanCheckOut = dateValidator.isCheckInEarlierThanCheckOut(checkIn, checkOut);
@@ -19,7 +19,7 @@ class DateValidatorImplTest {
     }
 
     @Test
-    public void checkInLaterThanCheckOut() {
+    void checkInLaterThanCheckOut() {
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = checkIn.minusDays(7);
         boolean checkInEarlierThanCheckOut = dateValidator.isCheckInEarlierThanCheckOut(checkIn, checkOut);

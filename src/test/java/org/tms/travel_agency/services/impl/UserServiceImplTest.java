@@ -42,7 +42,7 @@ class UserServiceImplTest {
     private UserService service;
 
     @BeforeEach
-    public void init() {
+    void init() {
         mapper = Mockito.mock(UserMapper.class);
         repository = Mockito.mock(UserRepository.class);
         validator = Mockito.mock(UserValidator.class);
@@ -51,7 +51,7 @@ class UserServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getUser")
-    public void loadUserByUserNameIfUserPreset(User user) {
+    void loadUserByUserNameIfUserPreset(User user) {
         Mockito.when(repository.findByUsername(Mockito.anyString())).thenReturn(Optional.of(user));
         UserDetails test = service.loadUserByUsername(user.getUsername());
 
@@ -59,14 +59,14 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void loadUserByUserNameIfUserNotPresent() {
+    void loadUserByUserNameIfUserNotPresent() {
         Mockito.when(repository.findByUsername(Mockito.anyString())).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchUserException.class).isThrownBy(() -> service.loadUserByUsername("TEST"));
     }
 
     @ParameterizedTest
     @MethodSource("getUserAndUserFullDescriptionDto")
-    public void saveSuccess(User user, UserFullDescriptionDto dto) {
+    void saveSuccess(User user, UserFullDescriptionDto dto) {
         Mockito.when(validator.isUnique(dto)).thenReturn(true);
         Mockito.when(mapper.convert(dto)).thenReturn(user);
         Mockito.when(repository.save(user)).thenReturn(user);
@@ -78,21 +78,21 @@ class UserServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getUserFullDescriptionDto")
-    public void saveUserNotUnique(UserFullDescriptionDto dto) {
+    void saveUserNotUnique(UserFullDescriptionDto dto) {
         Mockito.when(validator.isUnique(dto)).thenReturn(false);
         Assertions.assertThatExceptionOfType(DuplicateUserException.class).isThrownBy(() -> service.save(dto));
     }
 
     @Test
     @WithMockUser
-    public void updateIfUserNotExist() {
+    void updateIfUserNotExist() {
         Mockito.when(repository.findByUsername(Mockito.anyString())).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchUserException.class).isThrownBy(() -> service.update(Mockito.any(UserFullDescriptionDto.class)));
     }
 
     @Test
     @WithMockUser(username = "TEST")
-    public void updateIfDuplicate() {
+    void updateIfDuplicate() {
         UserFullDescriptionDto dto = new UserFullDescriptionDto();
         dto.setUsername("TEST1");
 
@@ -107,7 +107,7 @@ class UserServiceImplTest {
     @ParameterizedTest
     @MethodSource("getUserAndUserFullDescriptionDto")
     @WithMockUser
-    public void successUpdate(User user, UserFullDescriptionDto dto) {
+    void successUpdate(User user, UserFullDescriptionDto dto) {
         Mockito.when(repository.findByUsername("user")).thenReturn(Optional.of(user));
         Mockito.when(mapper.update(dto, user)).thenReturn(user);
         Mockito.when(repository.save(user)).thenReturn(user);
@@ -117,7 +117,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void deleteIfNotExist() {
+    void deleteIfNotExist() {
         UUID uuid = UUID.randomUUID();
         Mockito.when(repository.findById(uuid)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> service.delete(uuid)).isInstanceOf(NoSuchUserException.class);
@@ -126,7 +126,7 @@ class UserServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getUser")
-    public void deleteSuccess(User user) {
+    void deleteSuccess(User user) {
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.when(repository.findById(user.getId())).thenReturn(Optional.of(user));
         service.delete(user.getId());
@@ -139,7 +139,7 @@ class UserServiceImplTest {
     @ParameterizedTest
     @MethodSource("getUserAndUserFullDescriptionDto")
     @WithMockUser
-    public void getCurrentSuccess(User user, UserFullDescriptionDto dto) {
+    void getCurrentSuccess(User user, UserFullDescriptionDto dto) {
         Mockito.when(repository.findByUsername("user")).thenReturn(Optional.of(user));
         Mockito.when(mapper.convert(user)).thenReturn(dto);
         UserFullDescriptionDto current = service.getCurrent();
@@ -149,14 +149,14 @@ class UserServiceImplTest {
 
     @Test
     @WithMockUser
-    public void getCurrentIfNotExist() {
+    void getCurrentIfNotExist() {
         Mockito.when(repository.findByUsername("user")).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchUserException.class).isThrownBy(() -> service.getCurrent());
     }
 
     @ParameterizedTest
     @MethodSource({"getUserAndLightDtoLists"})
-    public void getAll(List<User> userList, List<UserLightDescriptionDto> dtoList) {
+    void getAll(List<User> userList, List<UserLightDescriptionDto> dtoList) {
         Mockito.when(repository.findAll()).thenReturn(userList);
         Mockito.when(mapper.convert(userList)).thenReturn(dtoList);
         List<UserLightDescriptionDto> all = service.getAll();
@@ -165,7 +165,7 @@ class UserServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getUserAndUserFullDescriptionDto")
-    public void getByIdSuccess(User user, UserFullDescriptionDto dto) {
+    void getByIdSuccess(User user, UserFullDescriptionDto dto) {
         Mockito.when(repository.findById(dto.getId())).thenReturn(Optional.of(user));
         Mockito.when(mapper.convert(user)).thenReturn(dto);
         UserFullDescriptionDto byId = service.getById(dto.getId());
@@ -173,7 +173,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void getByIdIfNotExist() {
+    void getByIdIfNotExist() {
         UUID uuid = UUID.randomUUID();
         Mockito.when(repository.findById(uuid)).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchUserException.class).isThrownBy(() -> service.getById(uuid));
@@ -181,7 +181,7 @@ class UserServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getUserAndUserFullDescriptionDto")
-    public void changeRoleSuccess(User user, UserFullDescriptionDto dto) {
+    void changeRoleSuccess(User user, UserFullDescriptionDto dto) {
         dto.setRole(Role.ROLE_ADMIN);
         Mockito.when(repository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(mapper.convert(user)).thenReturn(dto);
@@ -190,7 +190,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void changeRoleIfNotExist() {
+    void changeRoleIfNotExist() {
         UUID id = UUID.randomUUID();
         Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
         Assertions.assertThatExceptionOfType(NoSuchUserException.class).isThrownBy(() -> service.changeRole("TEST", id));
@@ -198,14 +198,14 @@ class UserServiceImplTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void isAdminTrue() {
+    void isAdminTrue() {
         boolean admin = service.isAdmin();
         Assertions.assertThat(admin).isTrue();
     }
 
     @Test
     @WithMockUser
-    public void isAdminFalse() {
+    void isAdminFalse() {
         boolean admin = service.isAdmin();
         Assertions.assertThat(admin).isFalse();
     }
@@ -300,16 +300,5 @@ class UserServiceImplTest {
         return Stream.of(dto);
     }
 
-    public static Stream<List<UserLightDescriptionDto>> getLightDtoList() {
-        UserLightDescriptionDto dto1 = new UserLightDescriptionDto();
-        dto1.setId(UUID.fromString("6f4c1fce-2fa5-47c7-b358-907e36bcaf79"));
-        dto1.setUsername("user1");
-        dto1.setRole(Role.ROLE_USER);
-        UserLightDescriptionDto dto2 = new UserLightDescriptionDto();
-        dto2.setId(UUID.fromString("d612c183-7f34-445b-898b-814532644b1c"));
-        dto2.setUsername("user2");
-        dto2.setRole(Role.ROLE_ADMIN);
-        return Stream.of(Arrays.asList(dto1, dto2));
-    }
 
 }

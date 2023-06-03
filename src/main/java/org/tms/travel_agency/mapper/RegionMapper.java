@@ -5,7 +5,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.tms.travel_agency.domain.Destination;
 import org.tms.travel_agency.domain.Region;
 import org.tms.travel_agency.dto.region.RegionDetailsDto;
@@ -14,7 +13,8 @@ import org.tms.travel_agency.exception.NoSuchDestinationException;
 import org.tms.travel_agency.repository.DestinationRepository;
 
 import java.util.List;
-@Service
+import java.util.Set;
+
 @Mapper(componentModel = "spring")
 public abstract class RegionMapper {
     @Autowired
@@ -25,7 +25,10 @@ public abstract class RegionMapper {
     @AfterMapping
     public Region convert(RegionDetailsDto dto, @MappingTarget Region entity){
         Destination destination = repository.findByNameIgnoreCase(dto.getDestination()).orElseThrow( ()-> new NoSuchDestinationException("no destination with name: "+dto.getDestination()));
-        destination.addRegion(entity);
+        Set<Region> regions = destination.getRegions();
+        if(!regions.contains(entity)) {
+            destination.addRegion(entity);
+        }
         return entity;
     }
 

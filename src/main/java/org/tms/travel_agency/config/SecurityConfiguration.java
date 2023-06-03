@@ -22,6 +22,7 @@ public class SecurityConfiguration {
                         .antMatchers("/user/usersManager","/user/delete/{id}","/user/changeRole","/rooms/add","/rooms/delete","/rooms/update","/rooms/details","/regionManager","/regionManager/update","/regionManager/delete","/hotels/create","/hotels/hotelManager", "/hotels/delete","/hotels/update","/hotels/details","/hotels/addBoardBasis", "/hotels/deleteBoardBasis","/destinations/destinationManager","/destinations/delete","/destinations/destinationManager/update","/cart/cancelBooking","/cart/allBooking","/adminPage").hasRole("ADMIN")
                         .antMatchers( "/user/update","/user/delete","/user/accountManager","/rooms/book","/rooms/prebook/","/rooms/prebook","/review/save","/review/delete","/review/update","/cart","/cart/book","/cart/deleteFromCart").authenticated()
                         .and()
+                        .csrf().disable()
                         .formLogin()
                         .loginPage("/user/login")
                         .loginProcessingUrl("/try-login")
